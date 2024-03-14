@@ -64,8 +64,8 @@ const Signin = () => {
       <Grid container direction="column" spacing={2}>
         <Grid item container justifyContent="center">
           <Typography variant="body1" gutterBottom sx={{ width: "60%" }}>
-            Connecte toi ou inscrit toi pour participer à une quête et
-            valider tes missions quotidiennes !
+            Connecte toi ou inscrit toi pour participer à une quête et valider
+            tes missions quotidiennes !
           </Typography>
         </Grid>
         <Grid item container justifyContent="center">
