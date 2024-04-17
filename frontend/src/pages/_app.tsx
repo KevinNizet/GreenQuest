@@ -11,6 +11,11 @@ import {
   InMemoryCache,
   createHttpLink,
 } from "@apollo/client";
+import { QuestProvider } from "@/contexts/QuestContext";
+
+//imports relatifs au thème global MaterialUI
+import theme from "@/styles/theme";
+import { ThemeProvider } from "@emotion/react";
 
 const link = createHttpLink({
   uri: "http://localhost:5050/",
@@ -29,7 +34,11 @@ const client = new ApolloClient({
 function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />;
+      <QuestProvider>
+        <ThemeProvider theme={theme}>
+          <Component {...pageProps} />;
+        </ThemeProvider>
+      </QuestProvider>
     </ApolloProvider>
   );
 }

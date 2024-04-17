@@ -10,11 +10,16 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  SelectChangeEvent,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import CloseIcon from "@mui/icons-material/Close";
 import { queryAllMissions } from "@/graphql/queryAllMissions";
 import { useQuery } from "@apollo/client";
+import { useQuestContext } from "@/contexts/QuestContext";
+import { useEffect, useState } from "react";
+import { useMutation } from "@apollo/client";
+import { mutationCreateQuest } from "@/graphql/mutationCreateQuest";
 
 export type MissionType = {
   id: number;
@@ -25,29 +30,82 @@ export type MissionType = {
   byDefault: boolean;
 };
 
-export default function DifficultyLevel() {
+export default function Missions() {
+  const [missions, setMissions] = useState<MissionType[]>([]);
+  const [selectedMissionTitle, setSelectedMissionTitle] = useState<string>("");
+  const { questInfo, setQuestInfo } = useQuestContext();
+  const { difficulty } = questInfo || {};
   const router = useRouter();
+
+  // Récupérer les missions depuis le backend
+  const { data: dataMissions } = useQuery<{ getMissions: MissionType[] }>(
+    queryAllMissions,
+    {
+      variables: {
+        sortBy: difficulty,
+      },
+    }
+  );
+
+  // pourvoir ajuster sa sélection en supprimant ajoutant les missions
+  const deleteMission = (id: number) => {
+    setMissions((prevMissions) =>
+      prevMissions.filter((mission) => mission.id !== id)
+    );
+  };
+
+  const selectMission = (event: SelectChangeEvent<string>) => {
+    setSelectedMissionTitle(event.target.value);
+    const missionToAdd = dataMissions?.getMissions.find(
+      (mission) => mission.title === event.target.value
+    );
+    if (
+      missionToAdd &&
+      !missions.some((mission) => mission.id === missionToAdd.id)
+    ) {
+      setMissions((prevMissions) => [...prevMissions, missionToAdd]);
+    }
+  };
+
+  useEffect(() => {
+    if (dataMissions) {
+      setMissions(dataMissions.getMissions.slice(0, 3));
+    }
+  }, [dataMissions]);
 
   const previousPage = () => {
     router.back();
   };
 
-  const nextPage = () => {
-    // page suivante
-  };
+  // validation de la quête
+  const [createQuest] = useMutation(mutationCreateQuest);
 
-  const { data: dataMissions } = useQuery<{ getMissions: MissionType[] }>(
-    queryAllMissions
-  );
+  const validateQuest = async () => {
+    try {
+      setQuestInfo((prevQuestInfo) => ({
+        ...prevQuestInfo,
+        missions: missions,
+      }));
 
-  const missions = dataMissions ? dataMissions.getMissions : [];
+      await createQuest({
+        variables: {
+          data: {
+            ...questInfo,
+            missions: missions.map((mission) => mission.id),
+          },
+        },
+      });
 
-  const deleteMission = (id: number) => {
-    console.log("Suppression de la mission avec l'ID :", id);
+      sessionStorage.clear();
+
+      router.push("/questtunnel/questLink");
+    } catch (err) {
+      console.error("Error creating quest:", err);
+    }
   };
 
   return (
-    <Layout title="Niveau de difficulté">
+    <Layout title="Missions">
       <Grid
         container
         direction="column"
@@ -110,15 +168,16 @@ export default function DifficultyLevel() {
           </InputLabel>
           <Select
             fullWidth
-            value="Mission 1"
+            value={selectedMissionTitle}
             variant="outlined"
+            onChange={selectMission}
             sx={{
               "&.Mui-focused fieldset": {
                 borderColor: "#7BD389 !important",
               },
             }}
           >
-            {missions.map((mission) => (
+            {dataMissions?.getMissions.map((mission) => (
               <MenuItem key={mission.id} value={mission.title}>
                 {mission.title}
               </MenuItem>
@@ -139,10 +198,11 @@ export default function DifficultyLevel() {
             </Button>
             <Button
               variant="contained"
-              onClick={nextPage}
+              onClick={validateQuest}
               sx={{ bgcolor: "#7BD389", color: "#000000" }}
+              disabled={missions.length <= 0}
             >
-              Suivant
+              Valider
             </Button>
           </Grid>
         </Grid>
