@@ -12,12 +12,12 @@ const Signup = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorConfirmPassword, setErrorConfirmPassword] = useState(false);
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstname, setFirstname] = useState("edward");
+  const [lastname, setLastname] = useState("Elric");
+  const [nickname, setNickname] = useState("fullmetal alchemist");
+  const [email, setEmail] = useState("fullmetal@gmail.com");
+  const [password, setPassword] = useState("Alphonse");
+  const [confirmPassword, setConfirmPassword] = useState("Alphonse");
   const router = useRouter();
 
   const [doSignup] = useMutation(signup);
@@ -25,47 +25,10 @@ const Signup = () => {
   // Password visibility
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  // Form submission with connection button
-  const handleSignIn = () => {
-    if (!validateEmail()) {
-      setEmailError(true);
-    } else {
-      setEmailError(false);
-    }
-
-    if (!validatePassword() || password.length < 3) {
-      setPasswordError(true);
-    } else {
-      setPasswordError(false);
-    }
-
-    if (!validateConfirmPassword()) {
-      setErrorConfirmPassword(true);
-    } else {
-      setErrorConfirmPassword(true);
-    }
-  };
-
-  const validateEmail = () => {
-    //TODO: ajouter la validation de l'email avec le back
-    return true;
-  };
-
-  const validatePassword = () => {
-    //TODO: ajouter la validation du mdp avec le back
-    return true;
-  };
-
-  const validateConfirmPassword = () => {
-    //TODO: ajouter la validation du mdp avec le back
-    return true;
-  };
-
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setErrorConfirmPassword(true);
-    } else {
+
+    try {
       const { data } = await doSignup({
         variables: {
           data: {
@@ -81,9 +44,19 @@ const Signup = () => {
         console.log("data part", data.item);
         router.replace("/signin");
       }
+    } catch (error: any) {
+      if (error.message.includes("Existing user")) {
+        setEmailError(true);
+      }
+
+      if (error.message.includes("Password length")) {
+        setPasswordError(true);
+      }
+      if (password !== confirmPassword) {
+        setErrorConfirmPassword(true);
+      }
     }
   };
-
   return (
     <Layout title="signup">
       <form
@@ -95,6 +68,18 @@ const Signup = () => {
         }}
       >
         <Grid container direction="column" spacing={2} sx={{ width: "70%" }}>
+          <Grid item container justifyContent="center">
+            <img
+              src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              alt="Description de l'image"
+              style={{
+                width: "720px",
+                height: "auto",
+                marginBottom: "80px",
+                marginTop: "100px",
+              }}
+            />
+          </Grid>
           <Grid item container justifyContent="center">
             <Typography
               variant="body1"
@@ -110,72 +95,81 @@ const Signup = () => {
           <Grid
             container
             sx={{
-              backgroundColor: "lightgray",
               display: "flex",
               flexDirection: "column",
               width: "100%",
               height: "60vh",
               justifyContent: "space-around",
               alignItems: "center",
+              backgroundColor: "#ECEBF5",
+              padding: "10px",
+              borderRadius: "5px",
             }}
           >
             <Grid item container justifyContent="center">
               <TextField
-                error={emailError}
+                className="textfield-outline-shadow"
+                color="success"
                 value={firstname}
                 required
                 id="fisrtname"
                 label="Prénom"
                 variant="outlined"
-                helperText={emailError ? "Email incorrect" : ""}
-                sx={{ width: "55%", fontWeight: "small" }}
+                sx={{ width: "70%" }}
                 size="small"
                 onChange={(e) => setFirstname(e.target.value)}
               />
             </Grid>{" "}
             <Grid item container justifyContent="center">
               <TextField
-                error={emailError}
+                className="textfield-outline-shadow"
+                color="success"
                 value={lastname}
                 required
                 id="lastname"
                 label="Nom"
                 variant="outlined"
-                helperText={emailError ? "Email incorrect" : ""}
-                sx={{ width: "55%" }}
+                sx={{ width: "70%" }}
                 size="small"
                 onChange={(e) => setLastname(e.target.value)}
               />
             </Grid>{" "}
             <Grid item container justifyContent="center">
               <TextField
-                error={emailError}
+                className="textfield-outline-shadow"
+                color="success"
                 value={nickname}
                 id="Nickname"
                 label="Pseudo"
                 variant="outlined"
-                helperText={emailError ? "Email incorrect" : ""}
-                sx={{ width: "55%" }}
+                sx={{ width: "70%" }}
                 size="small"
                 onChange={(e) => setNickname(e.target.value)}
               />
             </Grid>{" "}
             <Grid item container justifyContent="center">
               <TextField
+                className="textfield-outline-shadow"
+                color="success"
                 error={emailError}
                 value={email}
                 required
                 id="email"
                 label="Email"
                 variant="outlined"
-                helperText={emailError ? "Email incorrect" : ""}
-                sx={{ width: "55%" }}
+                helperText={emailError === true ? "Email déjà utilisé!" : ""}
+                sx={{ width: "70%" }}
                 size="small"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setEmailError(false); // Réinitialise emailError à false lors de la modification de l'email
+                }}
               />
             </Grid>
             <Grid item container justifyContent="center">
               <TextField
+                className="textfield-outline-shadow"
+                color="success"
                 error={passwordError}
                 value={password}
                 required
@@ -183,7 +177,7 @@ const Signup = () => {
                 label="Mot de passe"
                 variant="outlined"
                 helperText={
-                  passwordError
+                  passwordError === true
                     ? "Le mot de passe doit faire au moins 8 caractères"
                     : ""
                 }
@@ -199,13 +193,18 @@ const Signup = () => {
                     </IconButton>
                   ),
                 }}
-                sx={{ width: "55%" }}
+                sx={{ width: "70%" }}
                 size="small"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setPasswordError(false);
+                }}
               />
             </Grid>{" "}
             <Grid item container justifyContent="center">
               <TextField
+                className="textfield-outline-shadow"
+                color="success"
                 error={errorConfirmPassword}
                 value={confirmPassword}
                 required
@@ -229,13 +228,21 @@ const Signup = () => {
                     </IconButton>
                   ),
                 }}
-                sx={{ width: "55%" }}
+                sx={{ width: "70%" }}
                 size="small"
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                  setErrorConfirmPassword(false);
+                }}
               />
             </Grid>
             <Grid item container justifyContent="center">
-              <Button variant="contained" onClick={handleSignIn} type="submit">
+              <Button
+                variant="contained"
+                // onClick={handleSignIn}
+                type="submit"
+                color="success"
+              >
                 Inscription
               </Button>
             </Grid>

@@ -45,7 +45,7 @@ export class UserResolver {
     //custom error if user already exists
     const existingUser = await User.findOneBy({ email: data.email });
     if (existingUser) {
-      throw new Error(`User already exists`);
+      throw new Error(`Existing user`);
     }
 
     //create new user with hashed password
