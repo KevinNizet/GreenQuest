@@ -18,21 +18,28 @@ export class User extends BaseEntity {
   id!: number;
 
   @Column()
-  @Length(3, 50)
+  @Length(3, 50, {
+    message: "Firstname length",
+  })
   @Field()
   firstname!: string;
 
   @Column()
-  @Length(3, 50)
+  @Length(3, 50, { message: "Lastname length" })
   @Field()
   lastname!: string;
 
   @Column()
-  @Length(3, 50)
+  @Length(3, 50, {
+    message: "Username length",
+  })
   @Field()
   nickname!: string;
 
-  @Column({ length: 150, unique: true })
+  @Column({
+    length: 150,
+    unique: true,
+  })
   @Field()
   @IsEmail()
   email!: string;
@@ -77,7 +84,9 @@ export class UserCreateInput {
   email!: string;
 
   @Field()
-  @Matches(/^.{8,50}$/)
+  @Matches(/^.{8,50}$/, {
+    message: "Password length",
+  })
   password!: string;
 }
 
