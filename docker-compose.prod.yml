@@ -2,11 +2,11 @@ services:
   backend:
     image: laurejanin/greenquest-backend:latest
     environment:
-      - DB_USERNAME="username"
-      - DB_PASSWORD="password"
-      - DB_DATABASE="dbname"
-      - DB_HOST="database"
-      - JWT_SECRET="secret"
+      - DB_USERNAME=username
+      - DB_PASSWORD=password
+      - DB_DATABASE=dbname
+      - DB_HOST=database
+      - JWT_SECRET=secret
   database:
     image: postgres
     # restart: always
@@ -15,9 +15,9 @@ services:
     volumes:
       - /var/lib/postgresql/data
     environment:
-      - POSTGRES_USER="username"
-      - POSTGRES_PASSWORD="password"
-      - POSTGRES_DB="dbname"
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=dbname
   frontend:
     image: laurejanin/greenquest-frontend:latest
   nginx:
