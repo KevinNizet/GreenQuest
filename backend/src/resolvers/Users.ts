@@ -29,10 +29,12 @@ export class UserResolver {
     return users;
   }
   // return one user
+  // return one user
   @Query(() => User, { nullable: true })
   async user(@Arg("id", () => ID) id: number): Promise<User | null> {
     const user = await User.findOne({
       where: { id: id },
+      select: ["id", "firstname", "lastname", "nickname", "email"],
     });
     return user;
   }
