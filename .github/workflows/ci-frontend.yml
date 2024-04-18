@@ -39,7 +39,7 @@ jobs:
   docker:
     # needs: [test-front, has-changes]
     # if: ${{ github.base_ref == 'dev' && needs.has-changes.outputs.has-changes == 'true' }}
-    needs: test-front
+    # needs: test-front
     if: github.base_ref == 'dev'
     runs-on: ubuntu-latest
     steps:
