@@ -37,8 +37,6 @@ jobs:
         run: cd frontend && npm i && npm test
 
   docker:
-    # needs: [test-front, has-changes]
-    # if: ${{ github.base_ref == 'dev' && needs.has-changes.outputs.has-changes == 'true' }}
     needs: test-front
     if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
