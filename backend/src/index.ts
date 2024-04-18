@@ -50,10 +50,8 @@ async function start() {
   );
 
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
-  console.log(`🚀🚀🚀 Backend ready at http://localhost:${port}/ 🚀🚀🚀`);
-  console.log(
-    `🚀🚀🚀 Frontend is running at : ${process.env.FRONT_URL} 🚀🚀🚀`
-  );
+  console.log(`🚀🚀 Backend ready at http://localhost:${port}/ 🚀🚀`);
+  console.log(`🚀🚀 Frontend is running at : ${process.env.FRONT_URL} 🚀🚀`);
 }
 
 start();
