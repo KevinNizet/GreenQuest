@@ -5,6 +5,7 @@ export const queryMySelf = gql`
     item: mySelf {
       id
       email
+      nickname
     }
   }
 `;
