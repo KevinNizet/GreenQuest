@@ -53,7 +53,8 @@ export default function BasicModal({
 
   const handleLoginClick = () => {
     handleClose();
-    handleSwitchPosition(true); // Appeler la fonction pour réinitialiser le Switch
+    handleSwitchPosition(true);
+    setAuth(true);
   };
 
   console.log("auth in modal:", auth);

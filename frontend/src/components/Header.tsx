@@ -29,6 +29,7 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const { loading, data } = useQuery<{ item: userType }>(queryMySelf);
+
   const me = data?.item;
 
   useEffect(() => {
@@ -46,6 +47,18 @@ const Header = () => {
       console.log("Utilisateur déconnecté !");
     }
   }, [auth]);
+
+  if (loading)
+    return (
+      <div
+        style={{
+          textAlign: "center",
+          height: "75px",
+        }}
+      >
+        Loading...
+      </div>
+    );
 
   const handleCloseModal = () => {
     setModalOpen(false);

@@ -75,8 +75,7 @@ const Signup = () => {
               style={{
                 width: "720px",
                 height: "auto",
-                marginBottom: "80px",
-                marginTop: "100px",
+                marginBottom: "50px",
               }}
             />
           </Grid>
