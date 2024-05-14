@@ -6,6 +6,8 @@ export const queryMySelf = gql`
       id
       email
       nickname
+      firstname
+      lastname
     }
   }
 `;

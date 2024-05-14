@@ -7,7 +7,11 @@ export const mutationUpdateUser = gql`
     $nickname: String!
   ) {
     updateUser(
-      data: { firstname: $firstname, lastname: $lastname, nickname: $nickname }
+      data: {
+        firstname: $firstname
+        lastname: $lastname
+        nickname: $nickname
+      }
     ) {
       id
     }
