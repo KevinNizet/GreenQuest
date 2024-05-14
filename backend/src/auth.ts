@@ -11,16 +11,13 @@ export type ContextType = {
 
 // stock jwt token into cookies
 
-export const customAuthChecker: AuthChecker<ContextType> = async (
-  { root, args, context, info },
-  roles
-) => {
-  const cookies = new Cookies(context.req, context.res);
+export async function getUserFromReq(req: any, res: any): Promise<User | null> {
+  const cookies = new Cookies(req, res);
   const token = cookies.get("token");
 
   if (!token) {
     console.error("missing token");
-    return false;
+    return null;
   }
 
   try {
@@ -29,18 +26,31 @@ export const customAuthChecker: AuthChecker<ContextType> = async (
       const user = await User.findOneBy({ id: payload.userId });
 
       if (user !== null) {
-        context.user = user;
-        return true;
+        return Object.assign(user, { hashedPassword: undefined });
       } else {
-        console.error("user not found!");
-        return false;
+        console.error("user not found");
+        return null;
       }
     } else {
-      console.error("missing token, missing userId");
-      return false;
+      console.error("invalid token, msising userid");
+      return null;
     }
   } catch {
     console.error("invalid token");
+    return null;
+  }
+}
+
+export const customAuthChecker: AuthChecker<ContextType> = async (
+  { root, args, context, info },
+  roles
+) => {
+  const connectedUser = await getUserFromReq(context.req, context.res);
+
+  if (connectedUser) {
+    context.user = connectedUser;
+    return true;
+  } else {
     return false;
   }
 };

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { signup } from "@/graphql/signup";
+import { signup } from "@/graphql/mutationSignup";
 import { useMutation } from "@apollo/client";
 
 const Signup = () => {
@@ -22,7 +22,6 @@ const Signup = () => {
 
   const [doSignup] = useMutation(signup);
 
-  // Password visibility
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -57,6 +56,7 @@ const Signup = () => {
       }
     }
   };
+
   return (
     <Layout title="signup">
       <form
@@ -236,12 +236,7 @@ const Signup = () => {
               />
             </Grid>
             <Grid item container justifyContent="center">
-              <Button
-                variant="contained"
-                // onClick={handleSignIn}
-                type="submit"
-                color="success"
-              >
+              <Button variant="contained" type="submit" color="success">
                 Inscription
               </Button>
             </Grid>

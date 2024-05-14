@@ -16,7 +16,7 @@ import {
 import { validate } from "class-validator";
 import Cookies from "cookies";
 import jwt from "jsonwebtoken";
-import { ContextType } from "../auth";
+import { ContextType, getUserFromReq } from "../auth";
 
 const argon2 = require("argon2");
 
@@ -71,10 +71,10 @@ export class UserResolver {
   }
 
   // query to get self profile
-  @Authorized()
+
   @Query(() => User, { nullable: true })
   async mySelf(@Ctx() context: ContextType): Promise<User | null> {
-    return context.user as User;
+    return getUserFromReq(context.req, context.res);
   }
   // query de Màj des data utilisateur
   @Authorized()
