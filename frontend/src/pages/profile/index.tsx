@@ -18,7 +18,7 @@ interface UserType {
 
 export default function Profile(): React.ReactNode {
   const { loading, error, data } = useQuery(queryUser, {
-    variables: { userId: user.id },
+    // variables: { userId: user.id },
   });
 
   if (loading) return <p>Chargement...</p>;

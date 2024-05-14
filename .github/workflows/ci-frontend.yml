@@ -1,6 +1,6 @@
 name: jest-and-docker-frontend
 
-on: 
+on:
   push:
 
 jobs:
@@ -18,14 +18,14 @@ jobs:
         id: check-changes
         uses: dorny/paths-filter@v3
         with:
-          base:  ${{ github.ref }}
+          base: ${{ github.ref }}
           filters: |
             frontend:
               - 'frontend/**'
       - name: Inspect has-changes output
         run: |
           echo "has-changes: ${{ steps.check-changes.outputs.frontend }}"
-  
+
   test-front:
     needs: has-changes
     runs-on: ubuntu-latest
@@ -37,8 +37,8 @@ jobs:
         run: cd frontend && npm i && npm test
 
   docker:
-    needs: [test-front, has-changes]
-    if: ${{ github.base_ref == 'main' && needs.has-changes.outputs.has-changes == 'true' }} 
+    needs: test-front
+    if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -56,4 +56,3 @@ jobs:
           push: true
           context: "{{defaultContext}}:frontend"
           tags: ${{ secrets.DOCKERHUB_REPO_FRONTEND }}:latest, ${{ secrets.DOCKERHUB_REPO_FRONTEND }}:${{ github.sha }}
-

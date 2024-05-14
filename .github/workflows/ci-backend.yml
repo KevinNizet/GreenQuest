@@ -18,7 +18,7 @@ jobs:
         id: check-changes
         uses: dorny/paths-filter@v3
         with:
-          base:  ${{ github.ref }}
+          base: ${{ github.ref }}
           filters: |
             backend:
               - 'backend/**'
@@ -35,11 +35,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Goto backend and run tests
         run: cd backend && npm i && npm test
-        
 
   docker:
-    needs: [test-back, has-changes] 
-    if: ${{ github.base_ref == 'main' && needs.has-changes.outputs.has-changes == 'true' }} 
+    needs: test-back
+    if: github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU

@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <>
       <Layout title="Home">
-        <h1>Coucou GreenQuest!!</h1>
+        <h2>GreenQuest forever!!</h2>
       </Layout>
     </>
   );

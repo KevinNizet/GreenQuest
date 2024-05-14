@@ -52,7 +52,7 @@ export class UserResolver {
     //custom error if user already exists
     const existingUser = await User.findOneBy({ email: data.email });
     if (existingUser) {
-      throw new Error(`User already exists`);
+      throw new Error(`Existing user`);
     }
 
     //create new user with hashed password
@@ -74,7 +74,7 @@ export class UserResolver {
   @Authorized()
   @Query(() => User, { nullable: true })
   async mySelf(@Ctx() context: ContextType): Promise<User | null> {
-    return context.req, context.res;
+    return context.user as User;
   }
   // query de Màj des data utilisateur
   @Authorized()
@@ -196,5 +196,16 @@ export class UserResolver {
       console.log(existingUser, "user does not exists");
       return null;
     }
+  }
+
+  @Mutation(() => Boolean)
+  async signout(@Ctx() context: ContextType): Promise<Boolean> {
+    const cookies = new Cookies(context.req, context.res);
+    cookies.set("token", "", {
+      httpOnly: true,
+      secure: false,
+      maxAge: 0,
+    });
+    return true;
   }
 }
