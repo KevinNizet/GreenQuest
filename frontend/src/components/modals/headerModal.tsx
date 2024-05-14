@@ -8,6 +8,7 @@ import { signout } from "@/graphql/signout";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { useRouter } from "next/router";
 import { Stack } from "@mui/material";
+import { userType } from "../Header";
 
 const style = {
   position: "absolute" as "absolute",
@@ -23,41 +24,38 @@ const style = {
 
 type modalsType = {
   modalOpen: boolean;
-  auth: boolean;
+  me: userType;
   handleClose: () => void;
-  setAuth: (newvalue: boolean) => void;
-  handleSwitchPosition: (newvalue: boolean) => void;
 };
 
-export default function BasicModal({
-  modalOpen,
-  auth,
-  setAuth,
-  handleClose,
-  handleSwitchPosition,
-}: modalsType) {
+export default function BasicModal({ modalOpen, me, handleClose }: modalsType) {
   const router = useRouter();
   const ApolloClient = useApolloClient();
+
+  const logout = async () => {
+    try {
+      await doSignout();
+      ApolloClient.resetStore();
+      router.replace("/");
+      handleClose();
+    } catch (error) {
+      console.error(
+        "Une erreur s'est produite lors de la déconnexion :",
+        error
+      );
+      // Ajoutez ici le code pour traiter l'erreur, par exemple afficher un message à l'utilisateur
+    }
+  };
 
   const [doSignout] = useMutation(signout, {
     refetchQueries: [queryMySelf],
   });
 
-  const logout = () => {
-    doSignout();
-    setAuth(false);
-    ApolloClient.resetStore();
-    router.replace("/");
-    handleClose();
-  };
-
   const handleLoginClick = () => {
     handleClose();
-    handleSwitchPosition(true);
-    setAuth(true);
+    router.push("/signin");
   };
 
-  console.log("auth in modal:", auth);
   return (
     <div>
       <Modal
@@ -67,20 +65,34 @@ export default function BasicModal({
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Voulez vous vraiment vous déconnecter?
+            {me
+              ? "Voulez-vous vraiment vous déconnecter?"
+              : "Veuillez vous connecter."}
           </Typography>
           <Stack direction="row" spacing={2}>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <Button variant="contained" onClick={logout} sx={{ mt: 2 }}>
-                Oui
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handleLoginClick}
-                sx={{ mt: 2, ml: 3 }}
-              >
-                Non
-              </Button>
+              {me ? (
+                <>
+                  <Button variant="contained" onClick={logout} sx={{ mt: 2 }}>
+                    Oui
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleClose}
+                    sx={{ mt: 2, ml: 3 }}
+                  >
+                    Non
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant="contained"
+                  onClick={handleLoginClick}
+                  sx={{ mt: 2 }}
+                >
+                  Connexion
+                </Button>
+              )}
             </Typography>
           </Stack>
         </Box>

@@ -16,8 +16,9 @@ import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import BasicModal from "./modals/headerModal";
+import Link from "next/link";
 
-type userType = {
+export type userType = {
   id: number;
   email: string;
   nickname: string;
@@ -25,28 +26,30 @@ type userType = {
 
 const Header = () => {
   const router = useRouter();
-  const [auth, setAuth] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const { loading, data } = useQuery<{ item: userType }>(queryMySelf);
+
+  const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
 
   const me = data?.item;
 
-  useEffect(() => {
-    if (me) {
-      setAuth(true);
-    } else {
-      setAuth(false);
-    }
-  }, [me]);
+  console.log(me, "console.log me");
 
-  useEffect(() => {
-    if (auth) {
-      console.log("Utilisateur connecté !");
-    } else {
-      console.log("Utilisateur déconnecté !");
-    }
-  }, [auth]);
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleChange = () => {
+    setModalOpen(true);
+  };
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   if (loading)
     return (
@@ -59,26 +62,6 @@ const Header = () => {
         Loading...
       </div>
     );
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setModalOpen(true);
-  };
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSwitchPosition = (open: boolean) => {
-    setAuth(open);
-  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -166,16 +149,31 @@ const Header = () => {
                   onClose={handleClose}
                   sx={{ marginTop: "1.3rem" }}
                 >
-                  <MenuItem onClick={handleClose}>Profile</MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <a
-                      href={`/questtunnel`}
+                    <Link
+                      href="/userprofile"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      Profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Link
+                      href="/questtunnel"
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       Ajouter une quête
-                    </a>
+                    </Link>
                   </MenuItem>
-                  <MenuItem onClick={handleClose}>My account</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    {" "}
+                    <Link
+                      href="/"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      Tableau de bord
+                    </Link>
+                  </MenuItem>
                 </Menu>
               </div>
               <Typography
@@ -185,29 +183,17 @@ const Header = () => {
               >
                 {me.nickname}
               </Typography>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      sx={{
-                        "& .MuiSwitch-sizeMedium": {
-                          width: "10rem",
-                        },
-                      }}
-                      checked={modalOpen}
-                      onChange={handleChange}
-                      aria-label="login switch"
-                    />
-                  }
-                  label={auth ? "Logout" : "Login"}
-                />
-              </FormGroup>
+              <Button
+                onClick={handleChange}
+                color={"success"}
+                variant="contained"
+              >
+                {me ? "Logout" : "Login"}
+              </Button>
               <BasicModal
                 modalOpen={modalOpen}
                 handleClose={handleCloseModal}
-                auth={auth}
-                setAuth={setAuth}
-                handleSwitchPosition={handleSwitchPosition}
+                me={me}
               />
             </>
           )}
