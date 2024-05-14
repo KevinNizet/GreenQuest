@@ -30,13 +30,13 @@ export default function Profile(): React.ReactNode {
       <main className="main-content">
         <p>Page de profil</p>
         {users.map((user: UserType) => (
-          <div key={user.id}>
-            <p>Mon adresse mail est : {user.email}</p>
-            <p>Mon prénom : {user.firstname}</p>
-            <p>Mon nom de famille : {user.lastname}</p>
-            <p>Mon pseudo : {user.nickname}</p>
-          </div>
-        ))}
+            <div key={user.id}>
+              <p>Mon adresse mail est : {user.email}</p>
+              <p>Mon prénom : {user.firstname}</p>
+              <p>Mon nom de famille : {user.lastname}</p>
+              <p>Mon pseudo : {user.nickname}</p>
+            </div>
+          ))}
       </main>
     </Layout>
   );

@@ -12,12 +12,12 @@ const Signup = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorConfirmPassword, setErrorConfirmPassword] = useState(false);
-  const [firstname, setFirstname] = useState("edward");
-  const [lastname, setLastname] = useState("Elric");
-  const [nickname, setNickname] = useState("fullmetal alchemist");
-  const [email, setEmail] = useState("fullmetal@gmail.com");
-  const [password, setPassword] = useState("Alphonse");
-  const [confirmPassword, setConfirmPassword] = useState("Alphonse");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
 
   const [doSignup] = useMutation(signup);
@@ -75,8 +75,7 @@ const Signup = () => {
               style={{
                 width: "720px",
                 height: "auto",
-                marginBottom: "80px",
-                marginTop: "100px",
+                marginBottom: "50px",
               }}
             />
           </Grid>
