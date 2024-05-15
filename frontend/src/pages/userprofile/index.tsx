@@ -18,6 +18,9 @@ export default function Profile(): React.ReactNode {
   const [updateUser] = useMutation(mutationUpdateUser);
   const [editable, setEditable] = useState(false);
   const [editableFields, setEditableFields] = useState<UserType | null>(null);
+  const [firstnameError, setFirstNameError] = useState(false);
+  const [lastNameError, setLastNameError] = useState(false);
+  const [nicknameError, setNicknameError] = useState(false);
   const [toastOpen, setToastOpen] = React.useState({
     open: false,
     vertical: "top",
@@ -46,6 +49,14 @@ export default function Profile(): React.ReactNode {
   const handleUpdateProfile = () => {
     if (editableFields) {
       const { firstname, lastname, nickname } = editableFields;
+      // Gestion des erreurs sur chacun des champs avant la màj
+      const isFirstNameValid = validateFirstName(firstname);
+      const isLastNameValid = validateLastName(lastname);
+      const isNicknameValid = validNickName(nickname);
+
+      if (!isFirstNameValid || !isLastNameValid || !isNicknameValid) {
+        return;
+      }
       updateUser({
         variables: {
           firstname,
@@ -60,13 +71,30 @@ export default function Profile(): React.ReactNode {
           setToastOpen({ ...toastOpen, open: true });
         })
         .catch((error) => {
-          setToastMessage(
-            "Une erreur est survenue lors de la mise à jour de ton profil 😔 "
-          );
+          setToastMessage("Une erreur est survenue 😔 ");
           setToastOpen({ ...toastOpen, open: true });
         });
       setEditable(false);
     }
+  };
+
+  // Vérifie que les champs ne sont pas vides
+  const validateFirstName = (value: string) => {
+    const isValid = value.trim() !== "";
+    setFirstNameError(!isValid);
+    return isValid;
+  };
+
+  const validateLastName = (value: string) => {
+    const isValid = value.trim() !== "";
+    setLastNameError(!isValid);
+    return isValid;
+  };
+
+  const validNickName = (value: string) => {
+    const isValid = value.trim() !== "";
+    setNicknameError(!isValid);
+    return isValid;
   };
 
   return (
@@ -90,59 +118,62 @@ export default function Profile(): React.ReactNode {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <Paper>
-              <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
-                Pseudo
-              </Typography>
-              <TextField
-                variant="outlined"
-                sx={{ pl: 1, pb: 1 }}
-                value={
-                  editable
-                    ? editableFields?.nickname || me?.nickname || ""
-                    : me?.nickname || ""
-                }
-                onChange={(e) => handleFieldChange("nickname", e.target.value)}
-                disabled={!editable}
-              />
-            </Paper>
+          <Grid item xs={12}>
+            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
+              Pseudo
+            </Typography>
+            <TextField
+              variant="outlined"
+              autoComplete="off"
+              sx={{ width: "100%" }}
+              value={
+                editable
+                  ? (editableFields && editableFields.nickname) || ""
+                  : (me && me.nickname) || ""
+              }
+              onChange={(e) => handleFieldChange("nickname", e.target.value)}
+              disabled={!editable}
+              error={nicknameError}
+              helperText={nicknameError ? "Renseigner un pseudo valide" : ""}
+            />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Paper>
-              <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
-                Prénom
-              </Typography>
-              <TextField
-                variant="outlined"
-                sx={{ pl: 1, pb: 1 }}
-                value={
-                  editable
-                    ? editableFields?.firstname || me?.firstname || ""
-                    : me?.firstname || ""
-                }
-                onChange={(e) => handleFieldChange("firstname", e.target.value)}
-                disabled={!editable}
-              />
-            </Paper>
+          <Grid item xs={12}>
+            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
+              Prénom
+            </Typography>
+            <TextField
+              variant="outlined"
+              sx={{ width: "100%" }}
+              autoComplete="off"
+              value={
+                editable
+                  ? (editableFields && editableFields.firstname) || ""
+                  : (me && me.firstname) || ""
+              }
+              onChange={(e) => handleFieldChange("firstname", e.target.value)}
+              disabled={!editable}
+              error={firstnameError}
+              helperText={firstnameError ? "Renseigner un prénom valide" : ""}
+            />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Paper>
-              <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
-                Nom
-              </Typography>
-              <TextField
-                variant="outlined"
-                sx={{ pl: 1, pb: 1 }}
-                value={
-                  editable
-                    ? editableFields?.lastname || me?.lastname || ""
-                    : me?.lastname || ""
-                }
-                onChange={(e) => handleFieldChange("lastname", e.target.value)}
-                disabled={!editable}
-              />
-            </Paper>
+          <Grid item xs={12}>
+            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
+              Nom
+            </Typography>
+            <TextField
+              variant="outlined"
+              autoComplete="off"
+              sx={{ width: "100%" }}
+              value={
+                editable
+                  ? (editableFields && editableFields.lastname) || ""
+                  : (me && me.lastname) || ""
+              }
+              onChange={(e) => handleFieldChange("lastname", e.target.value)}
+              disabled={!editable}
+              error={lastNameError}
+              helperText={lastNameError ? "Renseigner un nom valide" : ""}
+            />
           </Grid>
           <Grid item xs={12} container justifyContent="flex-end" marginTop={5}>
             {editable ? (
@@ -159,7 +190,7 @@ export default function Profile(): React.ReactNode {
                 variant="contained"
                 onClick={() => {
                   setEditable(true);
-                  setEditableFields(me);
+                  setEditableFields({ ...me }); // Met à jour editableFields avec les valeurs actuelles de me
                 }}
               >
                 Modifier
