@@ -13,7 +13,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Mission } from "./Mission";
-import { ObjectID } from "./ObjectId";
 
 export enum Difficulty {
   EASY = "EASY",
@@ -59,6 +58,10 @@ export class Quest extends BaseEntity {
   @ManyToMany(() => Mission, (mission) => mission.quests)
   @Field(() => [Mission], { nullable: true })
   missions!: Mission[];
+
+  @Column()
+  @Field({ nullable: true })
+  code!: number;
 }
 
 @InputType()
@@ -80,4 +83,7 @@ export class QuestCreateInput {
 
   @Field(() => [ID], { nullable: true })
   missions: number[];
+
+  @Field({ nullable: true })
+  code!: number;
 }

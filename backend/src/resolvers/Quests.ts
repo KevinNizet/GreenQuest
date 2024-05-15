@@ -49,6 +49,13 @@ export class QuestResolver {
       newQuest.missions = missions;
     }
 
+    let uniqueCode: number;
+    do {
+      uniqueCode = Math.floor(100000 + Math.random() * 900000);
+    } while (await Quest.findOne({ where: { code: uniqueCode } }));
+
+    newQuest.code = uniqueCode;
+
     await newQuest.save();
 
     return newQuest;
