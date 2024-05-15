@@ -5,6 +5,7 @@ import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { signup } from "@/graphql/mutationSignup";
 import { useMutation } from "@apollo/client";
+import Image from "next/image";
 
 const Signup = () => {
   // Form states
@@ -69,13 +70,15 @@ const Signup = () => {
       >
         <Grid container direction="column" spacing={2} sx={{ width: "70%" }}>
           <Grid item container justifyContent="center">
-            <img
+            <Image
               src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              alt="Description de l'image"
+              width={1000}
+              height={400}
+              fill={false}
+              alt="Picture of the author"
               style={{
-                width: "720px",
-                height: "auto",
                 marginBottom: "50px",
+                objectFit: "cover",
               }}
             />
           </Grid>
