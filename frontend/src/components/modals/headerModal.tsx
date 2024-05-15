@@ -32,6 +32,10 @@ export default function BasicModal({ modalOpen, me, handleClose }: modalsType) {
   const router = useRouter();
   const ApolloClient = useApolloClient();
 
+  const [doSignout] = useMutation(signout, {
+    refetchQueries: [queryMySelf],
+  });
+
   const logout = async () => {
     try {
       await doSignout();
@@ -43,13 +47,8 @@ export default function BasicModal({ modalOpen, me, handleClose }: modalsType) {
         "Une erreur s'est produite lors de la déconnexion :",
         error
       );
-      // Ajoutez ici le code pour traiter l'erreur, par exemple afficher un message à l'utilisateur
     }
   };
-
-  const [doSignout] = useMutation(signout, {
-    refetchQueries: [queryMySelf],
-  });
 
   const handleLoginClick = () => {
     handleClose();

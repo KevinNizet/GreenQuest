@@ -5,9 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { queryMySelf } from "@/graphql/queryMySelf";
@@ -31,7 +28,15 @@ const Header = () => {
 
   const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
 
-  const me = data?.item;
+  const me = data && data?.item;
+
+  useEffect(() => {
+    if (data) {
+      console.log("connecté");
+    } else {
+      console.log("non connecté");
+    }
+  }, [data]);
 
   console.log(me, "console.log me");
 

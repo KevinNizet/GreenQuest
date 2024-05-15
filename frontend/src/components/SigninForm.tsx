@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client";
 import { mutationSignin } from "@/graphql/mutationSignin";
 import { useRouter } from "next/router";
 import theme from "@/styles/theme";
+import { queryMySelf } from "@/graphql/queryMySelf";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +18,9 @@ const Signin = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const [doSignin] = useMutation(mutationSignin);
+  const [doSignin] = useMutation(mutationSignin, {
+    refetchQueries: [queryMySelf],
+  });
 
   async function handleSignIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
