@@ -76,6 +76,7 @@ export class UserResolver {
   async mySelf(@Ctx() context: ContextType): Promise<User | null> {
     return getUserFromReq(context.req, context.res);
   }
+
   // query de Màj des data utilisateur
   @Authorized()
   @Mutation(() => User)
