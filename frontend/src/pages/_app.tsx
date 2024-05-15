@@ -36,7 +36,7 @@ function App({ Component, pageProps }: AppProps) {
     <ApolloProvider client={client}>
       <QuestProvider>
         <ThemeProvider theme={theme}>
-          <Component {...pageProps} />;
+          <Component {...pageProps} />
         </ThemeProvider>
       </QuestProvider>
     </ApolloProvider>

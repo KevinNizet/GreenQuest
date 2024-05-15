@@ -34,6 +34,11 @@ h1 {
   font-style: normal;
   color: #545454;
 }
+
+p {
+  color: #444343;
+}
+
 .textfield-outline-shadow {
   box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.1) inset;
 }
