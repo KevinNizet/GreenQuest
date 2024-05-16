@@ -39,7 +39,7 @@ const Signin = () => {
 
         if (data?.signin) {
           console.log("credentials ok");
-          router.replace("/");
+          router.replace("/dashboard");
           console.log("redirection");
         } else {
           setFailedConnexion(true);
