@@ -171,7 +171,7 @@ const Header = () => {
                   <MenuItem onClick={handleClose}>
                     {" "}
                     <Link
-                      href="/"
+                      href="/dashboard"
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       Tableau de bord

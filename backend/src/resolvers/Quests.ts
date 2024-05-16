@@ -28,6 +28,40 @@ export class QuestResolver {
     return quest;
   }
 
+  @Query(() => [Quest])
+  async getQuestByUser(
+    @Arg("userId", () => ID) userId: number
+  ): Promise<Quest[]> {
+    const quest = await Quest.find({
+      where: {
+        users: {
+          id: userId,
+        },
+      },
+      relations: { missions: true, users: true },
+    });
+    if (!quest) {
+      throw new Error("Pas de quête liée à cette 'id'");
+    }
+    console.log(quest, "  backend");
+    return quest;
+  }
+
+  @Query(() => [Quest])
+  async getQuestByCode(
+    @Arg("code", () => Number) code: number
+  ): Promise<Quest[]> {
+    const quest = await Quest.find({
+      where: { code },
+      relations: { missions: true, users: true },
+    });
+    if (!quest) {
+      throw new Error("Pas de quête liée à cette 'id'");
+    }
+    console.log(quest, " code backend");
+    return quest;
+  }
+
   // @Authorized() l'ajouter une fois que l'on aura modifié les tests backend.
   @Mutation(() => Quest)
   async createQuest(
