@@ -10,6 +10,10 @@ export const mutationCreateQuest = gql`
       missions {
         id
       }
+      code
+      users {
+        id
+      }
     }
   }
 `;
