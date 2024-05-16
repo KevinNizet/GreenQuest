@@ -51,7 +51,7 @@ export class Quest extends BaseEntity {
   duration!: number;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  @Field({ nullable: true })
+  @Field()
   createdAt!: Date;
 
   @Column({ type: "enum", enum: Difficulty, default: Difficulty.EASY })

@@ -1,25 +1,19 @@
 import { gql } from "@apollo/client";
 
 export const queryGetQuestByUser = gql`
-  query Query($getQuestByIdId: ID!) {
-    item: getQuestById(id: $getQuestByIdId) {
-      users {
-        id
-      }
+  query GetQuestByUser($userId: ID!) {
+    item: getQuestByUser(userId: $userId) {
       code
       createdAt
       description
       difficulty
       duration
       id
-      missions {
-        XPValue
-        createdAt
-        byDefault
-        description
-        difficulty
+      startDate
+      title
+      users {
         id
-        title
+        nickname
       }
     }
   }
