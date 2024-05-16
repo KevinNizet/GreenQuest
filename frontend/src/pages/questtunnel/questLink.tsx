@@ -1,10 +1,27 @@
 import Layout from "@/components/Layout";
 import { Grid, Typography, Button, Paper } from "@mui/material";
-
+import { useQuery } from "@apollo/client";
+import { queryGetQuestById } from "@/graphql/queryGetQuestById";
 import { useRouter } from "next/router";
 
-export default function QuestLink() {
+export default function QuestLink(): React.ReactNode {
   const router = useRouter();
+  const id = router.query.id as string;
+
+  const { data, error } = useQuery(queryGetQuestById, {
+    variables: { getQuestByIdId: id },
+    skip: id === undefined,
+  });
+
+  if (error) {
+    return <p>Erreur: {error.message}</p>;
+  }
+
+  if (!data) {
+    return <div>Chargement...</div>;
+  }
+
+  const code = data.getQuestById.code;
 
   const nothing = () => {
     router.push("/");
@@ -39,10 +56,10 @@ export default function QuestLink() {
           gap={3}
         >
           <Typography variant="h2" sx={{ fontSize: "1.5rem" }}>
-            Pour inviter vos amis, partager le lien ci-dessous
+            Pour inviter vos amis, partager le code ci-dessous
           </Typography>
           <Typography variant="h3" sx={{ fontSize: "1rem" }}>
-            Lien
+            {code}
           </Typography>
 
           <Button

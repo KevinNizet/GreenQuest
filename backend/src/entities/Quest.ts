@@ -94,6 +94,6 @@ export class QuestCreateInput {
   @Field({ nullable: true })
   code!: number;
 
-  @Field(() => [ObjectID], { nullable: true })
-  users!: ObjectID[];
+  @Field(() => [ID], { nullable: true })
+  users!: number[];
 }

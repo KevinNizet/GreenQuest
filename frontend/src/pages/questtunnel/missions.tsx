@@ -87,7 +87,7 @@ export default function Missions() {
         missions: missions,
       }));
 
-      await createQuest({
+      const response = await createQuest({
         variables: {
           data: {
             ...questInfo,
@@ -96,9 +96,11 @@ export default function Missions() {
         },
       });
 
+      const newlyCreatedQuestId = response.data.createQuest.id;
+
       sessionStorage.clear();
 
-      router.push("/questtunnel/questLink");
+      router.push(`/questtunnel/questLink?id=${newlyCreatedQuestId}`);
     } catch (err) {
       console.error("Error creating quest:", err);
     }
