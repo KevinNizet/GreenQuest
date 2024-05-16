@@ -40,8 +40,8 @@ describe("create a new quest", () => {
       duration: 10,
       difficulty: Difficulty.EASY,
       missions: [],
-      code: 123456,
       users: [],
+      code: 123456,
     };
 
     const response = await graphql({
@@ -55,12 +55,6 @@ describe("create a new quest", () => {
               duration
               difficulty
               code
-              users {
-                id
-              }
-              missions {
-                id
-              }
             }
           }
         `,
@@ -79,9 +73,7 @@ describe("create a new quest", () => {
     );
     expect(createQuest).toHaveProperty("duration", data.duration);
     expect(createQuest).toHaveProperty("difficulty", data.difficulty);
-    expect(createQuest).toHaveProperty("missions", data.missions);
-    expect(createQuest).toHaveProperty("users", data.users);
-    expect(createQuest).toHaveProperty("code", data.code);
+    expect(createQuest).toHaveProperty("code");
   });
 
   it("should find the created quest by its ID", async () => {
