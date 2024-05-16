@@ -15,8 +15,6 @@ export default function QuestTunnel() {
 
   const MIN_TITLE_LENGTH = 5;
 
-  console.log("user data:", data.item.id);
-
   const nextPage = () => {
     // Vérification du titre
     if (title.trim().length < MIN_TITLE_LENGTH) {

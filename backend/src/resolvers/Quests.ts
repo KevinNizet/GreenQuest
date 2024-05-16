@@ -62,7 +62,6 @@ export class QuestResolver {
     if (data.users && data.users.length > 0) {
       const users = await User.findByIds(data.users);
       newQuest.users = users;
-      console.log(users);
     }
 
     await newQuest.save();

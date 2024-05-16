@@ -15,7 +15,7 @@ export interface UserType {
 }
 
 export default function Profile(): React.ReactNode {
-  const { loading, error, data } = useQuery<{ item: UserType }>(queryMySelf);
+  const { loading, error, data } = useQuery(queryMySelf);
   const [updateUser] = useMutation(mutationUpdateUser);
   const [editable, setEditable] = useState(false);
   const [editableFields, setEditableFields] = useState<UserType | null>(null);
@@ -34,7 +34,7 @@ export default function Profile(): React.ReactNode {
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Erreur: {error.message}</p>;
 
-  const me: UserType | undefined = data?.item;
+  const me = data?.item;
 
   const handleFieldChange = (field: keyof UserType, value: string) => {
     if (editableFields) {

@@ -4,18 +4,24 @@ import { useQuery } from "@apollo/client";
 import { queryGetQuestById } from "@/graphql/queryGetQuestById";
 import { useRouter } from "next/router";
 
-export default function QuestLink() {
+export default function QuestLink(): React.ReactNode {
   const router = useRouter();
   const id = router.query.id as string;
 
-  const { data } = useQuery(queryGetQuestById, {
+  const { data, error } = useQuery(queryGetQuestById, {
     variables: { getQuestByIdId: id },
     skip: id === undefined,
   });
 
-  console.log("data quest", data);
+  if (error) {
+    return <p>Erreur: {error.message}</p>;
+  }
+
+  if (!data) {
+    return <div>Chargement...</div>;
+  }
+
   const code = data.getQuestById.code;
-  console.log(code);
 
   const nothing = () => {
     router.push("/");
