@@ -14,7 +14,7 @@ export class QuestResolver {
     return Quests;
   }
 
-  // @Authorized() l'ajouter une fois que l'on aura modifié les tests backend.
+  @Authorized()
   @Query(() => Quest)
   async getQuestById(@Arg("id", () => ID) id: number): Promise<Quest> {
     const quest = await Quest.findOne({
@@ -62,7 +62,7 @@ export class QuestResolver {
     return quest;
   }
 
-  // @Authorized() l'ajouter une fois que l'on aura modifié les tests backend.
+  @Authorized()
   @Mutation(() => Quest)
   async createQuest(
     @Arg("data", () => QuestCreateInput) data: QuestCreateInput

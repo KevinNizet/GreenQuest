@@ -1,14 +1,38 @@
 import { beforeAll, describe, expect, it } from "@jest/globals";
 import { QuestResolver } from "../src/resolvers/Quests";
 import { Difficulty, QuestCreateInput } from "../src/entities/Quest";
-import { buildSchema } from "type-graphql";
+import { AuthChecker, buildSchema } from "type-graphql";
 import { graphql } from "graphql";
 import { DataSource } from "typeorm";
 import { dataSourceOptions } from "../src/datasource";
 import { GraphQLSchema } from "graphql";
+import jwt from "jsonwebtoken";
+
+// Signer un jeton JWT avec l'ID de l'utilisateur
+function generateAuthToken(userId: string): string {
+  return jwt.sign({ userId }, "secret");
+}
+
+// Fonction pour vérifier si l'utilisateur est authentifié
+const customAuthChecker: AuthChecker<{ authToken: string }> = ({ context }) => {
+  const { authToken } = context;
+
+  if (!authToken) {
+    return false;
+  }
+
+  try {
+    const decodedToken = jwt.verify(authToken, "secret");
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 let dataSource: DataSource;
 let schema: GraphQLSchema;
+let authToken: string;
 
 beforeAll(async () => {
   dataSource = new DataSource({
@@ -26,7 +50,10 @@ beforeAll(async () => {
 
   schema = await buildSchema({
     resolvers: [QuestResolver],
+    authChecker: customAuthChecker,
   });
+
+  authToken = generateAuthToken("userId123");
 });
 
 describe("create a new quest", () => {
@@ -59,6 +86,7 @@ describe("create a new quest", () => {
           }
         `,
       variableValues: { data },
+      contextValue: { authToken },
     });
 
     const createQuest: any = response.data?.createQuest;
@@ -88,6 +116,7 @@ describe("create a new quest", () => {
           }
         `,
       variableValues: { Id: createdQuestId },
+      contextValue: { authToken },
     });
 
     const foundQuest = response.data?.getQuestById;
