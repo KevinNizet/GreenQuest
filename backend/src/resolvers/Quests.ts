@@ -2,13 +2,14 @@ import { validate } from "class-validator";
 import { Arg, Authorized, ID, Mutation, Query, Resolver } from "type-graphql";
 import { Quest, QuestCreateInput } from "../entities/Quest";
 import { Mission } from "../entities/Mission";
+import { User } from "../entities/User";
 
 @Resolver(Quest)
 export class QuestResolver {
   @Query(() => [Quest])
   async getQuests() {
     const Quests = await Quest.find({
-      relations: { missions: true },
+      relations: { missions: true, users: true },
     });
     return Quests;
   }
@@ -49,6 +50,19 @@ export class QuestResolver {
     if (data.missions && data.missions.length > 0) {
       const missions = await Mission.findByIds(data.missions);
       newQuest.missions = missions;
+    }
+
+    let uniqueCode: number;
+    do {
+      uniqueCode = Math.floor(100000 + Math.random() * 900000);
+    } while (await Quest.findOne({ where: { code: uniqueCode } }));
+
+    newQuest.code = uniqueCode;
+
+    if (data.users && data.users.length > 0) {
+      const users = await User.findByIds(data.users);
+      newQuest.users = users;
+      console.log(users);
     }
 
     await newQuest.save();

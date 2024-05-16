@@ -5,10 +5,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  OneToOne,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Quest } from "./Quest";
 
 @Entity()
 @ObjectType()
@@ -60,9 +61,10 @@ export class User extends BaseEntity {
   @Field()
   isPremium!: boolean;
 
-  // @OneToOne(() => Image)
-  // @JoinColumn()
-  // image: Image;
+  @ManyToMany(() => Quest, (Quest) => Quest.users)
+  @JoinTable()
+  @Field(() => [Quest], { nullable: true })
+  quests!: Quest[];
 }
 
 @InputType()
@@ -103,7 +105,6 @@ export class UserUpdateInput {
   @Field({ nullable: true })
   @Length(3, 50)
   nickname?: string;
-
 }
 
 @InputType()
@@ -114,4 +115,3 @@ export class ChangePasswordInput {
   @Field()
   newPassword: string;
 }
-
