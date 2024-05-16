@@ -6,15 +6,16 @@ import { mutationUpdateUser } from "@/graphql/userProfileUpdate/mutationUpdateUs
 import { Button, Grid, Paper, Typography, TextField } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 
-interface UserType {
+export interface UserType {
   email: string;
   firstname: string;
   lastname: string;
   nickname: string;
+  id: number;
 }
 
 export default function Profile(): React.ReactNode {
-  const { loading, error, data } = useQuery(queryMySelf);
+  const { loading, error, data } = useQuery<{ item: UserType }>(queryMySelf);
   const [updateUser] = useMutation(mutationUpdateUser);
   const [editable, setEditable] = useState(false);
   const [editableFields, setEditableFields] = useState<UserType | null>(null);
@@ -33,7 +34,7 @@ export default function Profile(): React.ReactNode {
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Erreur: {error.message}</p>;
 
-  const me = data?.item;
+  const me: UserType | undefined = data?.item;
 
   const handleFieldChange = (field: keyof UserType, value: string) => {
     if (editableFields) {
@@ -113,7 +114,7 @@ export default function Profile(): React.ReactNode {
               gutterBottom
               sx={{ width: "90%", textAlign: "center", marginBottom: "50px" }}
             >
-              L'adresse email liée à ton compte est : {me.email} <br />
+              L'adresse email liée à ton compte est : {me?.email} <br />
               Si tu souhaites la modifier, contacte un administrateur.
             </Typography>
           </Grid>

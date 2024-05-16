@@ -3,14 +3,19 @@ import { Grid, Typography, TextField, Button, Paper } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useQuestContext } from "@/contexts/QuestContext";
+import { useQuery } from "@apollo/client";
+import { queryMySelf } from "@/graphql/queryMySelf";
 
 export default function QuestTunnel() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { setQuestInfo } = useQuestContext();
+  const { data } = useQuery(queryMySelf);
 
   const MIN_TITLE_LENGTH = 5;
+
+  console.log("user data:", data.item.id);
 
   const nextPage = () => {
     // Vérification du titre
@@ -20,6 +25,7 @@ export default function QuestTunnel() {
     setQuestInfo({
       title: title,
       description: description,
+      users: data.item.id,
     });
 
     router.push("/questtunnel/startDateAndDuration");

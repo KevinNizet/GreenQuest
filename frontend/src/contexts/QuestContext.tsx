@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { MissionType } from "@/pages/questtunnel/missions";
+import { UserType } from "@/pages/userprofile";
 
 export enum Difficulty {
   EASY = "EASY",
@@ -20,6 +21,7 @@ export interface QuestData {
   duration?: number | null;
   difficulty?: Difficulty | null;
   missions?: MissionType[];
+  users?: UserType[];
 }
 
 export interface QuestContextProps {
