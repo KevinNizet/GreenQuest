@@ -16,6 +16,7 @@ const Dashboard = () => {
 
   return (
     <Layout title="dashboard">
+      <Box></Box>
       <Box
         sx={{
           height: "10%",
@@ -46,7 +47,7 @@ const Dashboard = () => {
             Point d&apos;expérience :
           </Typography>
         </Box>
-        <Button variant="contained" href="/questtunnel">
+        <Button variant="contained" href="/questtunnel" sx={{ height: "70%" }}>
           Créer une quête
         </Button>
       </Box>
@@ -73,14 +74,25 @@ const Dashboard = () => {
       <Box
         sx={{
           width: "100%",
-          height: "65%",
+          height: "60%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        {value === 0 && <MissionsTab />}
-        {value === 1 && <QuestsTab />}
+        {value === 0 && <MissionsTab value={value} />}
+        {value === 1 && <QuestsTab value={value} />}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          height: "4%",
+        }}
+      >
+        <Button variant="contained" sx={{ width: "20%", fontSize: "18px" }}>
+          Valider
+        </Button>
       </Box>
     </Layout>
   );

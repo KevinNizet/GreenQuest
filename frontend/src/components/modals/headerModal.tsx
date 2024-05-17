@@ -28,7 +28,11 @@ type modalsType = {
   handleClose: () => void;
 };
 
-export default function BasicModal({ modalOpen, me, handleClose }: modalsType) {
+export default function HeaderModal({
+  modalOpen,
+  me,
+  handleClose,
+}: modalsType) {
   const router = useRouter();
   const ApolloClient = useApolloClient();
 
@@ -40,7 +44,6 @@ export default function BasicModal({ modalOpen, me, handleClose }: modalsType) {
     try {
       await doSignout();
       ApolloClient.resetStore();
-      router.replace("/");
       handleClose();
     } catch (error) {
       console.error(
@@ -52,7 +55,7 @@ export default function BasicModal({ modalOpen, me, handleClose }: modalsType) {
 
   const handleLoginClick = () => {
     handleClose();
-    router.push("/signin");
+    router.push("/");
   };
 
   return (

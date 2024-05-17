@@ -15,6 +15,10 @@ export const queryGetQuestByUser = gql`
         id
         nickname
       }
+      missions {
+        id
+        title
+      }
     }
   }
 `;

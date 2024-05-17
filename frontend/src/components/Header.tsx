@@ -12,8 +12,8 @@ import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import BasicModal from "./modals/headerModal";
 import Link from "next/link";
+import HeaderModal from "./modals/HeaderModal";
 
 export type userType = {
   id: number;
@@ -193,7 +193,7 @@ const Header = () => {
               >
                 {me ? "Logout" : "Login"}
               </Button>
-              <BasicModal
+              <HeaderModal
                 modalOpen={modalOpen}
                 handleClose={handleCloseModal}
                 me={me}

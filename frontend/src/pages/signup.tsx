@@ -77,7 +77,7 @@ const Signup = () => {
               fill={false}
               alt="Picture of the author"
               style={{
-                marginBottom: "50px",
+                marginBottom: "8%",
                 objectFit: "cover",
               }}
             />
@@ -100,7 +100,7 @@ const Signup = () => {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-              height: "60vh",
+              height: "50vh",
               justifyContent: "space-around",
               alignItems: "center",
               backgroundColor: "#ECEBF5",

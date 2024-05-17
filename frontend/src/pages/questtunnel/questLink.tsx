@@ -24,7 +24,7 @@ export default function QuestLink(): React.ReactNode {
   const code = data.getQuestById.code;
 
   const nothing = () => {
-    router.push("/");
+    router.push("/dashboard");
   };
 
   return (
