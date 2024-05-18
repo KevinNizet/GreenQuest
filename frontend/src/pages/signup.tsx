@@ -41,7 +41,6 @@ const Signup = () => {
         },
       });
       if (data.item) {
-        console.log("data part", data.item);
         router.replace("/signin");
       }
     } catch (error: any) {
