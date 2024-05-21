@@ -43,7 +43,6 @@ export class QuestResolver {
     if (!quest) {
       throw new Error("Pas de quête liée à cette 'id'");
     }
-    console.log(quest, "  backend");
     return quest;
   }
 
