@@ -1,15 +1,24 @@
 import { validate } from "class-validator";
-import { Arg, Authorized, ID, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Authorized,
+  Ctx,
+  ID,
+  Mutation,
+  Query,
+  Resolver,
+} from "type-graphql";
 import { Quest, QuestCreateInput } from "../entities/Quest";
 import { Mission } from "../entities/Mission";
 import { User } from "../entities/User";
+import { ContextType } from "../auth";
 
 @Resolver(Quest)
 export class QuestResolver {
   @Query(() => [Quest])
   async getQuests() {
     const Quests = await Quest.find({
-      relations: { missions: true, users: true },
+      relations: { missions: true, users: true, createdBy: true },
     });
     return Quests;
   }
@@ -19,9 +28,9 @@ export class QuestResolver {
   async getQuestById(@Arg("id", () => ID) id: number): Promise<Quest> {
     const quest = await Quest.findOne({
       where: { id },
-      relations: { missions: true },
+      relations: { missions: true, users: true, createdBy: true },
     });
-
+    console.log(quest);
     if (!quest) {
       throw new Error("Pas de quête liée à cette 'id'");
     }
@@ -38,10 +47,10 @@ export class QuestResolver {
           id: userId,
         },
       },
-      relations: { missions: true, users: true },
+      relations: { missions: true, users: true, createdBy: true },
     });
     if (!quest) {
-      throw new Error("Pas de quête liée à cette 'id'");
+      throw new Error("Pas de quête liée à cette 'userId'");
     }
     return quest;
   }
@@ -52,18 +61,18 @@ export class QuestResolver {
   ): Promise<Quest[]> {
     const quest = await Quest.find({
       where: { code },
-      relations: { missions: true, users: true },
+      relations: { missions: true, users: true, createdBy: true },
     });
     if (!quest) {
-      throw new Error("Pas de quête liée à cette 'id'");
+      throw new Error("Pas de quête liée à de 'code'");
     }
-    console.log(quest, " code backend");
     return quest;
   }
 
   @Authorized()
   @Mutation(() => Quest)
   async createQuest(
+    @Ctx() context: ContextType,
     @Arg("data", () => QuestCreateInput) data: QuestCreateInput
   ): Promise<Quest> {
     const newQuest = new Quest();
@@ -72,6 +81,14 @@ export class QuestResolver {
     newQuest.startDate = data.startDate;
     newQuest.duration = data.duration;
     newQuest.difficulty = data.difficulty;
+
+    const user = context.user;
+
+    if (!user) {
+      throw new Error("Unable to determine the current user.");
+    }
+
+    newQuest.createdBy = user;
 
     const errors = await validate(newQuest);
     if (errors.length > 0) {
@@ -98,6 +115,8 @@ export class QuestResolver {
     }
 
     await newQuest.save();
+
+    console.log(newQuest);
 
     return newQuest;
   }

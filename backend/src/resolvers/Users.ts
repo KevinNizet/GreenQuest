@@ -25,17 +25,22 @@ const argon2 = require("argon2");
 export class UserResolver {
   @Query(() => [User])
   async getUsers(): Promise<User[]> {
-    const users = await User.find();
+    const users = await User.find({
+      relations: { questsParticipated: true, questsCreated: true },
+    });
     return users;
   }
   // return one user
-  // return one user
   @Query(() => User, { nullable: true })
-  async user(@Arg("id", () => ID) id: number): Promise<User | null> {
+  async user(@Arg("id", () => ID) id: number): Promise<User> {
     const user = await User.findOne({
       where: { id: id },
       select: ["id", "firstname", "lastname", "nickname", "email"],
+      relations: { questsParticipated: true, questsCreated: true },
     });
+    if (!user) {
+      throw new Error("Pas de user lié à cette 'id'");
+    }
     return user;
   }
 
@@ -71,7 +76,6 @@ export class UserResolver {
   }
 
   // query to get self profile
-
   @Query(() => User, { nullable: true })
   async mySelf(@Ctx() context: ContextType): Promise<User | null> {
     return getUserFromReq(context.req, context.res);
@@ -82,7 +86,6 @@ export class UserResolver {
   @Mutation(() => User)
   async updateUser(
     @Arg("data", () => UserUpdateInput) data: UserUpdateInput,
-
     @Ctx() context: ContextType
   ): Promise<User> {
     // Extraction de l'identifiant de l'utilisateur à partir du contexte
@@ -178,8 +181,6 @@ export class UserResolver {
           },
           `${process.env.JWT_SECRET}`
         );
-
-        console.log(token);
 
         const cookies = new Cookies(context.req, context.res);
         cookies.set("token", token, {

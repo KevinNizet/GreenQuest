@@ -11,6 +11,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ObjectID } from "./ObjectId";
@@ -66,9 +67,13 @@ export class Quest extends BaseEntity {
   @Field({ nullable: true })
   code!: number;
 
-  @ManyToMany(() => User, (user) => user.quests)
+  @ManyToMany(() => User, (user) => user.questsParticipated)
   @Field(() => [User], { nullable: true })
   users!: User[];
+
+  @ManyToOne(() => User, (user) => user.questsCreated)
+  @Field(() => User, { nullable: true })
+  createdBy!: User;
 }
 
 @InputType()
