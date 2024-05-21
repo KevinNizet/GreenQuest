@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
-import HeaderModal from "./modals/HeaderModal";
+import HeaderModal from "./modals/headerModal";
 
 export type userType = {
   id: number;

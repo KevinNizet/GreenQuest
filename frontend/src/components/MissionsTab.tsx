@@ -27,9 +27,10 @@ const MissionsTab = (props: MissionTabProps) => {
       },
     }
   );
-  console.log(error);
 
   const quests = data && data.item;
+
+  console.log(quests);
 
   return (
     <Fade in={props.value === 0} timeout={450}>

@@ -7,6 +7,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Quest } from "./Quest";
@@ -57,14 +58,14 @@ export class User extends BaseEntity {
   @Field()
   isAdmin!: boolean;
 
-  @Column("boolean", { default: false })
-  @Field()
-  isPremium!: boolean;
-
   @ManyToMany(() => Quest, (Quest) => Quest.users)
   @JoinTable()
   @Field(() => [Quest], { nullable: true })
-  quests!: Quest[];
+  questsParticipated!: Quest[];
+
+  @OneToMany(() => Quest, (Quest) => Quest.createdBy)
+  @Field(() => [Quest], { nullable: true })
+  questsCreated!: Quest[];
 }
 
 @InputType()
