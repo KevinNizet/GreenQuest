@@ -120,4 +120,14 @@ export class QuestResolver {
 
     return newQuest;
   }
+
+  @Mutation(() => Quest, { nullable: true })
+  async deleteQuest(@Arg("id", () => ID) id: number): Promise<Quest | null> {
+    const ads = await Quest.findOne({ where: { id: id } });
+    if (ads) {
+      await ads.remove();
+      ads.id = id;
+    }
+    return ads;
+  }
 }

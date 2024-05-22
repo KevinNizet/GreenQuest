@@ -1,15 +1,21 @@
-import { Box, Checkbox, Fade, Typography } from "@mui/material";
-import React from "react";
+import { Box, Checkbox, Fade } from "@mui/material";
+import React, { useState } from "react";
+import { userType } from "./Header";
 import { useQuery } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
+import Pagination from "@mui/material/Pagination";
 import QuestDetailsModal from "./modals/QuestDetailsModal";
-import { userType } from "./Header";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+
+type QuestTabProps = {
+  value: number;
+};
 
 export type QuestType = {
   id: number;
   XPValue: number;
-  users: { id: number };
+  users: [{ id: number; nickname: string }];
   code: number;
   createdAt: Date;
   description: string;
@@ -19,20 +25,15 @@ export type QuestType = {
   title: string;
 };
 
-type QuestTabProps = {
-  value: number;
-};
-
 const QuestsTab = (props: QuestTabProps) => {
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedQuest, setSelectedQuest] = React.useState<QuestType | null>(
-    null
-  );
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedQuest, setSelectedQuest] = useState<QuestType | null>(null);
 
   const handleOpen = (quest: QuestType) => {
     setSelectedQuest(quest);
     setModalOpen(true);
   };
+
   const handleClose = () => setModalOpen(false);
 
   const {
@@ -54,70 +55,130 @@ const QuestsTab = (props: QuestTabProps) => {
 
   const quests = data && data.item;
 
+  console.log(quests);
+
+  const [page, setPage] = useState(1);
+  const questsPerPage = 4;
+
+  const totalPages = Math.ceil((quests?.length || 0) / questsPerPage);
+
+  const displayedQuests = quests?.slice(
+    (page - 1) * questsPerPage,
+    page * questsPerPage
+  );
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
   return (
-    <>
-      <Fade in={props.value === 1} timeout={450}>
+    <Fade in={props.value === 1} timeout={450}>
+      <Box
+        sx={{
+          width: "90%",
+          height: "90%",
+          backgroundColor: "#f1d6b8",
+          borderRadius: "30px",
+          boxShadow: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: 2,
+        }}
+      >
         <Box
           sx={{
-            width: "90%",
-            height: "90%",
-            backgroundColor: "#f1d6b8",
-            borderRadius: "30px",
-            boxShadow: 2,
-            marginTop: 0,
+            width: "100%",
+            flexGrow: 1,
             display: "flex",
-            justifyContent: "center",
             flexDirection: "column",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "10%",
           }}
         >
-          {quests &&
-            quests.map((quest) => (
-              <Box
-                key={quest.id}
-                sx={{
-                  backgroundColor: "lightgrey",
-                  width: "80%",
-                  height: "15%",
-                  display: "flex",
-                  padding: "1.5rem",
-                  borderRadius: "10px",
-                  boxShadow: 1,
-                }}
-              >
+          <Box
+            sx={{
+              width: "100%",
+              flexGrow: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "20px",
+            }}
+          >
+            {displayedQuests &&
+              displayedQuests.map((quest) => (
                 <Box
+                  key={quest.id}
                   sx={{
-                    width: "100%",
-                    height: "100%",
+                    backgroundColor: "lightgrey",
+                    width: "90%",
                     display: "flex",
-                    gap: "30%",
+                    padding: "1.5rem",
+                    borderRadius: "10px",
+                    boxShadow: 1,
+                    margin: "1rem 0 0 0",
                   }}
                 >
-                  <p
-                    style={{
-                      width: "80%",
-                      display: "flex",
+                  <Box
+                    sx={{
+                      width: "100%",
                       alignItems: "center",
-                      cursor: "pointer",
-                      fontSize: "20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      height: "60px",
                     }}
-                    onClick={() => handleOpen(quest)}
                   >
-                    {quest.title}
-                  </p>
-                  <Checkbox sx={{ "& .MuiSvgIcon-root": { fontSize: 40 } }} />
+                    <p
+                      style={{
+                        width: "80%",
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        fontSize: "20px",
+                      }}
+                      onClick={() => handleOpen(quest)}
+                    >
+                      {quest.title}
+                    </p>
+                    <HelpOutlineIcon
+                      sx={{
+                        color: "grey",
+                        fontSize: "35px",
+                        margin: "0 1rem 0 0",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleOpen(quest)}
+                    />
+                    <Checkbox
+                      color="secondary"
+                      sx={{ "& .MuiSvgIcon-root": { fontSize: 40 } }}
+                    />
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              ))}
+          </Box>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            sx={{ margin: "1rem 0" }}
+            size="large"
+            color="primary"
+            shape="rounded"
+          />
           <QuestDetailsModal
             handleClose={handleClose}
             modalOpen={modalOpen}
             quest={selectedQuest}
+            me={me}
           />
         </Box>
-      </Fade>
-    </>
+      </Box>
+    </Fade>
   );
 };
 
