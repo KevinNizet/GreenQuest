@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
-import HeaderModal from "./modals/headerModal";
+import HeaderModal from "./modals/HeaderModal";
 
 export type userType = {
   id: number;
@@ -71,7 +71,7 @@ const Header = () => {
       <AppBar
         position="static"
         sx={{
-          height: "15vh",
+          height: "12vh",
           display: "flex",
           justifyContent: "center",
           borderTopLeftRadius: "2.5rem",

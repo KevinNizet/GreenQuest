@@ -3,6 +3,16 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { QuestType } from "../QuestsTab";
+import { userType } from "../Header";
+import { Button } from "@mui/material";
+import { useMutation } from "@apollo/client";
+import { mutationDeleteQuest } from "@/graphql/mutationDeleteQuest";
+import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
+
+interface State extends SnackbarOrigin {
+  open: boolean;
+}
 
 const style = {
   position: "absolute" as "absolute",
@@ -20,13 +30,49 @@ type QuestDetailsModalType = {
   handleClose: () => void;
   modalOpen: boolean;
   quest: QuestType | null;
+  me: userType | undefined;
 };
 
 export default function BasicModal({
   handleClose,
   modalOpen,
   quest,
+  me,
 }: QuestDetailsModalType) {
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [state, setState] = React.useState<State>({
+    open: false,
+    vertical: "top",
+    horizontal: "center",
+  });
+
+  const { vertical, horizontal, open } = state;
+
+  const handleClick = (newState: SnackbarOrigin) => {
+    setState({ ...newState, open: true });
+  };
+
+  const handleCloseSnackbar = () => {
+    setState({ ...state, open: false });
+  };
+
+  const [deleteQuest] = useMutation(mutationDeleteQuest, {
+    variables: { deleteQuestId: quest?.id },
+    refetchQueries: [queryGetQuestByUser],
+    onCompleted: () => {
+      handleClick({ vertical: "top", horizontal: "right" });
+    },
+  });
+
+  const handleOpenConfirmModal = () => {
+    handleClose(); // Ferme la première modal
+    setConfirmOpen(true); // Ouvre la deuxième modal
+  };
+
+  const handleCloseConfirmModal = () => {
+    setConfirmOpen(false);
+  };
+
   return (
     <div>
       <Modal
@@ -46,8 +92,61 @@ export default function BasicModal({
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {quest?.XPValue}
           </Typography>
+          <>
+            {quest?.users.map((user) => {
+              return (
+                user.id === me?.id && (
+                  <Button
+                    key={user.id}
+                    sx={{ color: "red", fontSize: "20px" }}
+                    onClick={handleOpenConfirmModal}
+                  >
+                    Supprimer
+                  </Button>
+                )
+              );
+            })}
+          </>
         </Box>
       </Modal>
+      <Modal open={confirmOpen} onClose={handleCloseConfirmModal}>
+        <Box sx={style}>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }} variant="h6">
+            Vous êtes sûr de vouloir supprimer cette quête ?
+          </Typography>
+          <Button
+            sx={{ color: "red", fontSize: "20px", mt: 2 }}
+            onClick={() => {
+              deleteQuest();
+              handleCloseConfirmModal();
+            }}
+          >
+            Confirmer
+          </Button>
+          <Button
+            sx={{ fontSize: "20px", mt: 2 }}
+            onClick={handleCloseConfirmModal}
+          >
+            Annuler
+          </Button>
+        </Box>
+      </Modal>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={handleCloseSnackbar}
+        message={`La quête ${quest?.title} a été supprimée ✅`}
+        autoHideDuration={5000}
+        key={vertical + horizontal}
+        sx={{
+          "& .MuiSnackbarContent-root": {
+            backgroundColor: "white ",
+            color: "#DBAD42",
+            borderRadius: "10px",
+            fontSize: "15px",
+          },
+        }}
+      />
     </div>
   );
 }
