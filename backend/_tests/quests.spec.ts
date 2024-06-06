@@ -7,6 +7,12 @@ import { DataSource } from "typeorm";
 import { dataSourceOptions } from "../src/datasource";
 import { GraphQLSchema } from "graphql";
 import jwt from "jsonwebtoken";
+import { ContextType } from "../src/auth";
+import { User } from "../src/entities/User";
+
+export interface JwtPayload {
+  userId: string;
+}
 
 // Signer un jeton JWT avec l'ID de l'utilisateur
 function generateAuthToken(userId: string): string {
@@ -14,7 +20,7 @@ function generateAuthToken(userId: string): string {
 }
 
 // Fonction pour vérifier si l'utilisateur est authentifié
-const customAuthChecker: AuthChecker<{ authToken: string }> = ({ context }) => {
+export const customAuthChecker: AuthChecker<ContextType> = ({ context }) => {
   const { authToken } = context;
 
   if (!authToken) {
@@ -22,8 +28,14 @@ const customAuthChecker: AuthChecker<{ authToken: string }> = ({ context }) => {
   }
 
   try {
-    const decodedToken = jwt.verify(authToken, "secret");
-
+    const decodedToken = jwt.verify(authToken, "secret") as JwtPayload;
+    context.user = {
+      id: parseInt(decodedToken.userId, 10),
+      firstname: "Test",
+      lastname: "User",
+      nickname: "testuser",
+      email: "testuser@example.com",
+    } as any;
     return true;
   } catch (error) {
     return false;
@@ -33,6 +45,7 @@ const customAuthChecker: AuthChecker<{ authToken: string }> = ({ context }) => {
 let dataSource: DataSource;
 let schema: GraphQLSchema;
 let authToken: string;
+let fakeUser: User;
 
 beforeAll(async () => {
   dataSource = new DataSource({
@@ -43,6 +56,7 @@ beforeAll(async () => {
     password: "pgpassword",
     database: "postgres",
     dropSchema: true,
+    synchronize: true,
     logging: false,
   });
 
@@ -53,7 +67,18 @@ beforeAll(async () => {
     authChecker: customAuthChecker,
   });
 
-  authToken = generateAuthToken("userId123");
+  // Créer un utilisateur fictif dans la base de données
+  fakeUser = await User.create({
+    firstname: "Test",
+    lastname: "User",
+    nickname: "testuser",
+    email: "testuser@example.com",
+    hashedPassword: "hashedPassword",
+    createdAt: new Date(),
+    isAdmin: false,
+  }).save();
+
+  authToken = generateAuthToken(fakeUser.id.toString());
 });
 
 describe("create a new quest", () => {
@@ -74,23 +99,30 @@ describe("create a new quest", () => {
     const response = await graphql({
       schema,
       source: `
-          mutation CreateQuest($data: QuestCreateInput!) {
-            createQuest(data: $data) {
-              id
-              title
-              startDate
-              duration
-              difficulty
-              code
-            }
+        mutation CreateQuest($data: QuestCreateInput!) {
+          createQuest(data: $data) {
+            id
+            title
+            startDate
+            duration
+            difficulty
+            code
           }
-        `,
+        }
+      `,
       variableValues: { data },
-      contextValue: { authToken },
+      contextValue: {
+        authToken,
+        user: fakeUser,
+      } as ContextType,
     });
 
+    if (response.errors) {
+      console.error("GraphQL Errors:", response.errors);
+    }
+
     const createQuest: any = response.data?.createQuest;
-    createdQuestId = createQuest.id;
+    createdQuestId = createQuest?.id;
 
     expect(createQuest).toBeDefined();
     expect(createQuest).toHaveProperty("id");
@@ -110,14 +142,21 @@ describe("create a new quest", () => {
       source: `
         query getQuestById($Id: ID!) {
           getQuestById(id: $Id) {
-              id
-              title
-            }
+            id
+            title
           }
-        `,
+        }
+      `,
       variableValues: { Id: createdQuestId },
-      contextValue: { authToken },
+      contextValue: {
+        authToken,
+        user: fakeUser,
+      } as ContextType,
     });
+
+    if (response.errors) {
+      console.error("GraphQL Errors:", response.errors);
+    }
 
     const foundQuest = response.data?.getQuestById;
 
