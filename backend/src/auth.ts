@@ -7,6 +7,7 @@ export type ContextType = {
   req: any;
   res: any;
   user?: User;
+  authToken: string;
 };
 
 // stock jwt token into cookies
