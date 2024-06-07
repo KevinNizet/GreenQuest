@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 import { Mission } from "./entities/Mission";
 import { Quest } from "./entities/Quest";
 import { User } from "./entities/User";
+import { UserToken } from "./entities/UserToken";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
 export const dataSourceOptions: PostgresConnectionOptions = {
@@ -13,7 +14,7 @@ export const dataSourceOptions: PostgresConnectionOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   // Penser à ajouter nos entités ici quand elles seront créées
-  entities: [User, Quest, Mission],
+  entities: [User, Quest, Mission, UserToken],
   synchronize: true,
   logging: true,
 };

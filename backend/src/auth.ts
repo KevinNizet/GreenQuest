@@ -11,7 +11,6 @@ export type ContextType = {
 };
 
 // stock jwt token into cookies
-
 export async function getUserFromReq(req: any, res: any): Promise<User | null> {
   const cookies = new Cookies(req, res);
   const token = cookies.get("token");
