@@ -23,7 +23,10 @@ import { userType } from "@/components/Header";
 import { queryMySelf } from "@/graphql/queryMySelf";
 
 const link = createHttpLink({
-  uri: "http://localhost:5050",
+  uri:
+    typeof window !== "undefined" && location.origin.includes("localhost")
+      ? "http://localhost:5050"
+      : "/api",
   credentials: "include",
 });
 
