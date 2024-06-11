@@ -32,7 +32,7 @@ const client = new ApolloClient({
   link,
 });
 
-const publicPages = ["/", "/signup", "/signin"];
+const publicPages = ["/", "/signup", "/signin", "/setNewPassword"];
 
 const Auth = (props: { children: React.ReactNode }) => {
   const { data, loading } = useQuery<{ item: userType }>(queryMySelf);

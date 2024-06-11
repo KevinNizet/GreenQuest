@@ -1,11 +1,19 @@
 import React, { FormEvent, useState } from "react";
-import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
+import Image from "next/image";
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation } from "@apollo/client";
 import { mutationSignin } from "@/graphql/mutationSignin";
 import { useRouter } from "next/router";
-import theme from "@/styles/theme";
 import { queryMySelf } from "@/graphql/queryMySelf";
+import { ResetPasswordModal } from "./modals/ResetPasswordModal";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,9 +22,10 @@ const Signin = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [failedConnexion, setFailedConnexion] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const router = useRouter();
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const clickShowPassword = () => setShowPassword((show) => !show);
 
   const [doSignin] = useMutation(mutationSignin, {
     refetchQueries: [queryMySelf],
@@ -63,14 +72,18 @@ const Signin = () => {
     return isValid;
   };
 
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
   return (
     <form onSubmit={handleSignIn}>
       <Grid container direction="column" spacing={2}>
         <Grid item container justifyContent="center">
-          <img
-            src="/assets/singin-page-picture.jpg"
+          <Image
+            src="/images/singin-page-picture.jpg"
             alt="Description de l'image"
-            style={{ width: "720px", height: "auto", marginBottom: "100px" }}
+            width={720}
+            height={300}
           />
         </Grid>
 
@@ -137,6 +150,19 @@ const Signin = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 fullWidth
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={clickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
 
@@ -163,6 +189,16 @@ const Signin = () => {
                 Connexion
               </Button>
             </Grid>
+
+            <Grid item container justifyContent="center">
+              <Button
+                variant="text"
+                color="secondary"
+                onClick={handleOpenModal}
+              >
+                Mot de passe oublié ?
+              </Button>
+            </Grid>
           </div>
         </Grid>
 
@@ -172,7 +208,7 @@ const Signin = () => {
             gutterBottom
             sx={{ width: "60%", textAlign: "center", marginTop: "60px" }}
           >
-            Tu n'as pas de compte ?
+            Tu n&apos;as pas de compte ?
           </Typography>
         </Grid>
 
@@ -186,6 +222,8 @@ const Signin = () => {
           </Button>
         </Grid>
       </Grid>
+
+      <ResetPasswordModal open={openModal} handleClose={handleCloseModal} />
     </form>
   );
 };

@@ -1,11 +1,15 @@
 import Mailjet from "node-mailjet";
 
+// Mailjet configuration
 const mailjet = new Mailjet({
   apiKey: process.env.MJ_APIKEY_PUBLIC,
   apiSecret: process.env.MJ_APIKEY_PRIVATE,
 });
 
+// Function to send the reset password email
 export async function sendResetPassword(email: string, token: string) {
+  const frontUrl = process.env.FRONT_URL;
+
   try {
     const result = await mailjet.post("send", { version: "v3.1" }).request({
       Messages: [
@@ -27,11 +31,11 @@ export async function sendResetPassword(email: string, token: string) {
             <p>Bonjour,</p>
             <p>Tu as fait une demande de réinitialisation de mot de passe. Clique sur le lien ci-dessous pour réinitialiser ton mot de passe :</p>
             <p style="text-align: center;">
-              <a href="http://localhost:5050/set-password?token=${token}" style="display: inline-block; padding: 10px 20px; margin: 10px 0; font-size: 16px; color: #fff; background-color: #006400; text-decoration: none; border-radius: 5px;">Réinitialiser mon mot de passe</a>
+              <a href="${frontUrl}/setNewPassword?token=${token}" style="display: inline-block; padding: 10px 20px; margin: 10px 0; font-size: 16px; color: #fff; background-color: #006400; text-decoration: none; border-radius: 5px;">Réinitialiser mon mot de passe</a>
             </p>
             <p>Si tu n'as pas fait cette demande, ignore ce message.</p>
             <p>Cordialement,<br>L'équipe GreenQuest</p>
-            <p style="font-size: 12px; color: #888;">Si le bouton ne fonctionne pas, copie et colle le lien suivant dans ton navigateur : http://localhost:5050/set-password?token=${token}</p>
+            <p style="font-size: 12px; color: #888;">Si le bouton ne fonctionne pas, copie et colle le lien suivant dans ton navigateur : ${frontUrl}/setNewPassword?token=${token}</p>
           </div>
         `,
         },

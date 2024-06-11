@@ -240,9 +240,6 @@ export class UserResolver {
 
     await token.save();
     await sendResetPassword(email, token.token);
-
-    console.log(token);
-
     return true;
   }
 
