@@ -17,6 +17,10 @@ import { validate } from "class-validator";
 import Cookies from "cookies";
 import jwt from "jsonwebtoken";
 import { ContextType, getUserFromReq } from "../auth";
+import { UserToken } from "../entities/UserToken";
+import { addDays, isBefore } from "date-fns";
+import { v4 as uuidv4 } from "uuid";
+import { sendResetPassword } from "../email";
 
 const argon2 = require("argon2");
 
@@ -208,6 +212,61 @@ export class UserResolver {
       secure: false,
       maxAge: 0,
     });
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async resetPassword(
+    @Arg("email") email: string,
+    @Ctx() context: ContextType
+  ): Promise<boolean> {
+    const connectedUser = await getUserFromReq(context.req, context.res);
+
+    if (connectedUser) {
+      throw new Error("User already connected");
+    }
+
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return true;
+    }
+
+    const token = new UserToken();
+    token.user = user;
+    token.createdAt = new Date();
+    token.expiresAt = addDays(new Date(), 2);
+    token.token = uuidv4();
+
+    await token.save();
+    await sendResetPassword(email, token.token);
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async setPassword(
+    @Arg("token") token: string,
+    @Arg("password") password: string
+  ): Promise<boolean> {
+    const userToken = await UserToken.findOne({
+      where: { token },
+      relations: { user: true },
+    });
+
+    if (!userToken) {
+      throw new Error("Invalid token");
+    }
+
+    if (isBefore(new Date(userToken.expiresAt), new Date())) {
+      throw new Error("Expired token");
+    }
+
+    const hashedPassword = await argon2.hash(password);
+    userToken.user.hashedPassword = hashedPassword;
+    await userToken.user.save();
+
+    await userToken.remove();
+
     return true;
   }
 }
