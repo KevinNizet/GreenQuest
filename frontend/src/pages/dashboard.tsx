@@ -8,10 +8,18 @@ import MissionsTab from "../components/MissionsTab";
 import QuestsTab from "../components/QuestsTab";
 import { useMutation } from "@apollo/client";
 import { mutationJoinQuestByCode } from "@/graphql/joinQuestByCode/mutationJoinQuestByCode";
+import Snackbar from "@mui/material/Snackbar";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
   const [questCode, setQuestCode] = useState<number | "">("");
+  const [toastOpen, setToastOpen] = React.useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+  const { vertical, horizontal, open } = toastOpen;
+  const [toastMessage, setToastMessage] = React.useState("");
 
   const [joinQuestByCode, { data, error }] = useMutation(
     mutationJoinQuestByCode
@@ -24,8 +32,8 @@ const Dashboard = () => {
   const handleQuestCodeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const code = parseInt(event.target.value, 10); // Convertir la chaîne en nombre
-    setQuestCode(isNaN(code) ? "" : code); // Si la conversion échoue, définir le state comme une chaîne vide
+    const code = parseInt(event.target.value);
+    setQuestCode(code);
   };
 
   const handleJoinQuest = async () => {
@@ -34,12 +42,16 @@ const Dashboard = () => {
         variables: { code: questCode },
       });
       console.log("Quête rejointe avec succès:", response.data.joinQuestByCode);
-      console.log("data : ", data);
-      //TODO: Màj UI pour retour utilisateur si succés (toast ? )
+      setToastMessage("La quête a été rejointe avec succès 👍🏻 !");
+      setToastOpen({ ...toastOpen, open: true });
     } catch (err) {
-      console.error("La quête n'a pas pu être rejointe", error);
-      //TODO: Màj UI pour retour utilisateur si échec (toast ? )
+      setToastMessage("Une erreur est survenue 😔");
+      setToastOpen({ ...toastOpen, open: true });
     }
+  };
+
+  const handleCloseToast = () => {
+    setToastOpen({ ...toastOpen, open: false });
   };
   return (
     <Layout title="dashboard">
@@ -169,6 +181,14 @@ const Dashboard = () => {
           Valider
         </Button>
       </Box>
+      <Snackbar
+        open={open}
+        autoHideDuration={5000}
+        onClose={handleCloseToast}
+        message={toastMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        key={vertical + horizontal}
+      />
     </Layout>
   );
 };

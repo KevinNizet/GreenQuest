@@ -158,7 +158,7 @@ export class QuestResolver {
 
     // verify if an element already exists in the array of users
     if (quest.users.some(existingUser => existingUser.id === user.id)) {
-      throw new Error("Utilisateur déjà inscrit à cette quête");
+      throw new Error("Vous avez déjà rejoint cette quête");
     }
 
     quest.users.push(user);
