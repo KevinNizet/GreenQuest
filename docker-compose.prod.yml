@@ -2,6 +2,7 @@ services:
   backend:
     image: laurejanin/greenquest-backend:latest
     environment:
+      - BACK_PORT=5000
       - DB_USERNAME=username
       - DB_PASSWORD=password
       - DB_DATABASE=dbname
