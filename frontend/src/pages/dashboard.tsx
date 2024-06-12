@@ -12,7 +12,9 @@ import Snackbar from "@mui/material/Snackbar";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
+  // State pstockant le code de la quête entré par l'utilisateur
   const [questCode, setQuestCode] = useState<string>("");
+  // States pour gérer l'affichage du toast
   const [toastOpen, setToastOpen] = React.useState({
     open: false,
     vertical: "top",
@@ -21,27 +23,30 @@ const Dashboard = () => {
   const { vertical, horizontal, open } = toastOpen;
   const [toastMessage, setToastMessage] = React.useState("");
 
-  const [joinQuestByCode, { data, error }] = useMutation(
-    mutationJoinQuestByCode
-  );
-
+  // Gestion de l'onglet actif (missions ou quêtes)
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  // Récupération du code renseigné par l'utilisateur
   const handleQuestCodeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setQuestCode(event.target.value);
   };
 
+  // validation du format de l'input
   const isValidQuestCode = (code: string): boolean => {
     return /^\d{6}$/.test(code);
   };
 
+  // Mutation permettant de rejoindre une quête
+  const [joinQuestByCode] = useMutation(mutationJoinQuestByCode);
+
   const handleJoinQuest = async () => {
+    // Vérification que le code est valide
     if (!isValidQuestCode(questCode)) {
-      setToastMessage("Veuillez entrer un code valide à 6 chiffres.");
+      setToastMessage("Tu dois entrer un code valide à 6 chiffres");
       setToastOpen({ ...toastOpen, open: true });
       return;
     }
@@ -50,7 +55,6 @@ const Dashboard = () => {
       const response = await joinQuestByCode({
         variables: { code: codeNumber },
       });
-      console.log("Quête rejointe avec succès:", response.data.joinQuestByCode);
       setToastMessage("La quête a été rejointe avec succès 👍🏻 !");
       setToastOpen({ ...toastOpen, open: true });
     } catch (err) {
@@ -59,6 +63,7 @@ const Dashboard = () => {
     }
   };
 
+  // Fermeture du toast
   const handleCloseToast = () => {
     setToastOpen({ ...toastOpen, open: false });
   };
