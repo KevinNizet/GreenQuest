@@ -23,7 +23,10 @@ import { userType } from "@/components/Header";
 import { queryMySelf } from "@/graphql/queryMySelf";
 
 const link = createHttpLink({
-  uri: "http://localhost:5050",
+  uri:
+    typeof window !== "undefined" && location.origin.includes("localhost")
+      ? "http://localhost:5050"
+      : "/api",
   credentials: "include",
 });
 
@@ -32,7 +35,7 @@ const client = new ApolloClient({
   link,
 });
 
-const publicPages = ["/", "/signup", "/signin"];
+const publicPages = ["/", "/signup", "/signin", "/setNewPassword"];
 
 const Auth = (props: { children: React.ReactNode }) => {
   const { data, loading } = useQuery<{ item: userType }>(queryMySelf);
