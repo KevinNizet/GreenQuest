@@ -37,6 +37,7 @@ const client = new ApolloClient({
 
 const publicPages = ["/", "/signup", "/signin", "/setNewPassword"];
 
+// fonction Auth (affiche quand l'utilisateur est connecté ou non)
 const Auth = (props: { children: React.ReactNode }) => {
   const { data, loading } = useQuery<{ item: userType }>(queryMySelf);
   const router = useRouter();
@@ -52,7 +53,7 @@ const Auth = (props: { children: React.ReactNode }) => {
         setIsAuthenticated(true);
       }
     }
-  }, [loading, data, router.pathname]);
+  }, [loading, data, router.pathname, router]);
 
   if (loading || isAuthenticated === null) {
     return <div>Loading...</div>;
@@ -64,10 +65,6 @@ const Auth = (props: { children: React.ReactNode }) => {
 
   return <>{props.children}</>;
 };
-
-// TODO: definir les pages publics
-
-//TODO: définir fonction Auth (affichage quand l'utilisateur est co ou non)
 
 function App({ Component, pageProps }: AppProps) {
   return (

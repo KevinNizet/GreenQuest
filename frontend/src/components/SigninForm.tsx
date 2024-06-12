@@ -47,9 +47,9 @@ const Signin = () => {
         });
 
         if (data?.signin) {
-          console.log("credentials ok");
-          router.replace("/dashboard");
-          console.log("redirection");
+          setTimeout(() => {
+            router.replace("/dashboard");
+          }, 1000);
         } else {
           setFailedConnexion(true);
           console.error("Connexion échouée:", data?.signin);
