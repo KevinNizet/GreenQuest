@@ -93,19 +93,15 @@ export default function BasicModal({
             {quest?.XPValue}
           </Typography>
           <>
-            {quest?.users.map((user) => {
-              return (
-                user.id === me?.id && (
-                  <Button
-                    key={user.id}
-                    sx={{ color: "red", fontSize: "20px" }}
-                    onClick={handleOpenConfirmModal}
-                  >
-                    Supprimer
-                  </Button>
-                )
-              );
-            })}
+            {quest?.createdBy.id === me?.id && (
+              <Button
+                key={quest?.id}
+                sx={{ color: "red", fontSize: "20px" }}
+                onClick={handleOpenConfirmModal}
+              >
+                Supprimer
+              </Button>
+            )}
           </>
         </Box>
       </Modal>

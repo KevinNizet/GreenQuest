@@ -41,7 +41,7 @@ export class QuestResolver {
   async getQuestByUser(
     @Arg("userId", () => ID) userId: number
   ): Promise<Quest[]> {
-    const quest = await Quest.find({
+    const quests = await Quest.find({
       where: {
         users: {
           id: userId,
@@ -49,10 +49,10 @@ export class QuestResolver {
       },
       relations: { missions: true, users: true, createdBy: true },
     });
-    if (!quest) {
+    if (!quests) {
       throw new Error("Pas de quête liée à cette 'userId'");
     }
-    return quest;
+    return quests;
   }
 
   @Query(() => [Quest])
@@ -157,7 +157,7 @@ export class QuestResolver {
     }
 
     // verify if an element already exists in the array of users
-    if (quest.users.some(existingUser => existingUser.id === user.id)) {
+    if (quest.users.some((existingUser) => existingUser.id === user.id)) {
       throw new Error("Vous avez déjà rejoint cette quête");
     }
 

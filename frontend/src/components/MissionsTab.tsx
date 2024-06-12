@@ -1,12 +1,11 @@
 import { Box, Checkbox, Fade } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { userType } from "./Header";
 import { useQuery } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { QuestType } from "./QuestsTab";
 import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
 import Pagination from "@mui/material/Pagination";
-import { green } from "@mui/material/colors";
 
 type MissionTabProps = {
   value: number;
@@ -32,14 +31,16 @@ const MissionsTab = (props: MissionTabProps) => {
   const [page, setPage] = useState(1);
   const missionsPerPage = 4;
 
+  // Récupération de toutes les missions
   const allMissions = quests?.flatMap((quest) => quest.missions) || [];
 
-  const totalPages = Math.ceil(allMissions.length / missionsPerPage);
-
+  // Calcul des missions à afficher pour la page courante
   const displayedMissions = allMissions.slice(
     (page - 1) * missionsPerPage,
     page * missionsPerPage
   );
+
+  const totalPages = Math.ceil(allMissions.length / missionsPerPage);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -47,6 +48,11 @@ const MissionsTab = (props: MissionTabProps) => {
   ) => {
     setPage(value);
   };
+
+  useEffect(() => {
+    // Réinitialiser la page à 1 si la longueur des missions change
+    setPage(1);
+  }, [allMissions.length]);
 
   return (
     <Fade in={props.value === 0} timeout={450}>
@@ -82,9 +88,9 @@ const MissionsTab = (props: MissionTabProps) => {
               gap: "20px",
             }}
           >
-            {displayedMissions.map((mission) => (
+            {displayedMissions.map((mission, index) => (
               <Box
-                key={mission.id}
+                key={`${mission.id}-${index}`} // Utilisez une combinaison de mission.id et index pour garantir l'unicité
                 sx={{
                   backgroundColor: "lightgrey",
                   width: "90%",

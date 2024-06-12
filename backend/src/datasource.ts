@@ -15,7 +15,7 @@ export const dataSourceOptions: PostgresConnectionOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   // Penser à ajouter nos entités ici quand elles seront créées
-  entities: [User, Quest, Mission, UserToken],
+  entities: [User, Quest, Mission, UserToken, UserMission],
   synchronize: true,
   logging: true,
 };

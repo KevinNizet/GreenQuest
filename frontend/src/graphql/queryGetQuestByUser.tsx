@@ -9,6 +9,9 @@ export const queryGetQuestByUser = gql`
       difficulty
       duration
       id
+      createdBy {
+        id
+      }
       startDate
       title
       users {
