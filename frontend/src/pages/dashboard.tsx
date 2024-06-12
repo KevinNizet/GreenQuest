@@ -12,7 +12,7 @@ import Snackbar from "@mui/material/Snackbar";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
-  const [questCode, setQuestCode] = useState<number | "">("");
+  const [questCode, setQuestCode] = useState<string>("");
   const [toastOpen, setToastOpen] = React.useState({
     open: false,
     vertical: "top",
@@ -32,14 +32,23 @@ const Dashboard = () => {
   const handleQuestCodeChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const code = parseInt(event.target.value);
-    setQuestCode(code);
+    setQuestCode(event.target.value);
+  };
+
+  const isValidQuestCode = (code: string): boolean => {
+    return /^\d{6}$/.test(code);
   };
 
   const handleJoinQuest = async () => {
+    if (!isValidQuestCode(questCode)) {
+      setToastMessage("Veuillez entrer un code valide à 6 chiffres.");
+      setToastOpen({ ...toastOpen, open: true });
+      return;
+    }
     try {
+      const codeNumber = parseInt(questCode);
       const response = await joinQuestByCode({
-        variables: { code: questCode },
+        variables: { code: codeNumber },
       });
       console.log("Quête rejointe avec succès:", response.data.joinQuestByCode);
       setToastMessage("La quête a été rejointe avec succès 👍🏻 !");
@@ -53,6 +62,7 @@ const Dashboard = () => {
   const handleCloseToast = () => {
     setToastOpen({ ...toastOpen, open: false });
   };
+
   return (
     <Layout title="dashboard">
       <Box></Box>
