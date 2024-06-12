@@ -6,7 +6,6 @@ import { queryMySelf } from "@/graphql/queryMySelf";
 import { QuestType } from "./QuestsTab";
 import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
 import Pagination from "@mui/material/Pagination";
-import { green } from "@mui/material/colors";
 
 type MissionTabProps = {
   value: number;
@@ -85,9 +84,9 @@ const MissionsTab = (props: MissionTabProps) => {
               gap: "20px",
             }}
           >
-            {displayedMissions.map((mission) => (
+            {displayedMissions.map((mission, index) => (
               <Box
-                key={mission.id}
+                key={`mission-${mission.id}-${index}`}
                 sx={{
                   backgroundColor: "lightgrey",
                   width: "90%",
