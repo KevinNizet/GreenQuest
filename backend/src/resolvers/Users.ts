@@ -21,6 +21,7 @@ import { UserToken } from "../entities/UserToken";
 import { addDays, isBefore } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import { sendResetPassword } from "../email";
+import { sendValidationEmail } from "../AccountValidationWithEmail";
 
 const argon2 = require("argon2");
 
@@ -73,10 +74,49 @@ export class UserResolver {
       nickname: data.nickname,
       email: data.email,
       hashedPassword,
+      isValidatedAccount: false,
     });
 
     await newUser.save();
+
+    // Generate account validation token
+    const token = new UserToken();
+    token.user = newUser;
+    token.createdAt = new Date();
+    token.expiresAt = addDays(new Date(), 2);
+    token.token = uuidv4();
+
+    await token.save();
+
+    // Send validation email
+    await sendValidationEmail(data.email, token.token);
+
     return newUser;
+  }
+
+  @Mutation(() => Boolean)
+  async validateAccount(@Arg("token") token: string): Promise<boolean> {
+    const userToken = await UserToken.findOne({
+      where: { token },
+      relations: { user: true },
+    });
+
+    if (!userToken) {
+      throw new Error("Invalid token");
+    }
+
+    if (isBefore(new Date(userToken.expiresAt), new Date())) {
+      throw new Error("Expired token");
+    }
+
+    const user = userToken.user;
+    // Set the account to validated
+    user.isValidatedAccount = true;
+    await user.save();
+
+    await userToken.remove();
+
+    return true;
   }
 
   // query to get self profile
@@ -170,6 +210,14 @@ export class UserResolver {
     @Arg("password") password: string
   ): Promise<User | null> {
     const existingUser = await User.findOneBy({ email });
+
+    // Vérifiez si le compte est validé
+    if (!existingUser?.isValidatedAccount) {
+      throw new Error(
+        "Votre compte n'est pas encore validé. Veuillez vérifier votre email pour valider votre compte."
+      );
+    }
+
     //verify if user exists
     if (existingUser) {
       const isPasswordValid = await argon2.verify(

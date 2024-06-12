@@ -14,6 +14,7 @@ import { mutationSignin } from "@/graphql/mutationSignin";
 import { useRouter } from "next/router";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { ResetPasswordModal } from "./modals/ResetPasswordModal";
+import { ApolloError } from "@apollo/client";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,6 +24,9 @@ const Signin = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [failedConnexion, setFailedConnexion] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  // gestion de l'état de validation du compte utilisateur
+  const [validationError, setValidationError] = useState(false);
+
   const router = useRouter();
 
   const clickShowPassword = () => setShowPassword((show) => !show);
@@ -34,6 +38,7 @@ const Signin = () => {
   async function handleSignIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setFailedConnexion(false);
+    setValidationError(false);
 
     // Validate email and password
     const isEmailValid = validateEmail();
@@ -54,8 +59,17 @@ const Signin = () => {
           setFailedConnexion(true);
           console.error("Connexion échouée:", data?.signin);
         }
-      } catch (error) {
-        console.error("Erreur lors de la connexion:", error);
+      } catch (err) {
+        if (err instanceof ApolloError) {
+          {
+            const errorMessage = err.graphQLErrors[0]?.message || err.message;
+            if (errorMessage.includes("Votre compte n'est pas encore validé")) {
+              setValidationError(true);
+            }
+          }
+        } else {
+          console.error("Erreur lors de la connexion:", err);
+        }
       }
     }
   }
@@ -170,6 +184,12 @@ const Signin = () => {
               {failedConnexion && (
                 <Typography variant="body2" color="error" gutterBottom>
                   Les identifiants sont incorrects
+                </Typography>
+              )}
+              {validationError && (
+                <Typography variant="body2" color="error" gutterBottom>
+                  Votre compte n'a pas encore été validé. Veuillez vérifier
+                  votre boîte mail et utiliser le lien de validation.
                 </Typography>
               )}
             </Grid>
