@@ -114,7 +114,7 @@ export default function Profile(): React.ReactNode {
               gutterBottom
               sx={{ width: "90%", textAlign: "center", marginBottom: "50px" }}
             >
-              L'adresse email liée à ton compte est : {me?.email} <br />
+              L&apos;adresse email liée à ton compte est : {me?.email} <br />
               Si tu souhaites la modifier, contacte un administrateur.
             </Typography>
           </Grid>
