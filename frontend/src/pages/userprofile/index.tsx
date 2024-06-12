@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import Layout from "@/components/Layout";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { mutationUpdateUser } from "@/graphql/userProfileUpdate/mutationUpdateUser";
-import { Button, Grid, Paper, Typography, TextField } from "@mui/material";
+import { Button, Grid, Typography, TextField } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 
 export interface UserType {

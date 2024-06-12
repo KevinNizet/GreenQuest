@@ -130,4 +130,41 @@ export class QuestResolver {
     }
     return ads;
   }
+  // allow a user to join a quest with its unique code
+  @Authorized()
+  @Mutation(() => Quest)
+  async joinQuestByCode(
+    @Ctx() context: ContextType,
+    @Arg("code", () => Number) code: number
+  ): Promise<Quest> {
+    const quest = await Quest.findOne({
+      where: { code },
+      relations: { users: true },
+    });
+
+    if (!quest) {
+      throw new Error("Il n'existe pas  de quête liée à ce code");
+    }
+
+    const user = context.user;
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    if (!quest.users) {
+      quest.users = [];
+    }
+
+    // verify if an element already exists in the array of users
+    if (quest.users.some(existingUser => existingUser.id === user.id)) {
+      throw new Error("Vous avez déjà rejoint cette quête");
+    }
+
+    quest.users.push(user);
+
+    await quest.save();
+
+    return quest;
+  }
 }
