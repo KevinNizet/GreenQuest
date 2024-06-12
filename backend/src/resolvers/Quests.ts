@@ -30,7 +30,6 @@ export class QuestResolver {
       where: { id },
       relations: { missions: true, users: true, createdBy: true },
     });
-    console.log(quest);
     if (!quest) {
       throw new Error("Pas de quête liée à cette 'id'");
     }
