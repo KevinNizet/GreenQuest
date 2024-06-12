@@ -90,7 +90,7 @@ const MissionsTab = (props: MissionTabProps) => {
           >
             {displayedMissions.map((mission, index) => (
               <Box
-                key={`${mission.id}-${index}`} // Utilisez une combinaison de mission.id et index pour garantir l'unicité
+                key={`mission-${mission.id}-${index}`}
                 sx={{
                   backgroundColor: "lightgrey",
                   width: "90%",

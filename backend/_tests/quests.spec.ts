@@ -19,7 +19,7 @@ function generateAuthToken(userId: string): string {
   return jwt.sign({ userId }, "secret");
 }
 
-// Fonction pour vérifier si l'utilisateur est authentifié
+// Fonction pour simuler un utilisateur connecté
 export const customAuthChecker: AuthChecker<ContextType> = ({ context }) => {
   const { authToken } = context;
 

@@ -30,7 +30,6 @@ export class QuestResolver {
       where: { id },
       relations: { missions: true, users: true, createdBy: true },
     });
-    console.log(quest);
     if (!quest) {
       throw new Error("Pas de quête liée à cette 'id'");
     }
@@ -90,6 +89,9 @@ export class QuestResolver {
 
     newQuest.createdBy = user;
 
+    // Add the creator to the users array
+    newQuest.users = [user];
+
     const errors = await validate(newQuest);
     if (errors.length > 0) {
       throw new Error(
@@ -116,8 +118,6 @@ export class QuestResolver {
 
     await newQuest.save();
 
-    console.log(newQuest);
-
     return newQuest;
   }
 
@@ -130,6 +130,7 @@ export class QuestResolver {
     }
     return ads;
   }
+
   // allow a user to join a quest with its unique code
   @Authorized()
   @Mutation(() => Quest)
@@ -152,13 +153,9 @@ export class QuestResolver {
       throw new Error("Utilisateur non trouvé");
     }
 
-    if (!quest.users) {
-      quest.users = [];
-    }
-
     // verify if an element already exists in the array of users
     if (quest.users.some((existingUser) => existingUser.id === user.id)) {
-      throw new Error("Vous avez déjà rejoint cette quête");
+      throw new Error("Tu as déjà rejoint cette quête");
     }
 
     quest.users.push(user);

@@ -66,10 +66,8 @@ const QuestsTab = (props: QuestTabProps) => {
 
   const quests = data && data.item;
 
-  // Reset page number if quests data changes
-  useEffect(() => {
-    setPage(1);
-  }, [quests?.length]);
+  const [page, setPage] = useState(1);
+  const questsPerPage = 4;
 
   const totalPages = Math.ceil((quests?.length || 0) / questsPerPage);
 
@@ -150,10 +148,10 @@ const QuestsTab = (props: QuestTabProps) => {
               gap: "20px",
             }}
           >
-            {displayedQuests && displayedQuests.length > 0 ? (
-              displayedQuests.map((quest) => (
+            {displayedQuests &&
+              displayedQuests.map((quest, index) => (
                 <Box
-                  key={quest.id}
+                  key={`quest-${index}-${quest.id}`}
                   sx={{
                     backgroundColor: "lightgrey",
                     width: "90%",
