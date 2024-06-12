@@ -32,13 +32,10 @@ const MissionsTab = (props: MissionTabProps) => {
   const [page, setPage] = useState(1);
   const missionsPerPage = 4;
 
-  // Flatten all missions from all quests
   const allMissions = quests?.flatMap((quest) => quest.missions) || [];
 
-  // Calculate total pages
   const totalPages = Math.ceil(allMissions.length / missionsPerPage);
 
-  // Determine the missions to display on the current page
   const displayedMissions = allMissions.slice(
     (page - 1) * missionsPerPage,
     page * missionsPerPage

@@ -55,8 +55,6 @@ const QuestsTab = (props: QuestTabProps) => {
 
   const quests = data && data.item;
 
-  console.log(quests);
-
   const [page, setPage] = useState(1);
   const questsPerPage = 4;
 

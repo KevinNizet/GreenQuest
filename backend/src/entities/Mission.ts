@@ -5,9 +5,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Difficulty, Quest } from "./Quest";
+import { UserMission } from "./UserMission";
 
 @Entity()
 @ObjectType()
@@ -44,6 +46,10 @@ export class Mission extends BaseEntity {
   @JoinTable()
   @Field(() => [Quest], { nullable: true })
   quests!: Quest[];
+
+  @OneToMany(() => UserMission, (userMission) => userMission.mission)
+  @Field(() => [UserMission])
+  userMissions!: UserMission[];
 }
 
 @InputType()

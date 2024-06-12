@@ -1,7 +1,14 @@
 import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
-import { Button, Grid, IconButton, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CardMedia,
+  Grid,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { signup } from "@/graphql/mutationSignup";
 import { useMutation } from "@apollo/client";
@@ -69,29 +76,22 @@ const Signup = () => {
       >
         <Grid container direction="column" spacing={2} sx={{ width: "70%" }}>
           <Grid item container justifyContent="center">
-            <Image
-              src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              width={1000}
-              height={400}
-              fill={false}
-              alt="Picture of the author"
-              style={{
-                marginBottom: "8%",
-                objectFit: "cover",
-              }}
+            <CardMedia
+              component="img"
+              sx={{ width: "44.3vw", marginBottom: "4rem" }}
+              image="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              alt="Paella dish"
             />
           </Grid>
           <Grid item container justifyContent="center">
             <Typography
               variant="body1"
               gutterBottom
-              sx={{ width: "70%", textAlign: "center" }}
+              sx={{ width: "70%", textAlign: "center", marginBottom: "3rem" }}
             >
               Inscrit toi ou connecte toi pour participer à une quête et valider
               tes missions quotidiennes !
             </Typography>
-            <br />
-            <br />
           </Grid>
           <Grid
             container

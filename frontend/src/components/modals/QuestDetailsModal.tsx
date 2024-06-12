@@ -65,8 +65,8 @@ export default function BasicModal({
   });
 
   const handleOpenConfirmModal = () => {
-    handleClose(); // Ferme la première modal
-    setConfirmOpen(true); // Ouvre la deuxième modal
+    handleClose();
+    setConfirmOpen(true);
   };
 
   const handleCloseConfirmModal = () => {
