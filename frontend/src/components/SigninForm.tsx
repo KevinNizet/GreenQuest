@@ -238,7 +238,7 @@ const Signin = () => {
             color="secondary"
             onClick={() => router.push("/signup")}
           >
-            Inscription
+            Inscris-toi
           </Button>
         </Grid>
       </Grid>

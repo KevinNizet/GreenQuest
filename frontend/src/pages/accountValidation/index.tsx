@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { mutationAccountValidation } from "@/graphql/accountValidation/mutationAccountValidation";
 import Layout from "@/components/Layout";
 import Image from "next/image";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 
 const ValidateAccount = () => {
   const router = useRouter();
@@ -17,15 +17,11 @@ const ValidateAccount = () => {
     if (token) {
       validateAccount({ variables: { token } });
     }
+  }, [token, validateAccount]);
 
-    // Redirection automatique sur la page de connexion
-    const redirectionTimeout = setTimeout(() => {
-      router.push("/signin");
-    }, 8000);
-
-    // Nettoyage du timeout
-    return () => clearTimeout(redirectionTimeout);
-  }, [token, validateAccount, router]);
+  const handleClick = () => {
+    router.replace("/signin");
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
@@ -51,10 +47,18 @@ const ValidateAccount = () => {
               }}
             >
               {" "}
-              Félicitations, votre compte a été validé avec succés. Vous allez à
-              présent être redirigé sur la page de connexion dans quelques
-              secondes{" "}
+              Félicitations, ton compte a été validé avec succés. Connecte toi à
+              ton compte pour démarrer l'aventure !{" "}
             </Typography>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={handleClick}
+              type="submit"
+              sx={{ marginTop: "10px", marginBottom: "60px" }}
+            >
+              Connecte toi
+            </Button>
             <Image
               src="/images/account-validation-picture.jpg"
               alt="Image de la page de validation de compte"

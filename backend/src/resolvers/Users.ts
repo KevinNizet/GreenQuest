@@ -214,7 +214,7 @@ export class UserResolver {
     // Vérifiez si le compte est validé
     if (!existingUser?.isValidatedAccount) {
       throw new Error(
-        "Votre compte n'est pas encore validé. Veuillez vérifier votre email pour valider votre compte."
+        "Ton compte n'est pas encore validé. Vérifie ton email pour le valider."
       );
     }
 
