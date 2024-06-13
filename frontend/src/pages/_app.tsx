@@ -35,7 +35,13 @@ const client = new ApolloClient({
   link,
 });
 
-const publicPages = ["/", "/signup", "/signin", "/setNewPassword"];
+const publicPages = [
+  "/",
+  "/signup",
+  "/signin",
+  "/setNewPassword",
+  "/accountValidation",
+];
 
 // fonction Auth (affiche quand l'utilisateur est connecté ou non)
 const Auth = (props: { children: React.ReactNode }) => {

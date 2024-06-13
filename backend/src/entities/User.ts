@@ -58,6 +58,9 @@ export class User extends BaseEntity {
   @Field()
   isAdmin!: boolean;
 
+  @Column({ default: false })
+  isValidatedAccount: boolean;
+
   @ManyToMany(() => Quest, (Quest) => Quest.users)
   @JoinTable()
   @Field(() => [Quest], { nullable: true })
