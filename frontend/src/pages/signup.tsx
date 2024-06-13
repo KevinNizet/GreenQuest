@@ -163,7 +163,7 @@ const Signup = () => {
                 size="small"
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setEmailError(false); // Réinitialise emailError à false lors de la modification de l'email
+                  setEmailError(false);
                 }}
               />
             </Grid>
@@ -190,7 +190,7 @@ const Signup = () => {
                       onClick={handleClickShowPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   ),
                 }}
@@ -225,7 +225,7 @@ const Signup = () => {
                       onClick={handleClickShowPassword}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   ),
                 }}
