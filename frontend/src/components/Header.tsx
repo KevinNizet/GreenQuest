@@ -74,42 +74,55 @@ const Header = () => {
           height: "12vh",
           display: "flex",
           justifyContent: "center",
-          borderTopLeftRadius: "2.5rem",
-          borderTopRightRadius: "2.5rem",
+          width: "100%",
         }}
       >
         <Toolbar
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            alignItems: "center",
             margin: 0,
             padding: 0,
-            width: "100%",
           }}
         >
           {!me && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8rem",
-                justifyContent: "center",
-              }}
-            >
-              <a href="/">
-                <img
-                  srcSet={`/images/greenquest_logo.png`}
-                  src={`/images/greenquest_logo.png`}
-                  alt="Greenquest_logo"
-                  loading="lazy"
-                  style={{ width: "6rem", margin: 0, padding: 0 }}
-                />
-              </a>
-              <h1 style={{ margin: "0.5rem 0 0 0" }}> Greenquest</h1>
+            <>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexGrow: 1,
+                }}
+              >
+                <a href="/">
+                  <img
+                    srcSet={`/images/greenquest_logo.png`}
+                    src={`/images/greenquest_logo.png`}
+                    alt="Greenquest_logo"
+                    loading="lazy"
+                    style={{ width: "6rem", margin: 0, padding: 0 }}
+                  />
+                </a>
+              </Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  flexGrow: 1,
+                  textAlign: "center",
+                  color: "#fff",
+                }}
+              >
+                Greenquest
+              </Typography>
               <Stack
                 direction="row"
                 spacing={2}
-                sx={{ display: "flex", alignItems: "center" }}
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
               >
                 {router.pathname === "/signin" ? (
                   <Button color={"success"} variant="contained" href="/signup">
@@ -121,7 +134,7 @@ const Header = () => {
                   </Button>
                 )}
               </Stack>
-            </div>
+            </>
           )}
           {me && (
             <>

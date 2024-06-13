@@ -23,7 +23,7 @@ export default function QuestTunnel() {
     setQuestInfo({
       title: title,
       description: description,
-      users: data.item.id,
+      users: data?.item?.id,
     });
 
     router.push("/questtunnel/startDateAndDuration");
@@ -42,6 +42,9 @@ export default function QuestTunnel() {
         <Typography variant="h1" sx={{ fontSize: "2rem", fontWeight: "bold" }}>
           Créer votre quête
         </Typography>
+        <Typography variant="body1">
+          Suis les différentes étapes pour créer ta propre quête !
+        </Typography>
 
         <Grid
           container
@@ -53,6 +56,9 @@ export default function QuestTunnel() {
           sx={{
             padding: 4,
             borderRadius: 5,
+            maxWidth: "70%",
+            width: "100%",
+            margin: "0 auto",
           }}
           gap={3}
         >

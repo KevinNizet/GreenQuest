@@ -96,8 +96,17 @@ const Signin = () => {
           <Image
             src="/images/singin-page-picture.jpg"
             alt="Description de l'image"
+            layout="responsive"
             width={720}
             height={300}
+            style={{
+              margin: "30px",
+              borderRadius: "5px",
+              maxWidth: "60%",
+              maxHeight: "50vh",
+              minWidth: "200px",
+              minHeight: "100px",
+            }}
           />
         </Grid>
 
@@ -118,7 +127,9 @@ const Signin = () => {
               backgroundColor: "#ECEBF5",
               padding: "20px",
               borderRadius: "5px",
-              width: "60%",
+              minWidth: "40%",
+              maxWidth: "60%",
+              /*        width: "60%", */
             }}
           >
             <Grid
