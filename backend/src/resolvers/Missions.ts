@@ -45,13 +45,12 @@ export class MissionResolver {
     @Arg("userId", () => ID) userId: number,
     @Arg("missionId", () => ID) missionId: number
   ): Promise<UserMission> {
-    // Vérifiez si l'utilisateur participe déjà à cette mission
     let userMission = await UserMission.findOne({
       where: {
         user: { id: userId },
         mission: { id: missionId },
       },
-      relations: { user: true, mission: true },
+      relations: ["user", "mission"],
     });
 
     if (!userMission) {
@@ -66,10 +65,14 @@ export class MissionResolver {
       userMission.user = user;
       userMission.mission = mission;
       userMission.points = 0;
+    } else {
+      if (userMission.isCompleted) {
+        throw new Error("Mission is already completed");
+      }
     }
 
     userMission.isCompleted = true;
-    userMission.points += userMission.mission.XPValue;
+    userMission.points = userMission.mission.XPValue;
 
     await userMission.save();
 

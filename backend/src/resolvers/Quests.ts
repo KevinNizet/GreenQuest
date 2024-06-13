@@ -12,6 +12,7 @@ import { Quest, QuestCreateInput } from "../entities/Quest";
 import { Mission } from "../entities/Mission";
 import { User } from "../entities/User";
 import { ContextType } from "../auth";
+import { UserMission } from "../entities/UserMission";
 
 @Resolver(Quest)
 export class QuestResolver {
@@ -163,5 +164,27 @@ export class QuestResolver {
     await quest.save();
 
     return quest;
+  }
+
+  @Query(() => Number)
+  async calculateUserPointsForQuest(
+    @Arg("userId", () => ID) userId: number,
+    @Arg("questId", () => ID) questId: number
+  ): Promise<number> {
+    const completions = await UserMission.find({
+      where: {
+        user: { id: userId },
+        mission: {
+          quests: { id: questId },
+        },
+        isCompleted: true,
+      },
+    });
+
+    const totalPoints = completions.reduce(
+      (total, completion) => total + completion.points,
+      0
+    );
+    return totalPoints;
   }
 }

@@ -13,6 +13,7 @@ import { QuestResolver } from "./resolvers/Quests";
 import { UserResolver } from "./resolvers/Users";
 import { customAuthChecker } from "./auth";
 import { UserMissionResolver } from "./resolvers/UserMissions";
+import "./scheduler";
 
 const port = process.env.BACK_PORT || 5050;
 

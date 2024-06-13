@@ -66,9 +66,6 @@ const QuestsTab = (props: QuestTabProps) => {
 
   const quests = data && data.item;
 
-  const [page, setPage] = useState(1);
-  const questsPerPage = 4;
-
   const totalPages = Math.ceil((quests?.length || 0) / questsPerPage);
 
   const displayedQuests = quests?.slice(
@@ -148,7 +145,7 @@ const QuestsTab = (props: QuestTabProps) => {
               gap: "20px",
             }}
           >
-            {displayedQuests &&
+            {displayedQuests ? (
               displayedQuests.map((quest, index) => (
                 <Box
                   key={`quest-${index}-${quest.id}`}
