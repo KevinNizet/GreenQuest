@@ -11,6 +11,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Quest } from "./Quest";
+import { UserMission } from "./UserMission";
 
 @Entity()
 @ObjectType()
@@ -69,6 +70,10 @@ export class User extends BaseEntity {
   @OneToMany(() => Quest, (Quest) => Quest.createdBy)
   @Field(() => [Quest], { nullable: true })
   questsCreated!: Quest[];
+
+  @OneToMany(() => UserMission, (userMission) => userMission.user)
+  @Field(() => [UserMission])
+  userMissions!: UserMission[];
 }
 
 @InputType()

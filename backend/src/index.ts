@@ -12,6 +12,8 @@ import { MissionResolver } from "./resolvers/Missions";
 import { QuestResolver } from "./resolvers/Quests";
 import { UserResolver } from "./resolvers/Users";
 import { customAuthChecker } from "./auth";
+import { UserMissionResolver } from "./resolvers/UserMissions";
+import "./scheduler";
 
 const port = process.env.BACK_PORT || 5050;
 
@@ -21,7 +23,12 @@ async function start() {
   const httpServer = http.createServer(app);
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, QuestResolver, MissionResolver],
+    resolvers: [
+      UserResolver,
+      QuestResolver,
+      MissionResolver,
+      UserMissionResolver,
+    ],
     authChecker: customAuthChecker,
   });
 

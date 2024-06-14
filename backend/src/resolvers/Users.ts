@@ -31,7 +31,11 @@ export class UserResolver {
   @Query(() => [User])
   async getUsers(): Promise<User[]> {
     const users = await User.find({
-      relations: { questsParticipated: true, questsCreated: true },
+      relations: {
+        questsParticipated: true,
+        questsCreated: true,
+        userMissions: true,
+      },
     });
     return users;
   }
@@ -41,7 +45,11 @@ export class UserResolver {
     const user = await User.findOne({
       where: { id: id },
       select: ["id", "firstname", "lastname", "nickname", "email"],
-      relations: { questsParticipated: true, questsCreated: true },
+      relations: {
+        questsParticipated: true,
+        questsCreated: true,
+        userMissions: true,
+      },
     });
     if (!user) {
       throw new Error("Pas de user lié à cette 'id'");

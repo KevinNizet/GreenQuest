@@ -1,11 +1,12 @@
 import { Box, Checkbox, Fade } from "@mui/material";
-import React, { useState } from "react";
-import { userType } from "./Header";
-import { useQuery } from "@apollo/client";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { QuestType } from "./QuestsTab";
 import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
 import Pagination from "@mui/material/Pagination";
+import { mutationValidateMission } from "@/graphql/mutationValidateMission";
+import { userType } from "./Header";
 
 type MissionTabProps = {
   value: number;
@@ -26,28 +27,63 @@ const MissionsTab = (props: MissionTabProps) => {
     }
   );
 
+  const [validateMission] = useMutation(mutationValidateMission);
+
   const quests = data && data.item;
 
   const [page, setPage] = useState(1);
   const missionsPerPage = 4;
 
-  // Flatten all missions from all quests
-  const allMissions = quests?.flatMap((quest) => quest.missions) || [];
+  // Récupération de toutes les missions
+  const uniqueMissionsMap = new Map();
 
-  // Calculate total pages
-  const totalPages = Math.ceil(allMissions.length / missionsPerPage);
+  quests?.forEach((quest) => {
+    quest.missions.forEach((mission) => {
+      if (!uniqueMissionsMap.has(mission.id)) {
+        uniqueMissionsMap.set(mission.id, { ...mission, questId: quest.id });
+      }
+    });
+  });
 
-  // Determine the missions to display on the current page
+  const allMissions = Array.from(uniqueMissionsMap.values());
+
+  // Calcul des missions à afficher pour la page courante
   const displayedMissions = allMissions.slice(
     (page - 1) * missionsPerPage,
     page * missionsPerPage
   );
+
+  const totalPages = Math.ceil(allMissions.length / missionsPerPage);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     setPage(value);
+  };
+
+  useEffect(() => {
+    // Réinitialiser la page à 1 si la longueur des missions change
+    setPage(1);
+  }, [allMissions.length]);
+
+  const handleCheckboxChange = async (missionId: number, checked: boolean) => {
+    if (checked) {
+      try {
+        await validateMission({
+          variables: {
+            missionId,
+            userId: me?.id,
+          },
+        });
+        // Vous pouvez ajouter ici une logique pour mettre à jour l'interface utilisateur si nécessaire
+        console.log(
+          `Mission ${missionId} validée pour l'utilisateur ${me?.id}`
+        );
+      } catch (error) {
+        console.error("Erreur lors de la validation de la mission:", error);
+      }
+    }
   };
 
   return (
@@ -120,6 +156,9 @@ const MissionsTab = (props: MissionTabProps) => {
                     sx={{
                       "& .MuiSvgIcon-root": { fontSize: 40 },
                     }}
+                    onChange={(e) =>
+                      handleCheckboxChange(mission.id, e.target.checked)
+                    }
                   />
                 </Box>
               </Box>
