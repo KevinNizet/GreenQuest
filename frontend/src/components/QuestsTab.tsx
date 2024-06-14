@@ -54,17 +54,28 @@ const QuestsTab = (props: QuestTabProps) => {
 
   const me = medata && medata.item;
 
+  if (meErrors) {
+    console.error(
+      "Erreur lors de la récupération des données utilisateur:",
+      meErrors
+    );
+  }
+
   const { data, loading, error } = useQuery<{ item: QuestType[] }>(
     queryGetQuestByUser,
     {
       variables: {
         userId: me?.id,
       },
-      skip: !me?.id, // Skip the query if me.id is not available
+      skip: !me?.id,
     }
   );
 
   const quests = data && data.item;
+
+  if (error) {
+    console.error("Erreur lors de la récupération des quêtes:", error);
+  }
 
   const totalPages = Math.ceil((quests?.length || 0) / questsPerPage);
 
