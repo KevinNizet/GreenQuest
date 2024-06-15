@@ -7,11 +7,14 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Quest } from "./Quest";
 import { UserMission } from "./UserMission";
+import { Image } from "./Image";
+import { ObjectID } from "./ObjectId";
 
 @Entity()
 @ObjectType()
@@ -74,6 +77,10 @@ export class User extends BaseEntity {
   @OneToMany(() => UserMission, (userMission) => userMission.user)
   @Field(() => [UserMission])
   userMissions!: UserMission[];
+
+  @ManyToOne(() => Image, { nullable: true })
+  @Field({ nullable: true })
+  image!: Image;
 }
 
 @InputType()
@@ -99,6 +106,9 @@ export class UserCreateInput {
     message: "Password length",
   })
   password!: string;
+
+  @Field({ nullable: true })
+  image?: ObjectID;
 }
 
 @InputType()
@@ -114,6 +124,9 @@ export class UserUpdateInput {
   @Field({ nullable: true })
   @Length(3, 50)
   nickname?: string;
+
+  @Field({ nullable: true })
+  image?: ObjectID;
 }
 
 @InputType()

@@ -14,6 +14,8 @@ import { UserResolver } from "./resolvers/Users";
 import { customAuthChecker } from "./auth";
 import { UserMissionResolver } from "./resolvers/UserMissions";
 import "./scheduler";
+import { initializeRoutes } from "./routes";
+import { ImageResolver } from "./resolvers/Images";
 
 const port = process.env.BACK_PORT || 5050;
 
@@ -28,6 +30,7 @@ async function start() {
       QuestResolver,
       MissionResolver,
       UserMissionResolver,
+      ImageResolver,
     ],
     authChecker: customAuthChecker,
   });
@@ -40,6 +43,8 @@ async function start() {
   await dataSource.initialize();
 
   await server.start();
+
+  initializeRoutes(app);
 
   app.use(
     "/",
