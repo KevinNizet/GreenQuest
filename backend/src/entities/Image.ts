@@ -13,10 +13,15 @@ export class Image extends BaseEntity {
   mimetype!: string;
 
   @Column()
-  @Field()
+  // @Field()
   path!: string;
 
   @Column()
-  @Field()
+  // @Field()
   originalName!: string;
+
+  @Field()
+  get uri(): string {
+    return `/api/images/${this.id}`;
+  }
 }
