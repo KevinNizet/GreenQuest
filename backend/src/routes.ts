@@ -57,13 +57,7 @@ export function initializeRoutes(app: Express) {
         newImage.path = `/app/uploads/${filename}`;
         newImage.originalName = req.file.originalname;
         await newImage.save();
-        res.json({
-          success: true,
-          image: {
-            id: newImage.id,
-            uri: newImage.uri,
-          },
-        });
+
         user.image = newImage;
         await user.save();
 

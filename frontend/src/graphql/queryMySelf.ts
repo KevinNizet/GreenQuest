@@ -8,6 +8,9 @@ export const queryMySelf = gql`
       nickname
       firstname
       lastname
+      image {
+        uri
+      }
     }
   }
 `;

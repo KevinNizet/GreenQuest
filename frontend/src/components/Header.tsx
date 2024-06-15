@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { queryMySelf } from "@/graphql/queryMySelf";
@@ -14,11 +13,15 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import HeaderModal from "./modals/HeaderModal";
+import AccountCircle from "@mui/icons-material/AccountCircle"; // Assurez-vous d'importer l'icône
 
 export type userType = {
   id: number;
   email: string;
   nickname: string;
+  image?: {
+    uri: string;
+  };
 };
 
 const Header = () => {
@@ -29,6 +32,8 @@ const Header = () => {
   const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
 
   const me = data && data?.item;
+
+  console.log(me);
 
   useEffect(() => {
     if (data) {
@@ -134,7 +139,19 @@ const Header = () => {
                   color="inherit"
                   onClick={handleMenu}
                 >
-                  <AccountCircle sx={{ fontSize: "4rem" }} />
+                  {me.image ? (
+                    <img
+                      src={`http://localhost:5050${me.image.uri}`}
+                      alt="Profile"
+                      style={{
+                        width: "4rem",
+                        height: "4rem",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    <AccountCircle sx={{ fontSize: "4rem" }} />
+                  )}
                 </IconButton>
                 <Menu
                   id="menu-appbar"
