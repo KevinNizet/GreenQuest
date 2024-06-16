@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, ChangeEvent } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Layout from "@/components/Layout";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { mutationUpdateUser } from "@/graphql/userProfileUpdate/mutationUpdateUser";
-import { Button, Grid, Typography, TextField } from "@mui/material";
+import { Button, Grid, Typography, TextField, Avatar } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import { mutationUpdateUserImage } from "@/graphql/userProfileUpdate/mutationUpdateUserImage";
 
@@ -34,6 +34,8 @@ export default function Profile(): React.ReactNode {
   });
   const { vertical, horizontal, open } = toastOpen;
   const [toastMessage, setToastMessage] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -47,11 +49,21 @@ export default function Profile(): React.ReactNode {
   const handleFieldChange = (field: keyof UserType, value: string) => {
     if (editableFields) {
       setEditableFields({
-        // Créé une copie de l'objet editableFields
         ...editableFields,
-        // Puis met à jour la valeur du champ
         [field]: value,
       });
+    }
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -60,7 +72,6 @@ export default function Profile(): React.ReactNode {
   const handleUpdateProfile = async () => {
     if (editableFields) {
       const { firstname, lastname, nickname } = editableFields;
-      // Gestion des erreurs sur chacun des champs avant la màj
       const isFirstNameValid = validateFirstName(firstname);
       const isLastNameValid = validateLastName(lastname);
       const isNicknameValid = validNickName(nickname);
@@ -69,10 +80,9 @@ export default function Profile(): React.ReactNode {
         return;
       }
 
-      const file = fileInputRef.current?.files?.[0];
-      if (file) {
+      if (selectedFile) {
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", selectedFile);
         const response = await fetch(`${backUrl}/api/users/${me.id}/image`, {
           method: "POST",
           body: formData,
@@ -102,7 +112,6 @@ export default function Profile(): React.ReactNode {
           lastname,
           nickname,
         },
-        // Met à jour la vue utilisateur immédiatement après
         refetchQueries: [{ query: queryMySelf }],
       })
         .then(() => {
@@ -117,7 +126,6 @@ export default function Profile(): React.ReactNode {
     }
   };
 
-  // Vérifie que les champs ne sont pas vides
   const validateFirstName = (value: string) => {
     const isValid = value.trim() !== "";
     setFirstNameError(!isValid);
@@ -218,12 +226,42 @@ export default function Profile(): React.ReactNode {
             <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
               Avatar
             </Typography>
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              disabled={!editable}
-            />
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                {preview ? (
+                  <Avatar
+                    alt="Avatar Preview"
+                    src={preview}
+                    sx={{ width: 56, height: 56 }}
+                  />
+                ) : me?.image?.uri ? (
+                  <Avatar
+                    alt="Current Avatar"
+                    src={`${backUrl}${me.image.uri}`}
+                    sx={{ width: 56, height: 56 }}
+                  />
+                ) : (
+                  <Avatar sx={{ width: 56, height: 56 }}>
+                    {me?.nickname.charAt(0).toUpperCase()}
+                  </Avatar>
+                )}
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  component="label"
+                  disabled={!editable}
+                >
+                  Changer d&apos;avatar
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={12} container justifyContent="flex-end" marginTop={5}>
             {editable ? (
