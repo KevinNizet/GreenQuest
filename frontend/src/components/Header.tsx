@@ -13,7 +13,8 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import HeaderModal from "./modals/HeaderModal";
-import AccountCircle from "@mui/icons-material/AccountCircle"; // Assurez-vous d'importer l'icône
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Image from "next/image";
 
 export type userType = {
   id: number;
@@ -29,15 +30,11 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  // console.log("NEXT_PUBLIC_BACK_URL:", process.env.NEXT_PUBLIC_BACK_URL);
-
   const backUrl = process.env.NEXT_PUBLIC_BACK_URL;
 
   const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
 
   const me = data && data?.item;
-
-  // console.log("Utilisateur connecté:", me);
 
   useEffect(() => {
     if (data) {
@@ -106,12 +103,15 @@ const Header = () => {
               }}
             >
               <a href="/">
-                <img
-                  srcSet={`/images/greenquest_logo.png`}
+                <Image
                   src={`/images/greenquest_logo.png`}
-                  alt="Greenquest_logo"
+                  alt="Logo de l'application"
                   loading="lazy"
-                  style={{ width: "6rem", margin: 0, padding: 0 }}
+                  width={96}
+                  height={96}
+                  style={{
+                    borderRadius: "50%",
+                  }}
                 />
               </a>
               <h1 style={{ margin: "0.5rem 0 0 0" }}> Greenquest</h1>
