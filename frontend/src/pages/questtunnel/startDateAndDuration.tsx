@@ -42,7 +42,7 @@ export default function StartAndDuration() {
         marginTop={3}
       >
         <Typography variant="h1" sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-          Créer votre quête
+          Crée ta quête
         </Typography>
 
         <Grid

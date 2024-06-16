@@ -188,8 +188,8 @@ const Signin = () => {
               )}
               {validationError && (
                 <Typography variant="body2" color="error" gutterBottom>
-                  Votre compte n'a pas encore été validé. Veuillez vérifier
-                  votre boîte mail et utiliser le lien de validation.
+                  Ton compte n&apos;a pas encore été validé. Vérifie ta boîte
+                  mail et utilise le lien de validation.
                 </Typography>
               )}
             </Grid>

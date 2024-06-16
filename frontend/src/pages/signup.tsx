@@ -104,8 +104,8 @@ const Signup = () => {
               gutterBottom
               sx={{ width: "70%", textAlign: "center", marginBottom: "3rem" }}
             >
-              Inscrit toi ou connecte toi pour participer à une quête et valider
-              tes missions quotidiennes !
+              Inscrit toi ou connecte toi pour participer à une quête et relever
+              des défis écologiques quotidiens !
             </Typography>
           </Grid>
           <Grid

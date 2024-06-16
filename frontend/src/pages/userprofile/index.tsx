@@ -150,7 +150,7 @@ export default function Profile(): React.ReactNode {
         <Grid container spacing={3} padding={4}>
           <Grid item xs={12} container justifyContent="center">
             <Typography variant="h3" paragraph>
-              Page de profil
+              Voici ton profil
             </Typography>
           </Grid>
 

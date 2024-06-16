@@ -108,7 +108,7 @@ export default function BasicModal({
       <Modal open={confirmOpen} onClose={handleCloseConfirmModal}>
         <Box sx={style}>
           <Typography id="modal-modal-description" sx={{ mt: 2 }} variant="h6">
-            Vous êtes sûr de vouloir supprimer cette quête ?
+            Tu es sûr de vouloir supprimer cette quête ?
           </Typography>
           <Button
             sx={{ color: "red", fontSize: "20px", mt: 2 }}

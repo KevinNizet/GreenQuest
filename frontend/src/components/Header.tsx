@@ -212,7 +212,7 @@ const Header = () => {
                 color={"success"}
                 variant="contained"
               >
-                {me ? "Logout" : "Login"}
+                {me ? "Se déconnecter" : "Se connecter"}
               </Button>
               <HeaderModal
                 modalOpen={modalOpen}
