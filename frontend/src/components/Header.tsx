@@ -29,11 +29,15 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  // console.log("NEXT_PUBLIC_BACK_URL:", process.env.NEXT_PUBLIC_BACK_URL);
+
+  const backUrl = process.env.NEXT_PUBLIC_BACK_URL;
+
   const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
 
   const me = data && data?.item;
 
-  console.log(me);
+  // console.log("Utilisateur connecté:", me);
 
   useEffect(() => {
     if (data) {
@@ -141,7 +145,7 @@ const Header = () => {
                 >
                   {me.image ? (
                     <img
-                      src={`http://localhost:5050${me.image.uri}`}
+                      src={`${backUrl}${me.image.uri}`}
                       alt="Profile"
                       style={{
                         width: "4rem",

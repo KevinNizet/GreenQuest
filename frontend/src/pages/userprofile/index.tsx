@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import Layout from "@/components/Layout";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { mutationUpdateUser } from "@/graphql/userProfileUpdate/mutationUpdateUser";
 import { Button, Grid, Typography, TextField } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
+import { mutationUpdateUserImage } from "@/graphql/userProfileUpdate/mutationUpdateUserImage";
 
 export interface UserType {
   email: string;
@@ -12,29 +13,36 @@ export interface UserType {
   lastname: string;
   nickname: string;
   id: number;
+  image?: {
+    uri: string;
+  };
 }
 
 export default function Profile(): React.ReactNode {
   const { loading, error, data } = useQuery(queryMySelf);
   const [updateUser] = useMutation(mutationUpdateUser);
+  const [updateUserImage] = useMutation(mutationUpdateUserImage);
   const [editable, setEditable] = useState(false);
   const [editableFields, setEditableFields] = useState<UserType | null>(null);
   const [firstnameError, setFirstNameError] = useState(false);
   const [lastNameError, setLastNameError] = useState(false);
   const [nicknameError, setNicknameError] = useState(false);
-  const [toastOpen, setToastOpen] = React.useState({
+  const [toastOpen, setToastOpen] = useState({
     open: false,
     vertical: "top",
     horizontal: "right",
   });
   const { vertical, horizontal, open } = toastOpen;
+  const [toastMessage, setToastMessage] = useState("");
 
-  const [toastMessage, setToastMessage] = React.useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Erreur: {error.message}</p>;
 
   const me = data?.item;
+
+  console.log(me);
 
   const handleFieldChange = (field: keyof UserType, value: string) => {
     if (editableFields) {
@@ -47,7 +55,9 @@ export default function Profile(): React.ReactNode {
     }
   };
 
-  const handleUpdateProfile = () => {
+  const backUrl = process.env.NEXT_PUBLIC_BACK_URL;
+
+  const handleUpdateProfile = async () => {
     if (editableFields) {
       const { firstname, lastname, nickname } = editableFields;
       // Gestion des erreurs sur chacun des champs avant la màj
@@ -58,17 +68,45 @@ export default function Profile(): React.ReactNode {
       if (!isFirstNameValid || !isLastNameValid || !isNicknameValid) {
         return;
       }
+
+      const file = fileInputRef.current?.files?.[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await fetch(`${backUrl}/api/users/${me.id}/image`, {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
+        const result = await response.json();
+        if (result.success) {
+          const imageId = result.image.id;
+          await updateUserImage({
+            variables: {
+              image: { id: imageId },
+            },
+            refetchQueries: [{ query: queryMySelf }],
+          });
+        } else {
+          setToastMessage(
+            "Une erreur est survenue lors de l'upload de l'image."
+          );
+          setToastOpen({ ...toastOpen, open: true });
+          return;
+        }
+      }
+
       updateUser({
         variables: {
           firstname,
           lastname,
           nickname,
         },
-        // Met à jour la vue utilisateur immédiatement aprés
+        // Met à jour la vue utilisateur immédiatement après
         refetchQueries: [{ query: queryMySelf }],
       })
         .then(() => {
-          setToastMessage("Ton profil a été mis à jour avec succés 👍🏻 !");
+          setToastMessage("Ton profil a été mis à jour avec succès 👍🏻 !");
           setToastOpen({ ...toastOpen, open: true });
         })
         .catch((error) => {
@@ -176,6 +214,17 @@ export default function Profile(): React.ReactNode {
               helperText={lastNameError ? "Renseigner un nom valide" : ""}
             />
           </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
+              Avatar
+            </Typography>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              disabled={!editable}
+            />
+          </Grid>
           <Grid item xs={12} container justifyContent="flex-end" marginTop={5}>
             {editable ? (
               <Button
@@ -191,7 +240,7 @@ export default function Profile(): React.ReactNode {
                 variant="contained"
                 onClick={() => {
                   setEditable(true);
-                  setEditableFields({ ...me }); // Met à jour editableFields avec les valeurs actuelles de me
+                  setEditableFields({ ...me });
                 }}
               >
                 Modifier

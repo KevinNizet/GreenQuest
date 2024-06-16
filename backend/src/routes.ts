@@ -10,7 +10,14 @@ export function initializeRoutes(app: Express) {
   const storage = multer.memoryStorage();
   const upload = multer({ storage });
 
-  app.use("/api", cors());
+  const allowedOrigins = ["http://localhost:3000"]; // Ajoutez ici les origines autorisées
+
+  app.use(
+    cors({
+      origin: allowedOrigins,
+      credentials: true, // Autoriser les informations d'identification
+    })
+  );
 
   // Route pour uploader une image
   app.post(
@@ -38,7 +45,7 @@ export function initializeRoutes(app: Express) {
         // Récupération de l'extention de l'image grâce à mime
         const extension = req.file.originalname.split(".").pop();
         const filename = `${Date.now()}-${
-          Math.log(Math.random() * 8999) + 1000
+          Math.random() * 8999 + 1000
         }.${extension}`;
 
         // Redimensionnement du fichier avec sharp

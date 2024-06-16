@@ -28,4 +28,5 @@ services:
       - ./frontend/public/:/app/public/
     environment:
       - WATCHPACK_POLLING=true
+      - NEXT_PUBLIC_BACK_URL=http://localhost:5050
     command: npm run dev
