@@ -10,7 +10,10 @@ export function initializeRoutes(app: Express) {
   const storage = multer.memoryStorage();
   const upload = multer({ storage });
 
-  const allowedOrigins = ["http://localhost:3000"];
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "https://staging.0923-rouge-3.wns.wilders.dev",
+  ];
 
   app.use(
     cors({

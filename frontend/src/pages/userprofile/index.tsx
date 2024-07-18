@@ -86,10 +86,13 @@ export default function Profile(): React.ReactNode {
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
-        const response = await fetch(`${backUrl}/api/users/${me.id}/image`, {
+        const response = await fetch(`${backUrl}/users/${me.id}/image`, {
           method: "POST",
           body: formData,
           credentials: "include",
+          headers: {
+            "x-apollo-operation-name": "uploadImage",
+          },
         });
         const result = await response.json();
         if (result.success) {
