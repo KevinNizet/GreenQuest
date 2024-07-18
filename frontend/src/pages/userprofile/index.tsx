@@ -67,7 +67,10 @@ export default function Profile(): React.ReactNode {
     }
   };
 
-  const backUrl = process.env.NEXT_PUBLIC_BACK_URL;
+  const backUrl =
+    typeof window !== "undefined" && location.origin.includes("localhost")
+      ? "http://localhost:5050/images"
+      : "/api/images";
 
   const handleUpdateProfile = async () => {
     if (editableFields) {
