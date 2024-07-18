@@ -46,7 +46,7 @@ export default function DifficultyLevel() {
         marginTop={3}
       >
         <Typography variant="h1" sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-          Créer votre quête
+          Crée ta quête
         </Typography>
 
         <Grid
@@ -67,7 +67,7 @@ export default function DifficultyLevel() {
             Étape 3
           </Typography>
           <InputLabel id="select-label">
-            Choisissez le niveau de difficulté
+            Choisis le niveau de difficulté
           </InputLabel>
           <Select
             value={difficulty}

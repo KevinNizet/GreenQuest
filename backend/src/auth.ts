@@ -23,7 +23,10 @@ export async function getUserFromReq(req: any, res: any): Promise<User | null> {
   try {
     const payload = jwt.verify(token, `${process.env.JWT_SECRET}`);
     if (typeof payload === "object" && "userId" in payload) {
-      const user = await User.findOneBy({ id: payload.userId });
+      const user = await User.findOne({
+        where: { id: payload.userId },
+        relations: ["image"],
+      });
 
       if (user !== null) {
         return Object.assign(user, { hashedPassword: undefined });

@@ -22,12 +22,14 @@ import { addDays, isBefore } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import { sendResetPassword } from "../email";
 import { sendValidationEmail } from "../AccountValidationWithEmail";
+import { ObjectID } from "../entities/ObjectId";
+import { Image as ImageEntity } from "../entities/Image";
 
 const argon2 = require("argon2");
 
-// return all users
 @Resolver(User)
 export class UserResolver {
+  // return all users
   @Query(() => [User])
   async getUsers(): Promise<User[]> {
     const users = await User.find({
@@ -35,6 +37,7 @@ export class UserResolver {
         questsParticipated: true,
         questsCreated: true,
         userMissions: true,
+        image: true,
       },
     });
     return users;
@@ -49,6 +52,7 @@ export class UserResolver {
         questsParticipated: true,
         questsCreated: true,
         userMissions: true,
+        image: true,
       },
     });
     if (!user) {
@@ -57,7 +61,7 @@ export class UserResolver {
     return user;
   }
 
-  // singup query
+  // signup query
   @Mutation(() => User)
   async signup(
     @Arg("data", () => UserCreateInput) data: UserCreateInput
@@ -164,7 +168,40 @@ export class UserResolver {
       user.nickname = data.nickname;
     }
 
-    await user.save(); // ENregistrement en BDD
+    // ENregistrement en BDD
+    await user.save();
+
+    return user;
+  }
+
+  // MAJ de l'avatar
+  @Authorized()
+  @Mutation(() => User)
+  async updateUserImage(
+    @Arg("image", () => ObjectID) imageObject: ObjectID,
+    @Ctx() context: ContextType
+  ): Promise<User> {
+    const userId = context?.user?.id;
+
+    if (!userId) {
+      throw new Error("Vous devez être connecté pour effectuer cette action");
+    }
+
+    const user = await User.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    const image = await ImageEntity.findOne({ where: { id: imageObject.id } });
+
+    if (!image) {
+      throw new Error("Image non trouvée");
+    }
+
+    user.image = image;
+
+    await user.save();
 
     return user;
   }
@@ -217,7 +254,10 @@ export class UserResolver {
     @Arg("email") email: string,
     @Arg("password") password: string
   ): Promise<User | null> {
-    const existingUser = await User.findOneBy({ email });
+    const existingUser = await User.findOne({
+      where: { email },
+      relations: { image: true },
+    });
 
     // Vérifiez si le compte est validé
     if (!existingUser?.isValidatedAccount) {

@@ -24,6 +24,8 @@ services:
       - POSTGRES_DB=dbname
   frontend:
     image: laurejanin/greenquest-frontend:latest
+    environment:
+      - NEXT_PUBLIC_BACK_URL=https://0923-rouge-3.wns.wilders.dev/api
   nginx:
     stop_grace_period: 0s
     image: nginx:1.21.3

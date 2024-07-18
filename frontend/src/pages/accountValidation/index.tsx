@@ -47,8 +47,8 @@ const ValidateAccount = () => {
               }}
             >
               {" "}
-              Félicitations, ton compte a été validé avec succés. Connecte toi à
-              ton compte pour démarrer l'aventure !{" "}
+              Félicitations, ton compte a été validé avec succés. Connecte toi
+              pour démarrer l&apos;aventure !{" "}
             </Typography>
             <Button
               color="secondary"

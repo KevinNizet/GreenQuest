@@ -138,7 +138,7 @@ export default function Missions() {
             Étape 4
           </Typography>
           <Typography variant="h3" sx={{ fontSize: "1rem" }}>
-            Choisissez vos missions
+            Choisis tes missions
           </Typography>
 
           <Grid container direction="column" gap={2} sx={{ width: "100%" }}>
