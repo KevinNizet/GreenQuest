@@ -13,7 +13,9 @@ import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
 import Pagination from "@mui/material/Pagination";
 import QuestDetailsModal from "./modals/QuestDetailsModal";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import { UserType } from "@/pages/userprofile";
+import { userMissionType } from "./MissionsTab";
 
 type QuestTabProps = {
   value: number;
@@ -22,7 +24,7 @@ type QuestTabProps = {
 export type QuestType = {
   id: number;
   XPValue: number;
-  users: [{ id: number; nickname: string }];
+  users: [{ id: number; nickname: string; userMissions: userMissionType[] }];
   code: number;
   createdAt: Date;
   description: string;
@@ -31,6 +33,7 @@ export type QuestType = {
   missions: [{ id: number; title: string }];
   title: string;
   createdBy: UserType;
+  startDate: string;
 };
 
 const QuestsTab = (props: QuestTabProps) => {
@@ -49,10 +52,17 @@ const QuestsTab = (props: QuestTabProps) => {
   const {
     loading: meLoading,
     data: medata,
-    error: meErrors,
+    error: meError,
   } = useQuery<{ item: userType }>(queryMySelf);
 
   const me = medata && medata.item;
+
+  if (meError) {
+    console.error(
+      "Erreur lors de la récupération des données utilisateur:",
+      meError
+    );
+  }
 
   const { data, loading, error } = useQuery<{ item: QuestType[] }>(
     queryGetQuestByUser,
@@ -60,11 +70,16 @@ const QuestsTab = (props: QuestTabProps) => {
       variables: {
         userId: me?.id,
       },
-      skip: !me?.id, // Skip the query if me.id is not available
+      fetchPolicy: "network-only",
+      skip: !me?.id,
     }
   );
 
   const quests = data && data.item;
+
+  if (error) {
+    console.error("Erreur lors de la récupération des quêtes:", error);
+  }
 
   const totalPages = Math.ceil((quests?.length || 0) / questsPerPage);
 
@@ -95,7 +110,7 @@ const QuestsTab = (props: QuestTabProps) => {
     );
   }
 
-  if (meErrors || error) {
+  if (meError || error) {
     return (
       <Box
         sx={{
@@ -180,18 +195,15 @@ const QuestsTab = (props: QuestTabProps) => {
                     >
                       {quest.title}
                     </p>
-                    <HelpOutlineIcon
+                    <MenuBookIcon
                       sx={{
-                        color: "grey",
-                        fontSize: "35px",
+                        color: "white",
+                        fontSize: "45px",
                         margin: "0 1rem 0 0",
                         cursor: "pointer",
+                        filter: "drop-shadow(0px 1px 1.2px grey);",
                       }}
                       onClick={() => handleOpen(quest)}
-                    />
-                    <Checkbox
-                      color="secondary"
-                      sx={{ "& .MuiSvgIcon-root": { fontSize: 40 } }}
                     />
                   </Box>
                 </Box>

@@ -17,6 +17,10 @@ export const queryGetQuestByUser = gql`
       users {
         id
         nickname
+        userMissions {
+          isCompleted
+          id
+        }
       }
       missions {
         id

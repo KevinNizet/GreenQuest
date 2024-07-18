@@ -7,12 +7,25 @@ import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
 import Pagination from "@mui/material/Pagination";
 import { mutationValidateMission } from "@/graphql/mutationValidateMission";
 import { userType } from "./Header";
+import { queryGetUserMission } from "@/graphql/queryGetUserMission";
 
 type MissionTabProps = {
   value: number;
 };
 
+export type userMissionType = {
+  id: number;
+  userId: number;
+  mission: { id: number };
+  nickName: string;
+  isCompleted: boolean;
+  points: number;
+};
+
 const MissionsTab = (props: MissionTabProps) => {
+  const [page, setPage] = useState(1);
+  const [completedMissions, setCompletedMissions] = useState<number[]>([]);
+
   const {
     loading: meLoading,
     data: medata,
@@ -20,34 +33,56 @@ const MissionsTab = (props: MissionTabProps) => {
   } = useQuery<{ item: userType }>(queryMySelf);
   const me = medata && medata.item;
 
-  const { data, loading, error } = useQuery<{ item: QuestType[] }>(
-    queryGetQuestByUser,
-    {
-      variables: { userId: me?.id },
-    }
-  );
+  const {
+    data: questData,
+    loading: questLoading,
+    error: questError,
+  } = useQuery<{ item: QuestType[] }>(queryGetQuestByUser, {
+    variables: { userId: me?.id },
+  });
+
+  const quests = questData && questData.item;
+
+  const {
+    data: userMissionData,
+    loading: userMissionLoading,
+    error: userMissionError,
+  } = useQuery(queryGetUserMission, {
+    variables: { userId: me?.id },
+  });
+
+  const userMissions = userMissionData?.item || [];
 
   const [validateMission] = useMutation(mutationValidateMission);
 
-  const quests = data && data.item;
+  useEffect(() => {
+    const completed = userMissions
+      .filter((userMission: userMissionType) => userMission.isCompleted)
+      .map((userMission: userMissionType) => userMission.mission.id);
+    setCompletedMissions(completed);
+  }, [userMissionData]);
 
-  const [page, setPage] = useState(1);
-  const missionsPerPage = 4;
-
-  // Récupération de toutes les missions
   const uniqueMissionsMap = new Map();
 
   quests?.forEach((quest) => {
     quest.missions.forEach((mission) => {
       if (!uniqueMissionsMap.has(mission.id)) {
-        uniqueMissionsMap.set(mission.id, { ...mission, questId: quest.id });
+        uniqueMissionsMap.set(mission.id, {
+          ...mission,
+          questIds: quest.missions
+            .filter((m) => m.id === mission.id)
+            .map(() => quest.id),
+        });
+      } else {
+        const existingMission = uniqueMissionsMap.get(mission.id);
+        existingMission.questIds.push(quest.id);
       }
     });
   });
 
   const allMissions = Array.from(uniqueMissionsMap.values());
 
-  // Calcul des missions à afficher pour la page courante
+  const missionsPerPage = 4;
   const displayedMissions = allMissions.slice(
     (page - 1) * missionsPerPage,
     page * missionsPerPage
@@ -63,27 +98,36 @@ const MissionsTab = (props: MissionTabProps) => {
   };
 
   useEffect(() => {
-    // Réinitialiser la page à 1 si la longueur des missions change
     setPage(1);
   }, [allMissions.length]);
 
-  const handleCheckboxChange = async (missionId: number, checked: boolean) => {
+  const handleCheckboxChange = async (
+    missionId: number,
+    questIds: number[],
+    checked: boolean
+  ) => {
     if (checked) {
       try {
-        await validateMission({
-          variables: {
-            missionId,
-            userId: me?.id,
-          },
-        });
-        // Vous pouvez ajouter ici une logique pour mettre à jour l'interface utilisateur si nécessaire
-        console.log(
-          `Mission ${missionId} validée pour l'utilisateur ${me?.id}`
+        await Promise.all(
+          questIds.map((questId) =>
+            validateMission({
+              variables: {
+                missionId,
+                userId: me?.id,
+                questId,
+              },
+            })
+          )
         );
+        setCompletedMissions((prev) => [...prev, missionId]);
       } catch (error) {
         console.error("Erreur lors de la validation de la mission:", error);
       }
     }
+  };
+
+  const isMissionCompleted = (missionId: number) => {
+    return completedMissions.includes(missionId);
   };
 
   return (
@@ -120,49 +164,62 @@ const MissionsTab = (props: MissionTabProps) => {
               gap: "20px",
             }}
           >
-            {displayedMissions.map((mission, index) => (
-              <Box
-                key={`mission-${mission.id}-${index}`}
-                sx={{
-                  backgroundColor: "lightgrey",
-                  width: "90%",
-                  display: "flex",
-                  padding: "1.5rem",
-                  borderRadius: "10px",
-                  boxShadow: 1,
-                  margin: "1rem 0 0 0",
-                }}
-              >
+            {displayedMissions.map((mission, index) => {
+              const completed = isMissionCompleted(mission.id);
+
+              return (
                 <Box
+                  key={`mission-${mission.id}-${index}`}
                   sx={{
-                    width: "100%",
+                    backgroundColor: "lightgrey",
+                    width: "90%",
                     display: "flex",
-                    justifyContent: "space-between",
+                    padding: "1.5rem",
+                    borderRadius: "10px",
+                    boxShadow: 1,
+                    margin: "1rem 0 0 0",
                   }}
                 >
-                  <p
-                    style={{
-                      width: "80%",
+                  <Box
+                    sx={{
+                      width: "100%",
                       display: "flex",
-                      alignItems: "center",
-                      cursor: "pointer",
-                      fontSize: "20px",
+                      justifyContent: "space-between",
                     }}
                   >
-                    {mission.title}
-                  </p>
-                  <Checkbox
-                    color="secondary"
-                    sx={{
-                      "& .MuiSvgIcon-root": { fontSize: 40 },
-                    }}
-                    onChange={(e) =>
-                      handleCheckboxChange(mission.id, e.target.checked)
-                    }
-                  />
+                    <p
+                      style={{
+                        width: "80%",
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        fontSize: "20px",
+                      }}
+                    >
+                      {mission.title}
+                    </p>
+                    <Checkbox
+                      color="secondary"
+                      checked={completed}
+                      disabled={completed}
+                      sx={{
+                        "& .MuiSvgIcon-root": { fontSize: 40 },
+                        "&.Mui-disabled": {
+                          color: "green",
+                        },
+                      }}
+                      onChange={(e) =>
+                        handleCheckboxChange(
+                          mission.id,
+                          mission.questIds,
+                          e.target.checked
+                        )
+                      }
+                    />
+                  </Box>
                 </Box>
-              </Box>
-            ))}
+              );
+            })}
           </Box>
           <Pagination
             count={totalPages}

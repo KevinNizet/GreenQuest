@@ -12,11 +12,13 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ObjectID } from "./ObjectId";
 import { Mission } from "./Mission";
 import { User } from "./User";
+import { UserMission } from "./UserMission";
 
 export enum Difficulty {
   EASY = "EASY",
@@ -70,6 +72,10 @@ export class Quest extends BaseEntity {
   @ManyToMany(() => User, (user) => user.questsParticipated)
   @Field(() => [User], { nullable: true })
   users!: User[];
+
+  @OneToMany(() => UserMission, (userMission) => userMission.quest)
+  @Field(() => [UserMission])
+  userMissions!: UserMission[];
 
   @ManyToOne(() => User, (user) => user.questsCreated)
   @Field(() => User, { nullable: true })

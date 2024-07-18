@@ -9,8 +9,7 @@ async function resetMissions() {
     console.error("Error resetting missions:", err);
   }
 }
-
-cron.schedule("0 0 * * *", async () => {
+cron.schedule("*/2 * * * *", async () => {
   try {
     await resetMissions();
   } catch (err) {

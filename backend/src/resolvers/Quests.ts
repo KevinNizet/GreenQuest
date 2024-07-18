@@ -4,13 +4,14 @@ import {
   Authorized,
   Ctx,
   ID,
+  Int,
   Mutation,
   Query,
   Resolver,
 } from "type-graphql";
 import { Quest, QuestCreateInput } from "../entities/Quest";
 import { Mission } from "../entities/Mission";
-import { User } from "../entities/User";
+import { User, UserQuestPoints } from "../entities/User";
 import { ContextType } from "../auth";
 import { UserMission } from "../entities/UserMission";
 
@@ -41,6 +42,7 @@ export class QuestResolver {
   async getQuestByUser(
     @Arg("userId", () => ID) userId: number
   ): Promise<Quest[]> {
+    // Rechercher les quêtes avec les relations spécifiées
     const quests = await Quest.find({
       where: {
         users: {
@@ -49,9 +51,22 @@ export class QuestResolver {
       },
       relations: { missions: true, users: true, createdBy: true },
     });
-    if (!quests) {
+
+    if (!quests || quests.length === 0) {
       throw new Error("Pas de quête liée à cette 'userId'");
     }
+
+    // Charger les UserMissions pour chaque user dans les quêtes
+    for (const quest of quests) {
+      for (const user of quest.users) {
+        const userWithMissions = await User.findOne({
+          where: { id: user.id },
+          relations: { userMissions: true }, // Charger les UserMissions
+        });
+        user.userMissions = userWithMissions?.userMissions || [];
+      }
+    }
+
     return quests;
   }
 
@@ -166,25 +181,31 @@ export class QuestResolver {
     return quest;
   }
 
-  @Query(() => Number)
-  async calculateUserPointsForQuest(
-    @Arg("userId", () => ID) userId: number,
+  @Query(() => [UserQuestPoints])
+  async getTotalPointsForQuest(
+    @Arg("userIds", () => [ID]) userIds: number[],
     @Arg("questId", () => ID) questId: number
-  ): Promise<number> {
-    const completions = await UserMission.find({
-      where: {
-        user: { id: userId },
-        mission: {
-          quests: { id: questId },
-        },
-        isCompleted: true,
-      },
-    });
+  ): Promise<UserQuestPoints[]> {
+    const results = await Promise.all(
+      userIds.map(async (userId) => {
+        const userMissions = await UserMission.find({
+          where: { user: { id: userId }, mission: { quests: { id: questId } } },
+          relations: ["user", "mission", "mission.quests"],
+        });
 
-    const totalPoints = completions.reduce(
-      (total, completion) => total + completion.points,
-      0
+        if (!userMissions.length) {
+          return { userId, points: 0 };
+        }
+
+        const totalPoints = userMissions.reduce((acc, userMission) => {
+          return acc + userMission.points;
+        }, 0);
+
+        return { userId, points: totalPoints };
+      })
     );
-    return totalPoints;
+    console.log(results);
+
+    return results;
   }
 }

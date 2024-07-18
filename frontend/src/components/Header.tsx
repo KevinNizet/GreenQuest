@@ -13,6 +13,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import HeaderModal from "./modals/HeaderModal";
+import { userMissionType } from "./MissionsTab";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Image from "next/image";
 
@@ -20,6 +21,7 @@ export type userType = {
   id: number;
   email: string;
   nickname: string;
+  userMissions: userMissionType[];
   image?: {
     uri: string;
   };
@@ -77,7 +79,7 @@ const Header = () => {
       <AppBar
         position="static"
         sx={{
-          height: "15vh",
+          height: "10vh",
           display: "flex",
           justifyContent: "center",
           borderTopLeftRadius: "2.5rem",
