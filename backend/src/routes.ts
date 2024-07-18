@@ -10,12 +10,12 @@ export function initializeRoutes(app: Express) {
   const storage = multer.memoryStorage();
   const upload = multer({ storage });
 
-  const allowedOrigins = ["http://localhost:3000"]; // Ajoutez ici les origines autorisées
+  const allowedOrigins = ["http://localhost:3000"];
 
   app.use(
     cors({
       origin: allowedOrigins,
-      credentials: true, // Autoriser les informations d'identification
+      credentials: true,
     })
   );
 
