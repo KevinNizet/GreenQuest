@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <Box
       sx={{
-        backgroundImage: `url('images/greenquest_background-accueil.webp')`,
+        backgroundImage: `url('images/greenquest_background-accueil.jpg')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         position: "relative",

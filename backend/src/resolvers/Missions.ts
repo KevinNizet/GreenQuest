@@ -1,7 +1,7 @@
 import { validate } from "class-validator";
 import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
 import { Mission, MissionCreateInput } from "../entities/Mission";
-import { Difficulty } from "../entities/Quest";
+import { Difficulty, Quest } from "../entities/Quest";
 import { UserMission } from "../entities/UserMission";
 import { User } from "../entities/User";
 
@@ -43,27 +43,30 @@ export class MissionResolver {
   @Mutation(() => UserMission)
   async validateMission(
     @Arg("userId", () => ID) userId: number,
-    @Arg("missionId", () => ID) missionId: number
+    @Arg("missionId", () => ID) missionId: number,
+    @Arg("questId", () => ID) questId: number
   ): Promise<UserMission> {
     let userMission = await UserMission.findOne({
       where: {
         user: { id: userId },
         mission: { id: missionId },
       },
-      relations: ["user", "mission"],
+      relations: ["user", "mission", "quest"],
     });
 
     if (!userMission) {
       const user = await User.findOne({ where: { id: userId } });
       const mission = await Mission.findOne({ where: { id: missionId } });
+      const quest = await Quest.findOne({ where: { id: questId } });
 
-      if (!user || !mission) {
-        throw new Error("User or Mission not found");
+      if (!user || !mission || !quest) {
+        throw new Error("User, Mission or Quest not found");
       }
 
       userMission = new UserMission();
       userMission.user = user;
       userMission.mission = mission;
+      userMission.quest = quest;
       userMission.points = 0;
     } else {
       if (userMission.isCompleted) {
@@ -72,7 +75,7 @@ export class MissionResolver {
     }
 
     userMission.isCompleted = true;
-    userMission.points = userMission.mission.XPValue;
+    userMission.points += userMission.mission.XPValue;
 
     await userMission.save();
 

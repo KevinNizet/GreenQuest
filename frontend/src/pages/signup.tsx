@@ -99,7 +99,7 @@ const Signup = () => {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-              height: "30vh",
+              height: "60vh",
               justifyContent: "space-around",
               alignItems: "center",
               backgroundColor: "#ECEBF5",

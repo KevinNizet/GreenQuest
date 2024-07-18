@@ -39,7 +39,7 @@ export default function QuestLink() {
     return <div>Chargement...</div>;
   }
 
-  const code = data.getQuestById.code;
+  const code = data.item.code;
 
   const shareUrl = "https://0923-rouge-3.wns.wilders.dev/";
   const shareMessage = `Rejoignez ma quête avec ce code: ${code}`;

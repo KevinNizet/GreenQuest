@@ -1,22 +1,5 @@
-import {
-  Arg,
-  ID,
-  Query,
-  Resolver,
-  Mutation,
-  Ctx,
-  Authorized,
-} from "type-graphql";
-import {
-  ChangePasswordInput,
-  User,
-  UserCreateInput,
-  UserUpdateInput,
-} from "../entities/User";
-import { validate } from "class-validator";
-import Cookies from "cookies";
-import jwt from "jsonwebtoken";
-import { ContextType, getUserFromReq } from "../auth";
+import { Arg, ID, Query, Resolver } from "type-graphql";
+
 import { UserMission } from "../entities/UserMission";
 
 const argon2 = require("argon2");
@@ -25,13 +8,16 @@ const argon2 = require("argon2");
 @Resolver(UserMission)
 export class UserMissionResolver {
   @Query(() => [UserMission])
-  async getUserMissions(): Promise<UserMission[]> {
-    const userrMissons = await UserMission.find({
+  async getUserMissions(
+    @Arg("userId", () => ID) userId: number
+  ): Promise<UserMission[]> {
+    const userMissions = await UserMission.find({
+      where: { user: { id: userId } },
       relations: {
         mission: { quests: true },
         user: true,
       },
     });
-    return userrMissons;
+    return userMissions;
   }
 }

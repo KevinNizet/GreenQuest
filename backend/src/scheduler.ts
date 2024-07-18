@@ -5,7 +5,7 @@ async function resetMissions() {
   await UserMission.update({ isCompleted: true }, { isCompleted: false });
   console.log("Missions has been reset to be completed !");
 }
-cron.schedule("0 0 * * *", async () => {
+cron.schedule("*/2 * * * *", async () => {
   try {
     await resetMissions();
   } catch (err) {

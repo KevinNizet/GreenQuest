@@ -21,6 +21,7 @@ import { UserToken } from "../entities/UserToken";
 import { addDays, isBefore } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import { sendResetPassword } from "../email";
+import { UserMission } from "../entities/UserMission";
 
 const argon2 = require("argon2");
 
@@ -36,8 +37,18 @@ export class UserResolver {
         userMissions: true,
       },
     });
+
+    for (const user of users) {
+      let totalPoint = 0;
+      for (const element of user.userMissions) {
+        totalPoint += element.points;
+        for (const element of user.userMissions) element.points = totalPoint;
+      }
+    }
+
     return users;
   }
+
   // return one user
   @Query(() => User, { nullable: true })
   async user(@Arg("id", () => ID) id: number): Promise<User> {
@@ -56,7 +67,6 @@ export class UserResolver {
     return user;
   }
 
-  // singup query
   @Mutation(() => User)
   async signup(
     @Arg("data", () => UserCreateInput) data: UserCreateInput
@@ -66,13 +76,11 @@ export class UserResolver {
       throw new Error(`Error occured: ${JSON.stringify(errors)}`);
     }
 
-    //custom error if user already exists
     const existingUser = await User.findOneBy({ email: data.email });
     if (existingUser) {
       throw new Error(`Existing user`);
     }
 
-    //create new user with hashed password
     const newUser = new User();
     const hashedPassword = await argon2.hash(data.password);
     Object.assign(newUser, {

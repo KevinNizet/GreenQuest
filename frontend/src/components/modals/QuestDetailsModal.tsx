@@ -9,6 +9,7 @@ import { useMutation } from "@apollo/client";
 import { mutationDeleteQuest } from "@/graphql/mutationDeleteQuest";
 import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
 import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
+import LeaderBoard from "../LeaderBoard";
 
 interface State extends SnackbarOrigin {
   open: boolean;
@@ -19,7 +20,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 550,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -90,8 +91,18 @@ export default function BasicModal({
             {quest?.description}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {quest?.XPValue}
+            Date de début : {quest?.startDate.split("T")[0]}
           </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Durée: {quest?.duration} {quest?.duration === 1 ? "jour" : "jours"}
+          </Typography>
+          <br />
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Classement :
+          </Typography>
+          <br />
+          <LeaderBoard questId={quest?.id} userId={me?.id} key={quest?.id} />
+          <br />
           <>
             {quest?.createdBy.id === me?.id && (
               <Button

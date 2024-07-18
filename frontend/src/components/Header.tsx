@@ -14,11 +14,13 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import HeaderModal from "./modals/HeaderModal";
+import { userMissionType } from "./MissionsTab";
 
 export type userType = {
   id: number;
   email: string;
   nickname: string;
+  userMissions: userMissionType[];
 };
 
 const Header = () => {

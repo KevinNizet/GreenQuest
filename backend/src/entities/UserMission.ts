@@ -9,6 +9,7 @@ import {
 import { Field, ObjectType, ID } from "type-graphql";
 import { User } from "./User";
 import { Mission } from "./Mission";
+import { Quest } from "./Quest";
 
 @Entity()
 @ObjectType()
@@ -26,6 +27,12 @@ export class UserMission extends BaseEntity {
   @JoinColumn({ name: "missionId" })
   @Field(() => Mission)
   mission!: Mission;
+
+  @ManyToOne(() => Quest, (quest) => quest.userMissions, {
+    onDelete: "CASCADE",
+  })
+  @Field(() => Quest)
+  quest!: Quest;
 
   @Column({ default: false })
   @Field()

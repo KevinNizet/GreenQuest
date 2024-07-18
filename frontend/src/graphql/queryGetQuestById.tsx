@@ -1,9 +1,14 @@
 import { gql } from "@apollo/client";
 
 export const queryGetQuestById = gql`
-  query Query($getQuestByIdId: ID!) {
-    getQuestById(id: $getQuestByIdId) {
+  query GetQuestById($getQuestByIdId: ID!) {
+    item: getQuestById(id: $getQuestByIdId) {
+      users {
+        id
+        nickname
+      }
       id
+      title
       code
     }
   }

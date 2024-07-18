@@ -1,5 +1,5 @@
 import { IsEmail, Length, Matches } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -71,6 +71,15 @@ export class User extends BaseEntity {
   @OneToMany(() => UserMission, (userMission) => userMission.user)
   @Field(() => [UserMission])
   userMissions!: UserMission[];
+}
+
+@ObjectType()
+export class UserQuestPoints {
+  @Field(() => Int)
+  userId: number;
+
+  @Field(() => Int)
+  points: number;
 }
 
 @InputType()
