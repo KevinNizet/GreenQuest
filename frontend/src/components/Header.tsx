@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { queryMySelf } from "@/graphql/queryMySelf";
@@ -15,18 +14,25 @@ import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import HeaderModal from "./modals/HeaderModal";
 import { userMissionType } from "./MissionsTab";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Image from "next/image";
 
 export type userType = {
   id: number;
   email: string;
   nickname: string;
   userMissions: userMissionType[];
+  image?: {
+    uri: string;
+  };
 };
 
 const Header = () => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
+
+  const backUrl = process.env.NEXT_PUBLIC_BACK_URL;
 
   const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
 
@@ -99,12 +105,15 @@ const Header = () => {
               }}
             >
               <a href="/">
-                <img
-                  srcSet={`/images/greenquest_logo.png`}
+                <Image
                   src={`/images/greenquest_logo.png`}
-                  alt="Greenquest_logo"
+                  alt="Logo de l'application"
                   loading="lazy"
-                  style={{ width: "6rem", margin: 0, padding: 0 }}
+                  width={96}
+                  height={96}
+                  style={{
+                    borderRadius: "50%",
+                  }}
                 />
               </a>
               <h1 style={{ margin: "0.5rem 0 0 0" }}> Greenquest</h1>
@@ -136,7 +145,19 @@ const Header = () => {
                   color="inherit"
                   onClick={handleMenu}
                 >
-                  <AccountCircle sx={{ fontSize: "4rem" }} />
+                  {me.image ? (
+                    <img
+                      src={`${backUrl}${me.image.uri}`}
+                      alt="Profile"
+                      style={{
+                        width: "4rem",
+                        height: "4rem",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ) : (
+                    <AccountCircle sx={{ fontSize: "4rem" }} />
+                  )}
                 </IconButton>
                 <Menu
                   id="menu-appbar"
@@ -193,7 +214,7 @@ const Header = () => {
                 color={"success"}
                 variant="contained"
               >
-                {me ? "Logout" : "Login"}
+                {me ? "Se déconnecter" : "Se connecter"}
               </Button>
               <HeaderModal
                 modalOpen={modalOpen}

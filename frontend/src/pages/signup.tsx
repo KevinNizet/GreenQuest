@@ -13,6 +13,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { signup } from "@/graphql/mutationSignup";
 import { useMutation } from "@apollo/client";
 import Image from "next/image";
+import Snackbar from "@mui/material/Snackbar";
 
 const Signup = () => {
   // Form states
@@ -27,6 +28,14 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
+  const [toastOpen, setToastOpen] = React.useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+  const { vertical, horizontal, open } = toastOpen;
+
+  const [toastMessage, setToastMessage] = React.useState("");
 
   const [doSignup] = useMutation(signup);
 
@@ -48,7 +57,13 @@ const Signup = () => {
         },
       });
       if (data.item) {
-        router.replace("/signin");
+        setToastMessage(
+          "Inscription réussie ! Vérifie ton adresse mail pour valider ton compte 👍🏻"
+        );
+        setToastOpen({ ...toastOpen, open: true });
+        setTimeout(() => {
+          router.replace("/signin");
+        }, 5000);
       }
     } catch (error: any) {
       if (error.message.includes("Existing user")) {
@@ -89,8 +104,8 @@ const Signup = () => {
               gutterBottom
               sx={{ width: "70%", textAlign: "center", marginBottom: "3rem" }}
             >
-              Inscrit toi ou connecte toi pour participer à une quête et valider
-              tes missions quotidiennes !
+              Inscrit toi ou connecte toi pour participer à une quête et relever
+              des défis écologiques quotidiens !
             </Typography>
           </Grid>
           <Grid
@@ -238,13 +253,26 @@ const Signup = () => {
               />
             </Grid>
             <Grid item container justifyContent="center">
-              <Button variant="contained" type="submit" color="success">
+              <Button
+                variant="contained"
+                type="submit"
+                color="success"
+                sx={{ margin: "30px" }}
+              >
                 Inscription
               </Button>
             </Grid>
           </Grid>
         </Grid>
       </form>
+      <Snackbar
+        open={open}
+        autoHideDuration={5000}
+        onClose={() => setToastOpen({ ...toastOpen, open: false })}
+        message={toastMessage}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        key={vertical + horizontal}
+      />
     </Layout>
   );
 };

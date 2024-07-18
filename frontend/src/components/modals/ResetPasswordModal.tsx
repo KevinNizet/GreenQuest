@@ -69,7 +69,7 @@ export function ResetPasswordModal({
         </Box>
         {resetEmailSent ? (
           <Typography variant="body1" sx={{ mt: 2 }}>
-            Un email de réinitialisation a été envoyé à votre adresse.
+            Un email de réinitialisation a été envoyé à ton adresse mail.
           </Typography>
         ) : (
           <form onSubmit={resetPassword}>

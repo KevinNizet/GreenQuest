@@ -22,12 +22,15 @@ import { addDays, isBefore } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import { sendResetPassword } from "../email";
 import { UserMission } from "../entities/UserMission";
+import { sendValidationEmail } from "../AccountValidationWithEmail";
+import { ObjectID } from "../entities/ObjectId";
+import { Image as ImageEntity } from "../entities/Image";
 
 const argon2 = require("argon2");
 
-// return all users
 @Resolver(User)
 export class UserResolver {
+  // return all users
   @Query(() => [User])
   async getUsers(): Promise<User[]> {
     const users = await User.find({
@@ -35,6 +38,7 @@ export class UserResolver {
         questsParticipated: true,
         questsCreated: true,
         userMissions: true,
+        image: true,
       },
     });
 
@@ -59,6 +63,7 @@ export class UserResolver {
         questsParticipated: true,
         questsCreated: true,
         userMissions: true,
+        image: true,
       },
     });
     if (!user) {
@@ -67,6 +72,7 @@ export class UserResolver {
     return user;
   }
 
+  // signup query
   @Mutation(() => User)
   async signup(
     @Arg("data", () => UserCreateInput) data: UserCreateInput
@@ -89,10 +95,49 @@ export class UserResolver {
       nickname: data.nickname,
       email: data.email,
       hashedPassword,
+      isValidatedAccount: false,
     });
 
     await newUser.save();
+
+    // Generate account validation token
+    const token = new UserToken();
+    token.user = newUser;
+    token.createdAt = new Date();
+    token.expiresAt = addDays(new Date(), 2);
+    token.token = uuidv4();
+
+    await token.save();
+
+    // Send validation email
+    await sendValidationEmail(data.email, token.token);
+
     return newUser;
+  }
+
+  @Mutation(() => Boolean)
+  async validateAccount(@Arg("token") token: string): Promise<boolean> {
+    const userToken = await UserToken.findOne({
+      where: { token },
+      relations: { user: true },
+    });
+
+    if (!userToken) {
+      throw new Error("Invalid token");
+    }
+
+    if (isBefore(new Date(userToken.expiresAt), new Date())) {
+      throw new Error("Expired token");
+    }
+
+    const user = userToken.user;
+    // Set the account to validated
+    user.isValidatedAccount = true;
+    await user.save();
+
+    await userToken.remove();
+
+    return true;
   }
 
   // query to get self profile
@@ -132,7 +177,40 @@ export class UserResolver {
       user.nickname = data.nickname;
     }
 
-    await user.save(); // ENregistrement en BDD
+    // ENregistrement en BDD
+    await user.save();
+
+    return user;
+  }
+
+  // MAJ de l'avatar
+  @Authorized()
+  @Mutation(() => User)
+  async updateUserImage(
+    @Arg("image", () => ObjectID) imageObject: ObjectID,
+    @Ctx() context: ContextType
+  ): Promise<User> {
+    const userId = context?.user?.id;
+
+    if (!userId) {
+      throw new Error("Vous devez être connecté pour effectuer cette action");
+    }
+
+    const user = await User.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new Error("Utilisateur non trouvé");
+    }
+
+    const image = await ImageEntity.findOne({ where: { id: imageObject.id } });
+
+    if (!image) {
+      throw new Error("Image non trouvée");
+    }
+
+    user.image = image;
+
+    await user.save();
 
     return user;
   }
@@ -185,7 +263,18 @@ export class UserResolver {
     @Arg("email") email: string,
     @Arg("password") password: string
   ): Promise<User | null> {
-    const existingUser = await User.findOneBy({ email });
+    const existingUser = await User.findOne({
+      where: { email },
+      relations: { image: true },
+    });
+
+    // Vérifiez si le compte est validé
+    if (!existingUser?.isValidatedAccount) {
+      throw new Error(
+        "Ton compte n'est pas encore validé. Vérifie ton email pour le valider."
+      );
+    }
+
     //verify if user exists
     if (existingUser) {
       const isPasswordValid = await argon2.verify(
