@@ -147,13 +147,18 @@ export default function Profile(): React.ReactNode {
   return (
     <Layout title="Mon profil">
       <div>
-        <Grid container spacing={3} padding={4}>
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          alignItems="center"
+          style={{ minHeight: "100vh" }}
+        >
           <Grid item xs={12} container justifyContent="center">
-            <Typography variant="h3" paragraph>
-              Voici ton profil
+            <Typography variant="h3" paragraph style={{ marginTop: "50px" }}>
+              Page de profil
             </Typography>
           </Grid>
-
           <Grid item container justifyContent="center">
             <Typography
               variant="body1"
@@ -164,126 +169,113 @@ export default function Profile(): React.ReactNode {
               Si tu souhaites la modifier, contacte un administrateur.
             </Typography>
           </Grid>
-
-          <Grid item xs={12}>
-            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
-              Pseudo
-            </Typography>
-            <TextField
-              variant="outlined"
-              autoComplete="off"
-              sx={{ width: "100%" }}
-              value={
-                editable
-                  ? (editableFields && editableFields.nickname) || ""
-                  : (me && me.nickname) || ""
-              }
-              onChange={(e) => handleFieldChange("nickname", e.target.value)}
-              disabled={!editable}
-              error={nicknameError}
-              helperText={nicknameError ? "Renseigner un pseudo valide" : ""}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
-              Prénom
-            </Typography>
-            <TextField
-              variant="outlined"
-              sx={{ width: "100%" }}
-              autoComplete="off"
-              value={
-                editable
-                  ? (editableFields && editableFields.firstname) || ""
-                  : (me && me.firstname) || ""
-              }
-              onChange={(e) => handleFieldChange("firstname", e.target.value)}
-              disabled={!editable}
-              error={firstnameError}
-              helperText={firstnameError ? "Renseigner un prénom valide" : ""}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
-              Nom
-            </Typography>
-            <TextField
-              variant="outlined"
-              autoComplete="off"
-              sx={{ width: "100%" }}
-              value={
-                editable
-                  ? (editableFields && editableFields.lastname) || ""
-                  : (me && me.lastname) || ""
-              }
-              onChange={(e) => handleFieldChange("lastname", e.target.value)}
-              disabled={!editable}
-              error={lastNameError}
-              helperText={lastNameError ? "Renseigner un nom valide" : ""}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
-              Avatar
-            </Typography>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item>
-                {preview ? (
-                  <Avatar
-                    alt="Avatar Preview"
-                    src={preview}
-                    sx={{ width: 56, height: 56 }}
+          <Grid item xs={12} sm={10} md={8} lg={6}>
+            <div
+              style={{
+                backgroundColor: "#ECEBF5",
+                padding: "20px",
+                borderRadius: "5px",
+                margin: "0 auto",
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <Typography variant="h6" paragraph>
+                    Pseudo
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{ width: "100%" }}
+                    value={
+                      editable
+                        ? (editableFields && editableFields.nickname) || ""
+                        : (me && me.nickname) || ""
+                    }
+                    onChange={(e) =>
+                      handleFieldChange("nickname", e.target.value)
+                    }
+                    disabled={!editable}
+                    error={nicknameError}
+                    helperText={
+                      nicknameError ? "Renseigner un pseudo valide" : ""
+                    }
                   />
-                ) : me?.image?.uri ? (
-                  <Avatar
-                    alt="Current Avatar"
-                    src={`${backUrl}${me.image.uri}`}
-                    sx={{ width: 56, height: 56 }}
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h6" paragraph>
+                    Prénom
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    autoComplete="off"
+                    value={
+                      editable
+                        ? (editableFields && editableFields.firstname) || ""
+                        : (me && me.firstname) || ""
+                    }
+                    onChange={(e) =>
+                      handleFieldChange("firstname", e.target.value)
+                    }
+                    disabled={!editable}
+                    error={firstnameError}
+                    helperText={
+                      firstnameError ? "Renseigner un prénom valide" : ""
+                    }
                   />
-                ) : (
-                  <Avatar sx={{ width: 56, height: 56 }}>
-                    {me?.nickname.charAt(0).toUpperCase()}
-                  </Avatar>
-                )}
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  component="label"
-                  disabled={!editable}
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h6" paragraph>
+                    Nom
+                  </Typography>
+                  <TextField
+                    variant="outlined"
+                    autoComplete="off"
+                    sx={{ width: "100%" }}
+                    value={
+                      editable
+                        ? (editableFields && editableFields.lastname) || ""
+                        : (me && me.lastname) || ""
+                    }
+                    onChange={(e) =>
+                      handleFieldChange("lastname", e.target.value)
+                    }
+                    disabled={!editable}
+                    error={lastNameError}
+                    helperText={lastNameError ? "Renseigner un nom valide" : ""}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  container
+                  justifyContent="flex-end"
+                  marginTop={5}
                 >
-                  Changer d&apos;avatar
-                  <input
-                    type="file"
-                    hidden
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />
-                </Button>
+                  {editable ? (
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={handleUpdateProfile}
+                    >
+                      Enregistrer
+                    </Button>
+                  ) : (
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() => {
+                        setEditable(true);
+                        setEditableFields({ ...me });
+                      }}
+                    >
+                      Modifier
+                    </Button>
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} container justifyContent="flex-end" marginTop={5}>
-            {editable ? (
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={handleUpdateProfile}
-              >
-                Enregistrer
-              </Button>
-            ) : (
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={() => {
-                  setEditable(true);
-                  setEditableFields({ ...me });
-                }}
-              >
-                Modifier
-              </Button>
-            )}
+            </div>
           </Grid>
         </Grid>
         <Snackbar

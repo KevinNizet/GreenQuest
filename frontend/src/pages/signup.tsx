@@ -81,190 +81,210 @@ const Signup = () => {
 
   return (
     <Layout title="signup">
-      <form
-        onSubmit={onSubmit}
+      <div
         style={{
           display: "flex",
-          alignItems: "center",
           justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
         }}
       >
-        <Grid container direction="column" spacing={2} sx={{ width: "70%" }}>
-          <Grid item container justifyContent="center">
-            <CardMedia
-              component="img"
-              sx={{ width: "25.7vw", marginBottom: "4rem" }}
-              image="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-              alt="Paella dish"
-            />
-          </Grid>
-          <Grid item container justifyContent="center">
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{ width: "70%", textAlign: "center", marginBottom: "3rem" }}
+        <form
+          onSubmit={onSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minWidth: "50%",
+            maxWidth: "80%",
+          }}
+        >
+          <Grid container direction="column" spacing={2} alignItems="center">
+            <Grid item container justifyContent="center">
+              <Image
+                src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                width={1000}
+                height={400}
+                fill={false}
+                alt="Picture of the author"
+                style={{
+                  margin: "30px",
+                  borderRadius: "5px",
+                  maxWidth: "60%",
+                  maxHeight: "50vh",
+                  minWidth: "200px",
+                  minHeight: "100px",
+                }}
+              />
+            </Grid>
+            <Grid item container justifyContent="center">
+              <Typography variant="body1" gutterBottom>
+                Inscrit toi ou connecte toi pour participer à une quête et
+                valider tes missions quotidiennes !
+              </Typography>
+              <br />
+              <br />
+            </Grid>
+            <Grid
+              item
+              container
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-around",
+                alignItems: "center",
+                backgroundColor: "#ECEBF5",
+                minWidth: "40%",
+                maxWidth: "60%",
+                borderRadius: "5px",
+                padding: "20px",
+              }}
             >
-              Inscrit toi ou connecte toi pour participer à une quête et relever
-              des défis écologiques quotidiens !
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              height: "60vh",
-              justifyContent: "space-around",
-              alignItems: "center",
-              backgroundColor: "#ECEBF5",
-              padding: "10px",
-              borderRadius: "5px",
-            }}
-          >
-            <Grid item container justifyContent="center">
-              <TextField
-                className="textfield-outline-shadow"
-                color="success"
-                value={firstname}
-                required
-                id="fisrtname"
-                label="Prénom"
-                variant="outlined"
-                sx={{ width: "70%" }}
-                size="small"
-                onChange={(e) => setFirstname(e.target.value)}
-              />
-            </Grid>{" "}
-            <Grid item container justifyContent="center">
-              <TextField
-                className="textfield-outline-shadow"
-                color="success"
-                value={lastname}
-                required
-                id="lastname"
-                label="Nom"
-                variant="outlined"
-                sx={{ width: "70%" }}
-                size="small"
-                onChange={(e) => setLastname(e.target.value)}
-              />
-            </Grid>{" "}
-            <Grid item container justifyContent="center">
-              <TextField
-                className="textfield-outline-shadow"
-                color="success"
-                value={nickname}
-                id="Nickname"
-                label="Pseudo"
-                variant="outlined"
-                sx={{ width: "70%" }}
-                size="small"
-                onChange={(e) => setNickname(e.target.value)}
-              />
-            </Grid>{" "}
-            <Grid item container justifyContent="center">
-              <TextField
-                className="textfield-outline-shadow"
-                color="success"
-                error={emailError}
-                value={email}
-                required
-                id="email"
-                label="Email"
-                variant="outlined"
-                helperText={emailError === true ? "Email déjà utilisé!" : ""}
-                sx={{ width: "70%" }}
-                size="small"
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setEmailError(false);
-                }}
-              />
-            </Grid>
-            <Grid item container justifyContent="center">
-              <TextField
-                className="textfield-outline-shadow"
-                color="success"
-                error={passwordError}
-                value={password}
-                required
-                id="password"
-                label="Mot de passe"
-                variant="outlined"
-                helperText={
-                  passwordError === true
-                    ? "Le mot de passe doit faire au moins 8 caractères"
-                    : ""
-                }
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  ),
-                }}
-                sx={{ width: "70%" }}
-                size="small"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setPasswordError(false);
-                }}
-              />
-            </Grid>{" "}
-            <Grid item container justifyContent="center">
-              <TextField
-                className="textfield-outline-shadow"
-                color="success"
-                error={errorConfirmPassword}
-                value={confirmPassword}
-                required
-                id="confirmPassword"
-                label="Confirmer le mot de passe"
-                variant="outlined"
-                helperText={
-                  errorConfirmPassword
-                    ? "Les deux mots de passes doivent être similaires"
-                    : ""
-                }
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  ),
-                }}
-                sx={{ width: "70%" }}
-                size="small"
-                onChange={(e) => {
-                  setConfirmPassword(e.target.value);
-                  setErrorConfirmPassword(false);
-                }}
-              />
-            </Grid>
-            <Grid item container justifyContent="center">
-              <Button
-                variant="contained"
-                type="submit"
-                color="success"
-                sx={{ margin: "30px" }}
-              >
-                Inscription
-              </Button>
+              <Grid item container justifyContent="center">
+                <TextField
+                  className="textfield-outline-shadow"
+                  color="success"
+                  value={firstname}
+                  required
+                  id="fisrtname"
+                  label="Prénom"
+                  variant="outlined"
+                  sx={{ width: "70%", paddingBottom: "20px" }}
+                  size="small"
+                  onChange={(e) => setFirstname(e.target.value)}
+                />
+              </Grid>
+              <Grid item container justifyContent="center">
+                <TextField
+                  className="textfield-outline-shadow"
+                  color="success"
+                  value={lastname}
+                  required
+                  id="lastname"
+                  label="Nom"
+                  variant="outlined"
+                  sx={{ width: "70%", paddingBottom: "20px" }}
+                  size="small"
+                  onChange={(e) => setLastname(e.target.value)}
+                />
+              </Grid>
+              <Grid item container justifyContent="center">
+                <TextField
+                  className="textfield-outline-shadow"
+                  color="success"
+                  value={nickname}
+                  id="Nickname"
+                  label="Pseudo"
+                  variant="outlined"
+                  sx={{ width: "70%", paddingBottom: "20px" }}
+                  size="small"
+                  onChange={(e) => setNickname(e.target.value)}
+                />
+              </Grid>
+              <Grid item container justifyContent="center">
+                <TextField
+                  className="textfield-outline-shadow"
+                  color="success"
+                  error={emailError}
+                  value={email}
+                  required
+                  id="email"
+                  label="Email"
+                  variant="outlined"
+                  helperText={emailError === true ? "Email déjà utilisé!" : ""}
+                  sx={{ width: "70%", paddingBottom: "20px" }}
+                  size="small"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setEmailError(false);
+                  }}
+                />
+              </Grid>
+              <Grid item container justifyContent="center">
+                <TextField
+                  className="textfield-outline-shadow"
+                  color="success"
+                  error={passwordError}
+                  value={password}
+                  required
+                  id="password"
+                  label="Mot de passe"
+                  variant="outlined"
+                  helperText={
+                    passwordError === true
+                      ? "Le mot de passe doit faire au moins 8 caractères"
+                      : ""
+                  }
+                  type={showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    ),
+                  }}
+                  sx={{ width: "70%", paddingBottom: "20px" }}
+                  size="small"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError(false);
+                  }}
+                />
+              </Grid>
+              <Grid item container justifyContent="center">
+                <TextField
+                  className="textfield-outline-shadow"
+                  color="success"
+                  error={errorConfirmPassword}
+                  value={confirmPassword}
+                  required
+                  id="confirmPassword"
+                  label="Confirmer le mot de passe"
+                  variant="outlined"
+                  helperText={
+                    errorConfirmPassword
+                      ? "Les deux mots de passes doivent être similaires"
+                      : ""
+                  }
+                  type={showPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    ),
+                  }}
+                  sx={{ width: "70%", paddingBottom: "20px" }}
+                  size="small"
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    setErrorConfirmPassword(false);
+                  }}
+                />
+              </Grid>
+              <Grid item container justifyContent="center">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  color="success"
+                  sx={{ margin: "30px" }}
+                >
+                  Inscription
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      </div>
       <Snackbar
         open={open}
         autoHideDuration={5000}
