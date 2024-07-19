@@ -1,11 +1,10 @@
 import multer from "multer";
-import express, { Express, Request, Response } from "express";
+import { Express, Request, Response } from "express";
 import { Image } from "./entities/Image";
 import { User } from "./entities/User";
 import { getUserFromReq } from "./auth";
 import sharp from "sharp";
 import cors from "cors";
-import path from "path";
 
 export function initializeRoutes(app: Express) {
   const storage = multer.memoryStorage();
@@ -14,6 +13,7 @@ export function initializeRoutes(app: Express) {
   const allowedOrigins = [
     "http://localhost:3000",
     "https://staging.0923-rouge-3.wns.wilders.dev",
+    "https://0923-rouge-3.wns.wilders.dev",
   ];
 
   app.use(
