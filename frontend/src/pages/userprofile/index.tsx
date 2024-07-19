@@ -90,6 +90,10 @@ export default function Profile(): React.ReactNode {
           method: "POST",
           body: formData,
           credentials: "include",
+          headers: {
+            "x-apollo-operation-name": "uploadImage",
+            "apollo-require-preflight": "true",
+          },
         });
         const result = await response.json();
         if (result.success) {
