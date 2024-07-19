@@ -22,6 +22,6 @@ export class Image extends BaseEntity {
 
   @Field()
   get uri(): string {
-    return `/api/images/${this.id}`;
+    return `/images/${this.id}`;
   }
 }

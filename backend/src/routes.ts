@@ -1,10 +1,11 @@
 import multer from "multer";
-import { Express, Request, Response } from "express";
+import express, { Express, Request, Response } from "express";
 import { Image } from "./entities/Image";
 import { User } from "./entities/User";
 import { getUserFromReq } from "./auth";
 import sharp from "sharp";
 import cors from "cors";
+import path from "path";
 
 export function initializeRoutes(app: Express) {
   const storage = multer.memoryStorage();
@@ -24,7 +25,7 @@ export function initializeRoutes(app: Express) {
 
   // Route pour uploader une image
   app.post(
-    "/api/users/:userId/image",
+    "/users/:userId/image",
     upload.single("file"),
     async (req: Request, res: Response) => {
       const connectedUser = await getUserFromReq(req, res);
@@ -59,12 +60,12 @@ export function initializeRoutes(app: Express) {
             fit: "inside",
             withoutEnlargement: true,
           })
-          .toFile(`/app/uploads/${filename}`);
+          .toFile(`/app/backend/public/uploads/${filename}`);
 
         // Enregistrement de l'image
         const newImage = new Image();
         newImage.mimetype = req.file.mimetype;
-        newImage.path = `/app/uploads/${filename}`;
+        newImage.path = `/app/backend/public/uploads/${filename}`;
         newImage.originalName = req.file.originalname;
         await newImage.save();
 
@@ -79,7 +80,7 @@ export function initializeRoutes(app: Express) {
   );
 
   // Route pour lire une image
-  app.get("/api/images/:imageId", async (req: Request, res: Response) => {
+  app.get("/images/:imageId", async (req: Request, res: Response) => {
     const connectedUser = await getUserFromReq(req, res);
 
     if (!connectedUser) {

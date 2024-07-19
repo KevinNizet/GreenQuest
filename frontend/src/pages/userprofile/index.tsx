@@ -69,8 +69,8 @@ export default function Profile(): React.ReactNode {
 
   const backUrl =
     typeof window !== "undefined" && location.origin.includes("localhost")
-      ? "http://localhost:5050/images"
-      : "/api/images";
+      ? "http://localhost:5050"
+      : "/api";
 
   const handleUpdateProfile = async () => {
     if (editableFields) {
@@ -90,9 +90,6 @@ export default function Profile(): React.ReactNode {
           method: "POST",
           body: formData,
           credentials: "include",
-          headers: {
-            "x-apollo-operation-name": "uploadImage",
-          },
         });
         const result = await response.json();
         if (result.success) {
