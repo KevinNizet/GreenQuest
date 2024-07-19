@@ -25,8 +25,8 @@ import { queryMySelf } from "@/graphql/queryMySelf";
 const link = createHttpLink({
   uri:
     typeof window !== "undefined" && location.origin.includes("localhost")
-      ? "http://localhost:5050"
-      : "/api",
+      ? "http://localhost:5050/graphql"
+      : "/api/graphql",
   credentials: "include",
 });
 

@@ -47,7 +47,7 @@ async function start() {
   initializeRoutes(app);
 
   app.use(
-    "/",
+    "/graphql",
     cors<cors.CorsRequest>({
       origin: process.env.FRONT_URL,
       credentials: true,

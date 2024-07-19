@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "@jest/globals";
+import { afterAll, beforeAll, describe, expect, it } from "@jest/globals";
 import { QuestResolver } from "../src/resolvers/Quests";
 import { Difficulty, QuestCreateInput } from "../src/entities/Quest";
 import { AuthChecker, buildSchema } from "type-graphql";
@@ -164,3 +164,5 @@ describe("create a new quest", () => {
     expect(foundQuest).toHaveProperty("id", createdQuestId);
   });
 });
+
+afterAll(() => dataSource.destroy());
