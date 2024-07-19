@@ -13,6 +13,7 @@ export function initializeRoutes(app: Express) {
   const allowedOrigins = [
     "http://localhost:3000",
     "https://staging.0923-rouge-3.wns.wilders.dev",
+    "https://0923-rouge-3.wns.wilders.dev",
   ];
 
   app.use(
@@ -24,7 +25,7 @@ export function initializeRoutes(app: Express) {
 
   // Route pour uploader une image
   app.post(
-    "/api/users/:userId/image",
+    "/users/:userId/image",
     upload.single("file"),
     async (req: Request, res: Response) => {
       const connectedUser = await getUserFromReq(req, res);
@@ -59,12 +60,12 @@ export function initializeRoutes(app: Express) {
             fit: "inside",
             withoutEnlargement: true,
           })
-          .toFile(`/app/uploads/${filename}`);
+          .toFile(`/app/backend/public/uploads/${filename}`);
 
         // Enregistrement de l'image
         const newImage = new Image();
         newImage.mimetype = req.file.mimetype;
-        newImage.path = `/app/uploads/${filename}`;
+        newImage.path = `/app/backend/public/uploads/${filename}`;
         newImage.originalName = req.file.originalname;
         await newImage.save();
 
@@ -79,7 +80,7 @@ export function initializeRoutes(app: Express) {
   );
 
   // Route pour lire une image
-  app.get("/api/images/:imageId", async (req: Request, res: Response) => {
+  app.get("/images/:imageId", async (req: Request, res: Response) => {
     const connectedUser = await getUserFromReq(req, res);
 
     if (!connectedUser) {
