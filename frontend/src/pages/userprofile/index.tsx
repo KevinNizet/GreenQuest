@@ -69,7 +69,7 @@ export default function Profile(): React.ReactNode {
 
   const backUrl =
     typeof window !== "undefined" && location.origin.includes("localhost")
-      ? "http://localhost:5050"
+      ? "http://localhost:5050/api"
       : "/api";
 
   const handleUpdateProfile = async () => {

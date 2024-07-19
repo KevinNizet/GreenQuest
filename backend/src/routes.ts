@@ -25,7 +25,7 @@ export function initializeRoutes(app: Express) {
 
   // Route pour uploader une image
   app.post(
-    "/users/:userId/image",
+    "/api/users/:userId/image",
     upload.single("file"),
     async (req: Request, res: Response) => {
       const connectedUser = await getUserFromReq(req, res);
@@ -80,7 +80,7 @@ export function initializeRoutes(app: Express) {
   );
 
   // Route pour lire une image
-  app.get("/images/:imageId", async (req: Request, res: Response) => {
+  app.get("/api/images/:imageId", async (req: Request, res: Response) => {
     const connectedUser = await getUserFromReq(req, res);
 
     if (!connectedUser) {

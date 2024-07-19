@@ -34,7 +34,7 @@ const Header = () => {
 
   const backUrl =
     typeof window !== "undefined" && location.origin.includes("localhost")
-      ? "http://localhost:5050"
+      ? "http://localhost:5050/api"
       : "/api";
 
   const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
