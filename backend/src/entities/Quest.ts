@@ -69,7 +69,9 @@ export class Quest extends BaseEntity {
   @Field({ nullable: true })
   code!: number;
 
-  @ManyToMany(() => User, (user) => user.questsParticipated)
+  @ManyToMany(() => User, (user) => user.questsParticipated, {
+    onDelete: "CASCADE",
+  })
   @Field(() => [User], { nullable: true })
   users!: User[];
 

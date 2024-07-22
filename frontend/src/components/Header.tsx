@@ -16,7 +16,7 @@ import HeaderModal from "./modals/HeaderModal";
 import { userMissionType } from "./MissionsTab";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { ThemeProvider } from "@mui/material/styles";
-import { headerTheme } from "@/themes/headerTheme";
+import { headerTheme, HeaderLogo } from "@/themes/headerTheme";
 
 export type userType = {
   id: number;
@@ -82,24 +82,15 @@ const Header = () => {
           <Toolbar>
             {!me && (
               <>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexGrow: 1,
-                  }}
-                >
+                <>
                   <a href="/">
-                    <img
-                      srcSet={`/images/greenquest_logo.png`}
+                    <HeaderLogo
                       src={`/images/greenquest_logo.png`}
                       alt="Greenquest_logo"
                       loading="lazy"
-                      style={{ width: "6rem", margin: 0, padding: 0 }}
                     />
                   </a>
-                </Box>
+                </>
                 <Typography
                   variant="h4"
                   sx={{
@@ -112,12 +103,8 @@ const Header = () => {
                 </Typography>
                 <Stack
                   direction="row"
-                  spacing={2}
-                  sx={{
-                    flexGrow: 1,
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
+                  // spacing={2}
+                  sx={{}}
                 >
                   {router.pathname === "/signin" ? (
                     <Button
@@ -143,7 +130,7 @@ const Header = () => {
               <>
                 <div>
                   <IconButton
-                    size="large"
+                    size="small"
                     aria-label="account of current user"
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
@@ -165,9 +152,9 @@ const Header = () => {
                         sx={{
                           fontSize: {
                             xs: "3.5rem", // taille de la police pour les écrans extra-petits
-                            sm: "5rem", // taille de la police pour les petits écrans
-                            md: "6rem", // taille de la police pour les écrans moyens
-                            lg: "5rem", // taille de la police pour les grands écran
+                            sm: "4rem", // taille de la police pour les petits écrans
+                            md: "3.5rem", // taille de la police pour les écrans moyens
+                            lg: "4rem", // taille de la police pour les grands écran
                           },
                         }}
                       />
@@ -216,40 +203,13 @@ const Header = () => {
                     </MenuItem>
                   </Menu>
                 </div>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={{ flexGrow: 1, margin: 1, fontSize: "1.5rem" }}
-                >
+                <Typography variant="h6" component="div">
                   {me.nickname}
                 </Typography>
                 <Button
                   onClick={handleChange}
                   color={"success"}
                   variant="contained"
-                  // sx={{
-                  //   fontSize: {
-                  //     xs: "0.75rem", // font size for extra-small screens
-                  //     sm: "1rem", // font size for small screens
-                  //     md: "1.25rem", // font size for medium screens
-                  //     lg: "1.5rem", // font size for large screens
-                  //     xl: "1rem", // font size for extra-large screens
-                  //   },
-                  //   padding: {
-                  //     xs: "0.5rem", // padding for extra-small screens
-                  //     sm: "0.75rem", // padding for small screens
-                  //     md: "1rem", // padding for medium screens
-                  //     lg: "1.25rem", // padding for large screens
-                  //     xl: "1.5rem",
-                  //   },
-                  //   margin: {
-                  //     xs: "0.5rem",
-                  //     sm: "0.75rem",
-                  //     md: "1rem",
-                  //     lg: "1.25rem",
-                  //     xl: "1.5rem",
-                  //   },
-                  // }}
                 >
                   {me ? "Déconnexion" : "Se connecter"}
                 </Button>

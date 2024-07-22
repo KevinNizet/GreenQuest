@@ -1,6 +1,4 @@
-import * as React from "react";
-import { red } from "@mui/material/colors";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { ThemeProvider, createTheme, styled } from "@mui/material/styles";
 
 const headerTheme = createTheme({
   palette: {
@@ -15,7 +13,7 @@ const headerTheme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: ({ theme }) => ({
-          height: "10vh",
+          height: "75px",
           display: "flex",
           justifyContent: "center",
           width: "100%",
@@ -27,48 +25,42 @@ const headerTheme = createTheme({
         root: ({ theme }) => ({
           display: "flex",
           alignItems: "center",
-          margin: 0,
-          padding: 0,
+          justifyItems: "center",
+          margin: "0",
+          padding: "0",
         }),
       },
     },
-    MuiIcon: {
+
+    MuiTypography: {
       styleOverrides: {
         root: ({ theme }) => ({
-          fontSize: "10rem",
+          flexGrow: 1,
+          margin: 1,
+          fontSize: "1.5rem",
         }),
       },
     },
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
-          fontSize: "1rem",
-          padding: "0.75rem",
-          margin: "0.75rem",
+          margin: "0 5% 0 0",
           [theme.breakpoints.up("xs")]: {
-            fontSize: "0.75rem",
+            fontSize: "0.55rem",
             padding: "0.5rem",
-            margin: "0.5rem",
           },
           [theme.breakpoints.up("sm")]: {
-            fontSize: "1rem",
+            fontSize: "0.75rem",
             padding: "0.75rem",
-            margin: "0.3rem",
+            margin: "0 1% 0 0",
           },
           [theme.breakpoints.up("md")]: {
-            fontSize: "1.25rem",
-            padding: "1rem",
-            margin: "1rem",
-          },
-          [theme.breakpoints.up("lg")]: {
-            fontSize: "1rem",
-            padding: "1.25rem",
-            margin: "1.25rem",
+            fontSize: "0.7rem",
+            padding: "0.5rem",
           },
           [theme.breakpoints.up("xl")]: {
-            fontSize: "1rem",
-            padding: "1.5rem",
-            margin: "1.5rem",
+            fontSize: "0.7rem",
+            padding: "0.5rem",
           },
         }),
       },
@@ -76,4 +68,24 @@ const headerTheme = createTheme({
   },
 });
 
-export { headerTheme };
+const HeaderLogo = styled("img")(({ theme }) => ({
+  width: "6rem",
+  filter: "drop-shadow(0 0 1px black)",
+  [theme.breakpoints.up("xs")]: {
+    width: "4rem",
+  },
+  [theme.breakpoints.up("sm")]: {
+    width: "5rem",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "4.5rem",
+  },
+  [theme.breakpoints.up("lg")]: {
+    width: "4.8rem",
+  },
+  [theme.breakpoints.up("xl")]: {
+    width: "5rem",
+  },
+}));
+
+export { headerTheme, HeaderLogo };

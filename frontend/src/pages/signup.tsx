@@ -7,6 +7,7 @@ import {
   Grid,
   IconButton,
   TextField,
+  ThemeProvider,
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -14,6 +15,7 @@ import { signup } from "@/graphql/mutationSignup";
 import { useMutation } from "@apollo/client";
 import Image from "next/image";
 import Snackbar from "@mui/material/Snackbar";
+import { SignupForm, SignupFormImg, SignupTheme } from "@/themes/signupTheme";
 
 const Signup = () => {
   // Form states
@@ -81,41 +83,13 @@ const Signup = () => {
 
   return (
     <Layout title="signup">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-        }}
-      >
-        <form
-          onSubmit={onSubmit}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            minWidth: "50%",
-            maxWidth: "80%",
-          }}
-        >
+      <ThemeProvider theme={SignupTheme}>
+        <SignupForm onSubmit={onSubmit}>
           <Grid container direction="column" spacing={2} alignItems="center">
             <Grid item container justifyContent="center">
-              <Image
+              <SignupFormImg
                 src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                width={1000}
-                height={400}
-                fill={false}
                 alt="Picture of the author"
-                style={{
-                  margin: "30px",
-                  borderRadius: "5px",
-                  maxWidth: "60%",
-                  maxHeight: "50vh",
-                  minWidth: "200px",
-                  minHeight: "100px",
-                }}
               />
             </Grid>
             <Grid item container justifyContent="center">
@@ -126,21 +100,7 @@ const Signup = () => {
               <br />
               <br />
             </Grid>
-            <Grid
-              item
-              container
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-around",
-                alignItems: "center",
-                backgroundColor: "#ECEBF5",
-                minWidth: "40%",
-                maxWidth: "60%",
-                borderRadius: "5px",
-                padding: "20px",
-              }}
-            >
+            <Grid item container>
               <Grid item container justifyContent="center">
                 <TextField
                   className="textfield-outline-shadow"
@@ -150,7 +110,6 @@ const Signup = () => {
                   id="fisrtname"
                   label="Prénom"
                   variant="outlined"
-                  sx={{ width: "70%", paddingBottom: "20px" }}
                   size="small"
                   onChange={(e) => setFirstname(e.target.value)}
                 />
@@ -164,7 +123,6 @@ const Signup = () => {
                   id="lastname"
                   label="Nom"
                   variant="outlined"
-                  sx={{ width: "70%", paddingBottom: "20px" }}
                   size="small"
                   onChange={(e) => setLastname(e.target.value)}
                 />
@@ -177,7 +135,6 @@ const Signup = () => {
                   id="Nickname"
                   label="Pseudo"
                   variant="outlined"
-                  sx={{ width: "70%", paddingBottom: "20px" }}
                   size="small"
                   onChange={(e) => setNickname(e.target.value)}
                 />
@@ -193,7 +150,6 @@ const Signup = () => {
                   label="Email"
                   variant="outlined"
                   helperText={emailError === true ? "Email déjà utilisé!" : ""}
-                  sx={{ width: "70%", paddingBottom: "20px" }}
                   size="small"
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -228,7 +184,6 @@ const Signup = () => {
                       </IconButton>
                     ),
                   }}
-                  sx={{ width: "70%", paddingBottom: "20px" }}
                   size="small"
                   onChange={(e) => {
                     setPassword(e.target.value);
@@ -263,7 +218,6 @@ const Signup = () => {
                       </IconButton>
                     ),
                   }}
-                  sx={{ width: "70%", paddingBottom: "20px" }}
                   size="small"
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
@@ -272,19 +226,15 @@ const Signup = () => {
                 />
               </Grid>
               <Grid item container justifyContent="center">
-                <Button
-                  variant="contained"
-                  type="submit"
-                  color="success"
-                  sx={{ margin: "30px" }}
-                >
+                <Button variant="contained" type="submit" color="success">
                   Inscription
                 </Button>
               </Grid>
             </Grid>
           </Grid>
-        </form>
-      </div>
+        </SignupForm>
+      </ThemeProvider>
+
       <Snackbar
         open={open}
         autoHideDuration={5000}
