@@ -30,7 +30,11 @@
     "react-code-input": "^3.10.1",
     "react-confetti": "^6.1.0",
     "react-dom": "18.2.0",
+    "react-lottie": "^1.2.4",
     "react-share": "^5.1.0",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/react-lottie": "^1.2.10"
   }
 }
