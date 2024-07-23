@@ -165,7 +165,9 @@ export default function Profile(): React.ReactNode {
               gutterBottom
               sx={{ width: "90%", textAlign: "center", marginBottom: "50px" }}
             >
-              L&apos;adresse email liée à ton compte est : {me?.email} <br />
+              L&apos;adresse email liée à ton compte est :{" "}
+              <strong> {me?.email} </strong>
+              <br />
               Si tu souhaites la modifier, contacte un administrateur.
             </Typography>
           </Grid>
@@ -176,6 +178,7 @@ export default function Profile(): React.ReactNode {
                 padding: "20px",
                 borderRadius: "5px",
                 margin: "0 auto",
+                marginBottom: "60px",
               }}
             >
               <Grid container spacing={3}>
