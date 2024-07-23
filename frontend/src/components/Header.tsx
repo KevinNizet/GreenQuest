@@ -33,7 +33,10 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const backUrl = process.env.NEXT_PUBLIC_BACK_URL;
+  const backUrl =
+    typeof window !== "undefined" && location.origin.includes("localhost")
+      ? "http://localhost:5050/api"
+      : "/api";
 
   const { loading, data, error } = useQuery<{ item: userType }>(queryMySelf);
 

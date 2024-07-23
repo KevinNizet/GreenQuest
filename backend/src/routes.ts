@@ -10,12 +10,16 @@ export function initializeRoutes(app: Express) {
   const storage = multer.memoryStorage();
   const upload = multer({ storage });
 
-  const allowedOrigins = ["http://localhost:3000"]; // Ajoutez ici les origines autorisées
+  const allowedOrigins = [
+    "http://localhost:3000",
+    "https://staging.0923-rouge-3.wns.wilders.dev",
+    "https://0923-rouge-3.wns.wilders.dev",
+  ];
 
   app.use(
     cors({
       origin: allowedOrigins,
-      credentials: true, // Autoriser les informations d'identification
+      credentials: true,
     })
   );
 
@@ -56,12 +60,12 @@ export function initializeRoutes(app: Express) {
             fit: "inside",
             withoutEnlargement: true,
           })
-          .toFile(`/app/uploads/${filename}`);
+          .toFile(`/app/backend/public/uploads/${filename}`);
 
         // Enregistrement de l'image
         const newImage = new Image();
         newImage.mimetype = req.file.mimetype;
-        newImage.path = `/app/uploads/${filename}`;
+        newImage.path = `/app/backend/public/uploads/${filename}`;
         newImage.originalName = req.file.originalname;
         await newImage.save();
 

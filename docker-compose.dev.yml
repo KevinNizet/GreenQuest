@@ -7,7 +7,7 @@ services:
       - ./backend/.env
     volumes:
       - ./backend/src/:/app/src/
-      - ./uploads:/app/uploads
+      - ./backend/public/uploads:/app/backend/public/uploads
 
   database:
     image: postgres

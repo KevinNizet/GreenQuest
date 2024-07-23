@@ -67,7 +67,10 @@ export default function Profile(): React.ReactNode {
     }
   };
 
-  const backUrl = process.env.NEXT_PUBLIC_BACK_URL;
+  const backUrl =
+    typeof window !== "undefined" && location.origin.includes("localhost")
+      ? "http://localhost:5050/api"
+      : "/api";
 
   const handleUpdateProfile = async () => {
     if (editableFields) {
@@ -83,10 +86,14 @@ export default function Profile(): React.ReactNode {
       if (selectedFile) {
         const formData = new FormData();
         formData.append("file", selectedFile);
-        const response = await fetch(`${backUrl}/api/users/${me.id}/image`, {
+        const response = await fetch(`${backUrl}/users/${me.id}/image`, {
           method: "POST",
           body: formData,
           credentials: "include",
+          headers: {
+            "x-apollo-operation-name": "uploadImage",
+            "apollo-require-preflight": "true",
+          },
         });
         const result = await response.json();
         if (result.success) {

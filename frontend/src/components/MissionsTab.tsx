@@ -1,13 +1,22 @@
-import { Box, Checkbox, Fade } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Checkbox,
+  Fade,
+  Typography,
+  Pagination,
+  Snackbar,
+} from "@mui/material";
 import { useQuery, useMutation } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { QuestType } from "./QuestsTab";
 import { queryGetQuestByUser } from "@/graphql/queryGetQuestByUser";
-import Pagination from "@mui/material/Pagination";
+import Lottie from "react-lottie";
+import wizard from "@/images/lottie/wizard.json";
 import { mutationValidateMission } from "@/graphql/mutationValidateMission";
 import { userType } from "./Header";
 import { queryGetUserMission } from "@/graphql/queryGetUserMission";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 type MissionTabProps = {
   value: number;
@@ -22,32 +31,87 @@ export type userMissionType = {
   points: number;
 };
 
+const styles = {
+  container: {
+    width: "90%",
+    height: "90%",
+    backgroundColor: "#d4d4d4",
+    borderRadius: "10px",
+    boxShadow: 2,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 2,
+  },
+  content: {
+    width: "100%",
+    flexGrow: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  missionList: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "20px",
+  },
+  missionBox: (isCompleted: boolean, isAnimating: boolean) => ({
+    backgroundColor: "#66bb6a",
+    opacity: isCompleted ? 0.5 : 1,
+    width: "90%",
+    display: "flex",
+    padding: "1.5rem",
+    borderRadius: "10px",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+    margin: "1rem 0 0 0",
+    animation: isAnimating ? "blinkAnimation 1s ease-in-out" : "none",
+    "@keyframes blinkAnimation": {
+      "0%": { backgroundColor: "#a5d6a7" },
+      "50%": { backgroundColor: "#DBAD42" },
+      "100%": { backgroundColor: "#a5d6a7" },
+    },
+  }),
+  missionTitle: {
+    width: "80%",
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    fontSize: "20px",
+    color: "#424242",
+  },
+  noMissionText: {
+    fontSize: "1.3rem",
+    paddingY: "1rem",
+    paddingX: "1rem",
+    textAlign: "center",
+  },
+};
+
 const MissionsTab = (props: MissionTabProps) => {
   const [page, setPage] = useState(1);
   const [completedMissions, setCompletedMissions] = useState<number[]>([]);
+  const [animationMission, setAnimationMission] = useState<number | null>(null);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
-  const {
-    loading: meLoading,
-    data: medata,
-    error: meErrors,
-  } = useQuery<{ item: userType }>(queryMySelf);
+  const { loading: meLoading, data: medata } = useQuery<{ item: userType }>(
+    queryMySelf
+  );
   const me = medata && medata.item;
 
-  const {
-    data: questData,
-    loading: questLoading,
-    error: questError,
-  } = useQuery<{ item: QuestType[] }>(queryGetQuestByUser, {
-    variables: { userId: me?.id },
-  });
+  const { data: questData } = useQuery<{ item: QuestType[] }>(
+    queryGetQuestByUser,
+    {
+      variables: { userId: me?.id },
+    }
+  );
 
   const quests = questData && questData.item;
 
-  const {
-    data: userMissionData,
-    loading: userMissionLoading,
-    error: userMissionError,
-  } = useQuery(queryGetUserMission, {
+  const { data: userMissionData } = useQuery(queryGetUserMission, {
     variables: { userId: me?.id },
   });
 
@@ -106,6 +170,14 @@ const MissionsTab = (props: MissionTabProps) => {
     questIds: number[],
     checked: boolean
   ) => {
+    if (completedMissions.includes(missionId)) {
+      setToastMessage(
+        "Tu dois attendre 24 heures avant de pouvoir valider cette mission à nouveau 😊."
+      );
+      setToastOpen(true);
+      return;
+    }
+
     if (checked) {
       try {
         await Promise.all(
@@ -120,6 +192,8 @@ const MissionsTab = (props: MissionTabProps) => {
           )
         );
         setCompletedMissions((prev) => [...prev, missionId]);
+        setAnimationMission(missionId);
+        setTimeout(() => setAnimationMission(null), 1000);
       } catch (error) {
         console.error("Erreur lors de la validation de la mission:", error);
       }
@@ -130,107 +204,105 @@ const MissionsTab = (props: MissionTabProps) => {
     return completedMissions.includes(missionId);
   };
 
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: wizard,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   return (
     <Fade in={props.value === 0} timeout={450}>
-      <Box
-        sx={{
-          width: "90%",
-          height: "90%",
-          backgroundColor: "#dac6b5",
-          borderRadius: "30px",
-          boxShadow: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          padding: 2,
-        }}
-      >
-        <Box
-          sx={{
-            width: "100%",
-            flexGrow: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            {displayedMissions.map((mission, index) => {
-              const completed = isMissionCompleted(mission.id);
+      <Box sx={styles.container}>
+        <Box sx={styles.content}>
+          <Box sx={styles.missionList}>
+            {displayedMissions.length > 0 ? (
+              displayedMissions.map((mission, index) => {
+                const completed = isMissionCompleted(mission.id);
+                const isAnimating = animationMission === mission.id;
 
-              return (
-                <Box
-                  key={`mission-${mission.id}-${index}`}
-                  sx={{
-                    backgroundColor: "lightgrey",
-                    width: "90%",
-                    display: "flex",
-                    padding: "1.5rem",
-                    borderRadius: "10px",
-                    boxShadow: 1,
-                    margin: "1rem 0 0 0",
-                  }}
-                >
+                return (
                   <Box
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
+                    key={`mission-${mission.id}-${index}`}
+                    sx={styles.missionBox(completed, isAnimating)}
                   >
-                    <p
-                      style={{
-                        width: "80%",
+                    <Box
+                      sx={{
+                        width: "100%",
                         display: "flex",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        fontSize: "20px",
+                        justifyContent: "space-between",
                       }}
                     >
-                      {mission.title}
-                    </p>
-                    <Checkbox
-                      color="secondary"
-                      checked={completed}
-                      disabled={completed}
-                      sx={{
-                        "& .MuiSvgIcon-root": { fontSize: 40 },
-                        "&.Mui-disabled": {
-                          color: "green",
-                        },
-                      }}
-                      onChange={(e) =>
-                        handleCheckboxChange(
-                          mission.id,
-                          mission.questIds,
-                          e.target.checked
-                        )
-                      }
-                    />
+                      <Typography sx={styles.missionTitle}>
+                        {mission.title}
+                      </Typography>
+                      <Checkbox
+                        icon={
+                          <CheckCircleIcon
+                            sx={{ fontSize: 40, color: "white" }}
+                          />
+                        }
+                        checkedIcon={
+                          <CheckCircleIcon
+                            sx={{ fontSize: 40, color: "green" }}
+                          />
+                        }
+                        checked={completed}
+                        onChange={(e) =>
+                          handleCheckboxChange(
+                            mission.id,
+                            mission.questIds,
+                            e.target.checked
+                          )
+                        }
+                        sx={{ cursor: "pointer" }}
+                      />
+                    </Box>
                   </Box>
+                );
+              })
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography sx={styles.noMissionText}>
+                  Oh non 😢 ! Tu n&apos;as pas encore de missions.
+                </Typography>
+                <Typography sx={styles.noMissionText}>
+                  Crées ou rejoins une quête 🧳 pour débloquer de nouvelles
+                  missions 🗝️!
+                </Typography>
+                <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
+                  <Lottie options={defaultOptions} height={400} width={400} />
                 </Box>
-              );
-            })}
+              </Box>
+            )}
           </Box>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            sx={{ margin: "1rem 0" }}
-            size="large"
-            color="primary"
-            shape="rounded"
-          />
+          {totalPages > 1 && (
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              sx={{ margin: "1rem 0" }}
+              size="large"
+              color="primary"
+              shape="rounded"
+            />
+          )}
         </Box>
+        <Snackbar
+          open={toastOpen}
+          autoHideDuration={5000}
+          onClose={() => setToastOpen(false)}
+          message={toastMessage}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        />
       </Box>
     </Fade>
   );

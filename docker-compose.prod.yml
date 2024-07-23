@@ -11,6 +11,7 @@ services:
       - FRONT_URL=https://0923-rouge-3.wns.wilders.dev
       - MJ_APIKEY_PUBLIC=94d9051bde289b772a4d0d165447edc8
       - MJ_APIKEY_PRIVATE=bc641d6a643c5405af90ec989b4ec045
+    volume: ./backend/public/uploads:/app/backend/public/uploads
   database:
     image: postgres
     # restart: always
@@ -24,8 +25,6 @@ services:
       - POSTGRES_DB=dbname
   frontend:
     image: laurejanin/greenquest-frontend:latest
-    environment:
-      - NEXT_PUBLIC_BACK_URL=https://0923-rouge-3.wns.wilders.dev/api
   nginx:
     stop_grace_period: 0s
     image: nginx:1.21.3

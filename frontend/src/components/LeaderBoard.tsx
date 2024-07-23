@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -6,9 +6,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { queryGetTotalPointsForQuest } from "@/graphql/queryGetTotalPointsForQuest";
-import { QuestType } from "./QuestsTab";
 import { queryGetQuestById } from "@/graphql/queryGetQuestById";
 import { UserType } from "@/pages/userprofile";
 
@@ -88,10 +87,24 @@ const LeaderBoard = ({ questId }: LeaderBoardProps) => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              <TableCell align={"center"} style={{ minWidth: "50%" }}>
+              <TableCell
+                align={"center"}
+                style={{
+                  minWidth: "50%",
+                  backgroundColor: "#f0f0f0",
+                  border: "1px solid white",
+                }}
+              >
                 Aventurier
               </TableCell>
-              <TableCell align={"center"} style={{ minWidth: "50%" }}>
+              <TableCell
+                align={"center"}
+                style={{
+                  minWidth: "50%",
+                  backgroundColor: "#f0f0f0",
+                  border: "1px solid white",
+                }}
+              >
                 Points
               </TableCell>
             </TableRow>
