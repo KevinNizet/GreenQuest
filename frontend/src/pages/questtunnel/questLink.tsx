@@ -71,7 +71,13 @@ export default function QuestLink() {
           component={Paper}
           elevation={3}
           sx={{
-            maxWidth: "90%",
+            width: {
+              xs: "80%", // for extra-small screens
+              sm: "70%", // for small screens
+              md: "60%", // for medium screens
+              lg: "50%", // for large screens
+              xl: "40%", // for extra-large screens
+            },
             padding: 4,
             borderRadius: 5,
           }}

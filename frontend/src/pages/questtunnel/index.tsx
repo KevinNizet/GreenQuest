@@ -57,7 +57,13 @@ export default function QuestTunnel() {
             padding: 4,
             borderRadius: 5,
             maxWidth: "70%",
-            width: "100%",
+            width: {
+              xs: "80%", // for extra-small screens
+              sm: "70%", // for small screens
+              md: "60%", // for medium screens
+              lg: "50%", // for large screens
+              xl: "40%", // for extra-large screens
+            },
             margin: "0 auto",
           }}
           gap={3}
