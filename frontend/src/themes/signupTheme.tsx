@@ -118,7 +118,7 @@ const SignupDiv = styled("div")(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "space-around",
   alignItems: "center",
-  backgroundColor: "#F4F4F8",
+  backgroundColor: "#ECEBF5",
   padding: "15px",
   borderRadius: "5px",
   width: "80%",

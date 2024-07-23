@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { QuestType } from "../QuestsTab";
 import { userType } from "../Header";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, ThemeProvider } from "@mui/material";
 import { useMutation } from "@apollo/client";
 import { mutationDeleteQuest } from "@/graphql/mutationDeleteQuest";
 import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
@@ -17,16 +17,32 @@ interface State extends SnackbarOrigin {
   open: boolean;
 }
 
-const style = {
+const firtsModalstyle = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 550,
+  width: { xs: "70%", sm: "60%", md: "40%", lg: "40%", xl: "25%" },
+
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  borderRadius: "15px",
+};
+
+const secondeModalstyle = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: { xs: "20%", sm: "60%", md: "40%", lg: "40%", xl: "25%" },
+
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: "15px",
 };
 
 type QuestDetailsModalType = {
@@ -102,7 +118,7 @@ export default function BasicModal({
         aria-describedby="modal-modal-description"
         sx={{ borderRadius: "10px" }}
       >
-        <Box sx={style} key={quest?.id}>
+        <Box sx={firtsModalstyle} key={quest?.id}>
           <Box
             sx={{
               display: "flex",
@@ -110,7 +126,12 @@ export default function BasicModal({
               alignItems: "center",
             }}
           >
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              width="100%"
+            >
               {quest?.title}
             </Typography>
             <IconButton onClick={handleClose}>
@@ -119,22 +140,22 @@ export default function BasicModal({
           </Box>
           <Typography
             id="modal-modal-description"
-            sx={{ mt: 2, fontStyle: "italic" }}
+            sx={{ mt: 1, fontStyle: "italic" }}
           >
             {quest?.description}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography id="modal-modal-description">
             <strong>Date de début :</strong>{" "}
             {quest?.startDate
               ? formatDate(quest.startDate)
               : "Date non disponible"}
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography id="modal-modal-description">
             <strong>Durée :</strong> {quest?.duration}{" "}
             {quest?.duration === 1 ? "jour" : "jours"}
           </Typography>
           <br />
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography id="modal-modal-description">
             <strong>Classement des aventuriers :</strong>
           </Typography>
           <br />
@@ -142,7 +163,7 @@ export default function BasicModal({
           <br />
           <>
             {quest?.createdBy.id === me?.id && (
-              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
                 <Button
                   key={quest?.id}
                   sx={{
@@ -165,7 +186,7 @@ export default function BasicModal({
         </Box>
       </Modal>
       <Modal open={confirmOpen} onClose={handleCloseConfirmModal}>
-        <Box sx={style}>
+        <Box sx={secondeModalstyle}>
           <Box
             sx={{
               display: "flex",
