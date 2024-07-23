@@ -123,7 +123,7 @@ const MissionsTab = (props: MissionTabProps) => {
       .filter((userMission: userMissionType) => userMission.isCompleted)
       .map((userMission: userMissionType) => userMission.mission.id);
     setCompletedMissions(completed);
-  }, [userMissionData, userMissions]);
+  }, [userMissionData]);
 
   // Crée une liste triée de toutes les missions en fonction de leur statut de complétion et les quêtes auxquelles elles appartiennent (sortedMissions).
   useEffect(() => {
