@@ -3,10 +3,13 @@ import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Layout from "@/components/Layout";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import MissionsTab from "../components/MissionsTab";
 import QuestsTab from "../components/QuestsTab";
 import JoinQuestModal from "../components/modals/JoinQuestModal";
+import Lottie from "react-lottie";
+import cible from "@/images/lottie/cible.json";
+import boussole from "@/images/lottie/boussole.json";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -22,6 +25,18 @@ const Dashboard = () => {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+  };
+
+  const defaultOptionsCible = {
+    loop: true,
+    autoplay: true,
+    animationData: cible,
+  };
+
+  const defaultOptionsBoussole = {
+    loop: true,
+    autoplay: true,
+    animationData: boussole,
   };
 
   return (
@@ -69,6 +84,24 @@ const Dashboard = () => {
           <Tab label="Quêtes" sx={{ fontSize: "25px" }} />
         </Tabs>
       </Box>
+      <Box
+        sx={{
+          width: "100%",
+          height: "80px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: "-2.5rem",
+        }}
+      >
+        {value === 0 && (
+          <Lottie options={defaultOptionsCible} height={90} width={90} />
+        )}
+        {value === 1 && (
+          <Lottie options={defaultOptionsBoussole} height={50} width={50} />
+        )}
+      </Box>
+
       <Box
         sx={{
           width: "100%",

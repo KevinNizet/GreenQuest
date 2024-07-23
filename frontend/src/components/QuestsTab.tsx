@@ -40,7 +40,7 @@ const styles = {
   container: {
     width: "90%",
     height: "90%",
-    backgroundColor: "#d4d4d4",
+    backgroundColor: "#ECEBF5",
     borderRadius: "10px",
     boxShadow: 2,
     display: "flex",
@@ -65,7 +65,7 @@ const styles = {
     gap: "20px",
   },
   questBox: {
-    backgroundColor: "#f8d7e4",
+    backgroundColor: "#96897B",
     width: "90%",
     display: "flex",
     padding: "1.5rem",
@@ -79,9 +79,10 @@ const styles = {
     alignItems: "center",
     cursor: "pointer",
     fontSize: "20px",
+    color: "white",
   },
   questIcon: {
-    color: "grey",
+    color: "white",
     fontSize: "45px",
     margin: "0 1rem 0 0",
     cursor: "pointer",
