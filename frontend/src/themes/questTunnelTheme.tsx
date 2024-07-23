@@ -117,61 +117,7 @@ const QuestTunnelGridTextField = styled("div")(({ theme }) => ({
   },
 }));
 
-/* const SigninDiv = styled("div")(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-around",
-  alignItems: "center",
-  backgroundColor: "#F4F4F8",
-  padding: "20px",
-  borderRadius: "5px",
-  width: "70%",
-
-  [theme.breakpoints.up("sm")]: {
-    width: "50%",
-  },
-  [theme.breakpoints.up("lg")]: {
-    width: "35%",
-  },
-  [theme.breakpoints.up("xl")]: {
-    width: "20%",
-  },
-}));
-
-
-
-const SigninForm = styled("form")(({ theme }) => ({
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  position: "relative",
-  width: "100%",
-}));
-
-const SigninFormImg = styled("img")(({ theme }) => ({
-  width: "100%",
-  height: "24vh",
-  marginTop: "1px",
-  boxShadow: "17px 42px 31px -41px rgba(0, 0, 0, 0.19)",
-  [theme.breakpoints.up("sm")]: {
-    height: "25vh",
-  },
-  [theme.breakpoints.up("md")]: {
-    width: "60%",
-    height: "38vh",
-    borderBottomRightRadius: "8px",
-    borderBottomLeftRadius: "8px",
-  },
-  [theme.breakpoints.up("lg")]: {
-    width: "40%",
-  },
-})); */
-
 export {
   QuestTunnelTheme,
   QuestTunnelGridTextField,
-  /*  SiginGridTextField,
-  SigninDiv,
-  SigninFormImg,
-  SigninForm, */
 };
