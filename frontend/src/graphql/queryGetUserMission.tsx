@@ -8,6 +8,7 @@ export const queryGetUserMission = gql`
       mission {
         id
         title
+        XPValue
       }
     }
   }

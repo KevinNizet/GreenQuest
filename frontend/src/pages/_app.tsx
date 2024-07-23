@@ -13,6 +13,7 @@ import {
   useQuery,
 } from "@apollo/client";
 import { QuestProvider } from "@/contexts/QuestContext";
+import "../styles/CustomCheckbox.module.css";
 
 //imports relatifs au thème global MaterialUI
 import theme from "@/styles/theme";
