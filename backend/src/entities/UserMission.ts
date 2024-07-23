@@ -42,7 +42,7 @@ export class UserMission extends BaseEntity {
   @Field()
   points!: number;
 
-  @Column({ type: "timestamp", default: () => "current_timestamp" })
-  @Field()
-  resetDate!: Date;
+  // @Column({ type: "timestamp", default: () => "current_timestamp" })
+  // @Field()
+  // resetDate!: Date;
 }
