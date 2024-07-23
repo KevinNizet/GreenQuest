@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import { Grid, Typography, Button, Paper } from "@mui/material";
+import { Grid, Typography, Button, Paper, Box } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { queryGetQuestById } from "@/graphql/queryGetQuestById";
 import { useRouter } from "next/router";
@@ -13,8 +13,19 @@ import {
 } from "react-share";
 import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
+import Lottie from "react-lottie";
+import adventure from "@/images/lottie/adventure.json";
 
 export default function QuestLink() {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: adventure,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   const router = useRouter();
   const id = router.query.id as string;
 
@@ -78,7 +89,7 @@ export default function QuestLink() {
           gap={3}
         >
           <Typography variant="h2" sx={{ fontSize: "1.5rem" }}>
-            Pour inviter tes amis, partage le code ci-dessous
+            Pour inviter tes amis, partage le code ci-dessous :
           </Typography>
           <Typography
             variant="h3"
@@ -111,6 +122,17 @@ export default function QuestLink() {
               <FacebookMessengerIcon size={32} round />
             </FacebookMessengerShareButton>
           </Grid>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              paddingTop: "3rem",
+            }}
+          >
+            <Lottie options={defaultOptions} height={400} width={600} />
+          </Box>
 
           <Button
             variant="contained"
