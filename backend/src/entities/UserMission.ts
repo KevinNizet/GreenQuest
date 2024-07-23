@@ -18,7 +18,9 @@ export class UserMission extends BaseEntity {
   @Field(() => ID)
   id!: number;
 
-  @ManyToOne(() => User, (user) => user.userMissions)
+  @ManyToOne(() => User, (user) => user.userMissions, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userId" })
   @Field(() => User)
   user!: User;

@@ -79,7 +79,7 @@ function App({ Component, pageProps }: AppProps) {
       <Auth>
         <QuestProvider>
           <ThemeProvider theme={theme}>
-            <Component {...pageProps} />;
+            <Component {...pageProps} />
           </ThemeProvider>
         </QuestProvider>
       </Auth>

@@ -71,6 +71,7 @@ const Dashboard = () => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
+          marginBottom: "50px",
         }}
       >
         <Tabs

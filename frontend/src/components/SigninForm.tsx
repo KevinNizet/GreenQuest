@@ -7,6 +7,7 @@ import {
   Typography,
   IconButton,
   InputAdornment,
+  ThemeProvider,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation } from "@apollo/client";
@@ -15,6 +16,12 @@ import { useRouter } from "next/router";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { ResetPasswordModal } from "./modals/ResetPasswordModal";
 import { ApolloError } from "@apollo/client";
+import {
+  SigninDiv,
+  SigninForm,
+  SigninFormImg,
+  SigninFormTheme,
+} from "@/themes/signinTheme";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -90,161 +97,139 @@ const Signin = () => {
   const handleCloseModal = () => setOpenModal(false);
 
   return (
-    <form onSubmit={handleSignIn}>
-      <Grid container direction="column" spacing={2}>
-        <Grid item container justifyContent="center">
-          <Image
-            src="/images/singin-page-picture.jpg"
-            alt="Description de l'image"
-            width={720}
-            height={300}
-          />
-        </Grid>
+    <ThemeProvider theme={SigninFormTheme}>
+      <SigninForm onSubmit={handleSignIn}>
+        <Grid container direction="column" spacing={1}>
+          <Grid item container justifyContent="center" width="100%">
+            <SigninFormImg
+              src="/images/singin-page-picture.jpg"
+              alt="Description de l'image"
+            />
+          </Grid>
 
-        <Grid item container justifyContent="center">
-          <Typography
-            variant="body1"
-            gutterBottom
-            sx={{ width: "60%", textAlign: "center", marginBottom: "20px" }}
-          >
-            Connecte toi ou inscrit toi pour participer à une quête et valider
-            tes missions quotidiennes !
-          </Typography>
-        </Grid>
+          <Grid item container justifyContent="center">
+            <Typography variant="body1" gutterBottom>
+              Connecte toi ou inscrit toi pour participer à une quête et valider
+              tes missions quotidiennes !
+            </Typography>
+          </Grid>
 
-        <Grid item container justifyContent="center">
-          <div
-            style={{
-              backgroundColor: "#ECEBF5",
-              padding: "20px",
-              borderRadius: "5px",
-              width: "60%",
-            }}
-          >
-            <Grid
-              item
-              container
-              justifyContent="center"
-              sx={{ marginBottom: "10px" }}
-            >
-              <TextField
-                sx={{ marginTop: "20px" }}
-                error={emailError}
-                required
-                id="email"
-                label="Email"
-                variant="outlined"
-                color="secondary"
-                helperText={emailError ? "Format de l'email incorrect" : ""}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                fullWidth
-              />
-            </Grid>
+          <Grid item container justifyContent="center">
+            <SigninDiv>
+              <Grid item container justifyContent="center">
+                <TextField
+                  size="small"
+                  error={emailError}
+                  required
+                  id="email"
+                  label="Email"
+                  variant="outlined"
+                  color="secondary"
+                  helperText={emailError ? "Format de l'email incorrect" : ""}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Grid>
+              <Grid item container justifyContent="center">
+                <TextField
+                  size="small"
+                  error={passwordError}
+                  required
+                  id="password"
+                  label="Mot de passe"
+                  variant="outlined"
+                  color="secondary"
+                  helperText={
+                    passwordError
+                      ? "Le mot de passe doit faire au moins 8 caractères"
+                      : ""
+                  }
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={clickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
 
-            <Grid
-              item
-              container
-              justifyContent="center"
-              sx={{ marginBottom: "10px" }}
-            >
-              <TextField
-                error={passwordError}
-                required
-                id="password"
-                label="Mot de passe"
-                variant="outlined"
-                color="secondary"
-                helperText={
-                  passwordError
-                    ? "Le mot de passe doit faire au moins 8 caractères"
-                    : ""
-                }
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={clickShowPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
+              <Grid item container justifyContent="center">
+                {failedConnexion && (
+                  <Typography variant="body2" color="error" gutterBottom>
+                    Les identifiants sont incorrects
+                  </Typography>
+                )}
+                {validationError && (
+                  <Typography variant="body2" color="error" gutterBottom>
+                    Ton compte n&apos;a pas encore été validé. Vérifie ta boîte
+                    mail et utilise le lien de validation.
+                  </Typography>
+                )}
+              </Grid>
 
-            <Grid item container justifyContent="center">
-              {failedConnexion && (
-                <Typography variant="body2" color="error" gutterBottom>
-                  Les identifiants sont incorrects
-                </Typography>
-              )}
-              {validationError && (
-                <Typography variant="body2" color="error" gutterBottom>
-                  Ton compte n&apos;a pas encore été validé. Vérifie ta boîte
-                  mail et utilise le lien de validation.
-                </Typography>
-              )}
-            </Grid>
-
-            <Grid
-              item
-              container
-              justifyContent="center"
-              sx={{ marginBottom: "10px" }}
-            >
-              <Button
-                color="secondary"
-                variant="contained"
-                type="submit"
-                sx={{ marginTop: "30px" }}
+              <Grid
+                item
+                container
+                justifyContent="center"
+                sx={{ marginBottom: "10px" }}
               >
-                Connexion
-              </Button>
-            </Grid>
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  type="submit"
+                  sx={{ marginTop: "30px" }}
+                >
+                  Connexion
+                </Button>
+              </Grid>
 
-            <Grid item container justifyContent="center">
-              <Button
-                variant="text"
-                color="secondary"
-                onClick={handleOpenModal}
-              >
-                Mot de passe oublié ?
-              </Button>
-            </Grid>
-          </div>
+              <Grid item container justifyContent="center">
+                <Button
+                  variant="text"
+                  color="secondary"
+                  onClick={handleOpenModal}
+                >
+                  Mot de passe oublié ?
+                </Button>
+              </Grid>
+            </SigninDiv>
+          </Grid>
+
+          <Grid item container justifyContent="center" height={"10%"}>
+            <Typography
+              variant="body1"
+              gutterBottom
+              sx={{ width: "60%", textAlign: "center", marginTop: "1%" }}
+            >
+              Tu n&apos;as pas de compte ?
+            </Typography>
+          </Grid>
+
+          <Grid item container justifyContent="center">
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => router.push("/signup")}
+              sx={{ marginBottom: "1rem" }}
+            >
+              Inscris-toi
+            </Button>
+          </Grid>
         </Grid>
 
-        <Grid item container justifyContent="center">
-          <Typography
-            variant="body1"
-            gutterBottom
-            sx={{ width: "60%", textAlign: "center", marginTop: "60px" }}
-          >
-            Tu n&apos;as pas de compte ?
-          </Typography>
-        </Grid>
-
-        <Grid item container justifyContent="center">
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => router.push("/signup")}
-          >
-            Inscris-toi
-          </Button>
-        </Grid>
-      </Grid>
-
-      <ResetPasswordModal open={openModal} handleClose={handleCloseModal} />
-    </form>
+        <ResetPasswordModal open={openModal} handleClose={handleCloseModal} />
+      </SigninForm>
+    </ThemeProvider>
   );
 };
 
