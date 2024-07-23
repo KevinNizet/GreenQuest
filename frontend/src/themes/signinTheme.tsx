@@ -33,7 +33,7 @@ const SigninFormTheme = createTheme({
             width: "40%",
           },
           [theme.breakpoints.up("xl")]: {
-            fontSize: "2vh",
+            fontSize: "1.5vh",
             width: "30%",
           },
         }),
@@ -110,34 +110,6 @@ const SigninDiv = styled("div")(({ theme }) => ({
   },
 }));
 
-const SiginGridTextField = styled("div")(({ theme }) => ({
-  position: "absolute",
-  width: "80%",
-  height: "80%",
-  backgroundColor: "rgba(240, 240, 240, 0.7)",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-around",
-  alignItems: "center",
-  borderRadius: "2.5rem",
-  padding: "1rem",
-  [theme.breakpoints.up("xs")]: {
-    width: "80%",
-  },
-  [theme.breakpoints.up("sm")]: {
-    width: "70%",
-  },
-  [theme.breakpoints.up("md")]: {
-    width: "70%",
-  },
-  [theme.breakpoints.up("lg")]: {
-    width: "60%",
-  },
-  [theme.breakpoints.up("xl")]: {
-    width: "40%",
-  },
-}));
-
 const SigninForm = styled("form")(({ theme }) => ({
   display: "flex",
   justifyContent: "center",
@@ -159,16 +131,17 @@ const SigninFormImg = styled("img")(({ theme }) => ({
     height: "38vh",
     borderBottomRightRadius: "8px",
     borderBottomLeftRadius: "8px",
+    borderRadius: "8px",
   },
   [theme.breakpoints.up("lg")]: {
     width: "40%",
   },
+  [theme.breakpoints.up("xl")]: {
+    marginTop: "2rem",
+    width: "30%",
+    height: "30vh",
+    borderRadius: "8px",
+  },
 }));
 
-export {
-  SigninFormTheme,
-  SiginGridTextField,
-  SigninDiv,
-  SigninFormImg,
-  SigninForm,
-};
+export { SigninFormTheme, SigninDiv, SigninFormImg, SigninForm };

@@ -17,10 +17,10 @@ const SignupTheme = createTheme({
           color: "#393E41",
           fontWeight: "bold",
           fontSize: "1.8vh",
-          width: "60%",
+          width: "85%",
           textAlign: "center",
-          marginTop: "1vh",
-          marginBottom: "1vh",
+          marginTop: "0.5vh",
+          marginBottom: "0.5vh",
           [theme.breakpoints.up("sm")]: {
             fontSize: "1rem",
             width: "60%",
@@ -42,9 +42,10 @@ const SignupTheme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: ({ theme }) => ({
-          width: "80%",
+          width: "85%",
           fontSize: "2vh",
           margin: "0.5rem",
+
           [theme.breakpoints.up("md")]: {
             fontSize: "1rem",
           },
@@ -59,10 +60,33 @@ const SignupTheme = createTheme({
       },
     },
 
+    MuiFormControl: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          marginBottom: "3rem",
+        }),
+      },
+    },
+
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          height: "30px",
+        }),
+      },
+    },
+
+    MuiInputBase: {
+      styleOverrides: {
+        root: ({ theme }) => ({ height: "40px" }),
+      },
+    },
+
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
-          margin: "1",
+          marginTop: "0.6rem",
+          marginBottom: "0.6rem",
           boxShadow: "2",
           borderRadius: "8px",
 
@@ -89,52 +113,28 @@ const SignupTheme = createTheme({
   },
 });
 
-const SigninDiv = styled("div")(({ theme }) => ({
+const SignupDiv = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-around",
   alignItems: "center",
   backgroundColor: "#F4F4F8",
-  padding: "20px",
+  padding: "15px",
   borderRadius: "5px",
-  width: "70%",
-
+  width: "80%",
+  height: "40%",
   [theme.breakpoints.up("sm")]: {
     width: "50%",
+  },
+  [theme.breakpoints.up("md")]: {
+    width: "35%",
+    marginBottom: "3rem",
   },
   [theme.breakpoints.up("lg")]: {
     width: "35%",
   },
   [theme.breakpoints.up("xl")]: {
     width: "20%",
-  },
-}));
-
-const SignupGridTextField = styled("div")(({ theme }) => ({
-  position: "absolute",
-  width: "80%",
-  height: "80%",
-  backgroundColor: "rgba(240, 240, 240, 0.7)",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-around",
-  alignItems: "center",
-  borderRadius: "2.5rem",
-  padding: "1rem",
-  [theme.breakpoints.up("xs")]: {
-    width: "80%",
-  },
-  [theme.breakpoints.up("sm")]: {
-    width: "70%",
-  },
-  [theme.breakpoints.up("md")]: {
-    width: "70%",
-  },
-  [theme.breakpoints.up("lg")]: {
-    width: "60%",
-  },
-  [theme.breakpoints.up("xl")]: {
-    width: "40%",
   },
 }));
 
@@ -149,7 +149,7 @@ const SignupForm = styled("form")(({ theme }) => ({
 const SignupFormImg = styled("img")(({ theme }) => ({
   width: "100%",
   height: "24vh",
-  marginTop: "1px",
+  marginTop: "px",
   boxShadow: "17px 42px 31px -41px rgba(0, 0, 0, 0.19)",
   [theme.breakpoints.up("sm")]: {
     height: "25vh",
@@ -163,12 +163,12 @@ const SignupFormImg = styled("img")(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     width: "40%",
   },
+  [theme.breakpoints.up("xl")]: {
+    marginTop: "2rem",
+    width: "30%",
+    height: "30vh",
+    borderRadius: "8px",
+  },
 }));
 
-export {
-  SignupTheme,
-  SignupGridTextField,
-  SigninDiv,
-  SignupFormImg,
-  SignupForm,
-};
+export { SignupTheme, SignupDiv, SignupFormImg, SignupForm };

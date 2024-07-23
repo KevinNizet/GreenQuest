@@ -15,7 +15,12 @@ import { signup } from "@/graphql/mutationSignup";
 import { useMutation } from "@apollo/client";
 import Image from "next/image";
 import Snackbar from "@mui/material/Snackbar";
-import { SignupForm, SignupFormImg, SignupTheme } from "@/themes/signupTheme";
+import {
+  SignupDiv,
+  SignupForm,
+  SignupFormImg,
+  SignupTheme,
+} from "@/themes/signupTheme";
 
 const Signup = () => {
   // Form states
@@ -100,136 +105,140 @@ const Signup = () => {
               <br />
               <br />
             </Grid>
-            <Grid item container>
-              <Grid item container justifyContent="center">
-                <TextField
-                  className="textfield-outline-shadow"
-                  color="success"
-                  value={firstname}
-                  required
-                  id="fisrtname"
-                  label="Prénom"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setFirstname(e.target.value)}
-                />
-              </Grid>
-              <Grid item container justifyContent="center">
-                <TextField
-                  className="textfield-outline-shadow"
-                  color="success"
-                  value={lastname}
-                  required
-                  id="lastname"
-                  label="Nom"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setLastname(e.target.value)}
-                />
-              </Grid>
-              <Grid item container justifyContent="center">
-                <TextField
-                  className="textfield-outline-shadow"
-                  color="success"
-                  value={nickname}
-                  id="Nickname"
-                  label="Pseudo"
-                  variant="outlined"
-                  size="small"
-                  onChange={(e) => setNickname(e.target.value)}
-                />
-              </Grid>
-              <Grid item container justifyContent="center">
-                <TextField
-                  className="textfield-outline-shadow"
-                  color="success"
-                  error={emailError}
-                  value={email}
-                  required
-                  id="email"
-                  label="Email"
-                  variant="outlined"
-                  helperText={emailError === true ? "Email déjà utilisé!" : ""}
-                  size="small"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    setEmailError(false);
-                  }}
-                />
-              </Grid>
-              <Grid item container justifyContent="center">
-                <TextField
-                  className="textfield-outline-shadow"
-                  color="success"
-                  error={passwordError}
-                  value={password}
-                  required
-                  id="password"
-                  label="Mot de passe"
-                  variant="outlined"
-                  helperText={
-                    passwordError === true
-                      ? "Le mot de passe doit faire au moins 8 caractères"
-                      : ""
-                  }
-                  type={showPassword ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    ),
-                  }}
-                  size="small"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setPasswordError(false);
-                  }}
-                />
-              </Grid>
-              <Grid item container justifyContent="center">
-                <TextField
-                  className="textfield-outline-shadow"
-                  color="success"
-                  error={errorConfirmPassword}
-                  value={confirmPassword}
-                  required
-                  id="confirmPassword"
-                  label="Confirmer le mot de passe"
-                  variant="outlined"
-                  helperText={
-                    errorConfirmPassword
-                      ? "Les deux mots de passes doivent être similaires"
-                      : ""
-                  }
-                  type={showPassword ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    ),
-                  }}
-                  size="small"
-                  onChange={(e) => {
-                    setConfirmPassword(e.target.value);
-                    setErrorConfirmPassword(false);
-                  }}
-                />
-              </Grid>
-              <Grid item container justifyContent="center">
-                <Button variant="contained" type="submit" color="success">
-                  Inscription
-                </Button>
-              </Grid>
+            <Grid item container justifyContent="space-around">
+              <SignupDiv>
+                <Grid item container justifyContent="center">
+                  <TextField
+                    className="textfield-outline-shadow"
+                    color="success"
+                    value={firstname}
+                    required
+                    id="fisrtname"
+                    label="Prénom"
+                    variant="outlined"
+                    size="small"
+                    onChange={(e) => setFirstname(e.target.value)}
+                  />
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <TextField
+                    className="textfield-outline-shadow"
+                    color="success"
+                    value={lastname}
+                    required
+                    id="lastname"
+                    label="Nom"
+                    variant="outlined"
+                    size="small"
+                    onChange={(e) => setLastname(e.target.value)}
+                  />
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <TextField
+                    className="textfield-outline-shadow"
+                    color="success"
+                    value={nickname}
+                    id="Nickname"
+                    label="Pseudo"
+                    variant="outlined"
+                    size="small"
+                    onChange={(e) => setNickname(e.target.value)}
+                  />
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <TextField
+                    className="textfield-outline-shadow"
+                    color="success"
+                    error={emailError}
+                    value={email}
+                    required
+                    id="email"
+                    label="Email"
+                    variant="outlined"
+                    helperText={
+                      emailError === true ? "Email déjà utilisé!" : ""
+                    }
+                    size="small"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setEmailError(false);
+                    }}
+                  />
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <TextField
+                    className="textfield-outline-shadow"
+                    color="success"
+                    error={passwordError}
+                    value={password}
+                    required
+                    id="password"
+                    label="Mot de passe"
+                    variant="outlined"
+                    helperText={
+                      passwordError === true
+                        ? "Le mot de passe doit faire au moins 8 caractères"
+                        : ""
+                    }
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      ),
+                    }}
+                    size="small"
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setPasswordError(false);
+                    }}
+                  />
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <TextField
+                    className="textfield-outline-shadow"
+                    color="success"
+                    error={errorConfirmPassword}
+                    value={confirmPassword}
+                    required
+                    id="confirmPassword"
+                    label="Confirmer le mot de passe"
+                    variant="outlined"
+                    helperText={
+                      errorConfirmPassword
+                        ? "Les deux mots de passes doivent être similaires"
+                        : ""
+                    }
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      ),
+                    }}
+                    size="small"
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      setErrorConfirmPassword(false);
+                    }}
+                  />
+                </Grid>
+                <Grid item container justifyContent="center">
+                  <Button variant="contained" type="submit" color="success">
+                    Inscription
+                  </Button>
+                </Grid>
+              </SignupDiv>
             </Grid>
           </Grid>
         </SignupForm>
