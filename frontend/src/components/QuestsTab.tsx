@@ -110,13 +110,13 @@ const QuestsTab = ({ value }: QuestTabProps) => {
   const handleClose = () => setModalOpen(false);
 
   const {
+    data: meData,
     loading: meLoading,
-    data: medata,
     error: meError,
   } = useQuery<{ item: userType }>(queryMySelf);
-  const me = medata?.item;
+  const me = meData?.item;
 
-  const { data, loading, error } = useQuery<{ item: QuestType[] }>(
+  const { data, loading, error, refetch } = useQuery<{ item: QuestType[] }>(
     queryGetQuestByUser,
     {
       variables: { userId: me?.id },
@@ -247,6 +247,7 @@ const QuestsTab = ({ value }: QuestTabProps) => {
               modalOpen={modalOpen}
               quest={selectedQuest}
               me={me}
+              refetch={refetch}
             />
           )}
         </Box>

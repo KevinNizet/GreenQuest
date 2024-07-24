@@ -86,13 +86,13 @@ const Header = () => {
             {!me && (
               <>
                 <>
-                  <a href="/">
+                  <Link href="/">
                     <HeaderLogo
                       src={`/images/greenquest_logo.png`}
                       alt="Greenquest_logo"
                       loading="lazy"
                     />
-                  </a>
+                  </Link>
                 </>
                 <Typography
                   variant="h4"
@@ -110,21 +110,17 @@ const Header = () => {
                   sx={{}}
                 >
                   {router.pathname === "/signin" ? (
-                    <Button
-                      color={"success"}
-                      variant="contained"
-                      href="/signup"
-                    >
-                      Inscription
-                    </Button>
+                    <Link href="/signup" passHref>
+                      <Button color={"success"} variant="contained">
+                        Inscription
+                      </Button>
+                    </Link>
                   ) : (
-                    <Button
-                      color={"success"}
-                      variant="contained"
-                      href="/signin"
-                    >
-                      Connexion
-                    </Button>
+                    <Link href="/signin" passHref>
+                      <Button color={"success"} variant="contained">
+                        Connexion
+                      </Button>
+                    </Link>
                   )}
                 </Stack>
               </>

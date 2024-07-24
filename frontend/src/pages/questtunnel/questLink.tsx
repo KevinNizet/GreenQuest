@@ -1,5 +1,12 @@
 import Layout from "@/components/Layout";
-import { Grid, Typography, Button, Paper, Box } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  Button,
+  Paper,
+  Box,
+  ThemeProvider,
+} from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { queryGetQuestById } from "@/graphql/queryGetQuestById";
 import { useRouter } from "next/router";
@@ -15,6 +22,10 @@ import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
 import Lottie from "react-lottie";
 import adventure from "@/images/lottie/adventure.json";
+import {
+  QuestTunnelTheme,
+  QuestTunnelGridTextField,
+} from "@/themes/questTunnelTheme";
 
 export default function QuestLink() {
   const defaultOptions = {
@@ -35,6 +46,10 @@ export default function QuestLink() {
   });
 
   const [showConfetti, setShowConfetti] = useState(true);
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 0,
+    height: typeof window !== "undefined" ? window.innerHeight : 0,
+  });
 
   useEffect(() => {
     setTimeout(() => {
@@ -60,95 +75,104 @@ export default function QuestLink() {
   };
 
   return (
-    <Layout title="Lien de la quête">
-      {showConfetti && <Confetti />}
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        gap={5}
-        marginTop={4}
-      >
-        <Typography variant="h1" sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-          Félicitations ta quête a été créée !
-        </Typography>
-
+    <ThemeProvider theme={QuestTunnelTheme}>
+      <Layout title="Lien de la quête">
+        {showConfetti && (
+          <Confetti width={windowSize.width} height={windowSize.height} />
+        )}
         <Grid
           container
           direction="column"
           justifyContent="center"
           alignItems="center"
-          component={Paper}
-          elevation={3}
-          sx={{
-            width: {
-              xs: "80%", // for extra-small screens
-              sm: "70%", // for small screens
-              md: "60%", // for medium screens
-              lg: "50%", // for large screens
-              xl: "40%", // for extra-large screens
-            },
-            padding: 4,
-            borderRadius: 5,
-          }}
-          gap={3}
+          gap={1}
+          marginTop={4}
         >
-          <Typography variant="h2" sx={{ fontSize: "1.5rem" }}>
-            Pour inviter tes amis, partage le code ci-dessous :
+          <Typography variant="h1">
+            Félicitations ta quête est créée 🎊 !
           </Typography>
-          <Typography
-            variant="h3"
-            sx={{ fontSize: "1.5rem", fontWeight: "bold" }}
-          >
-            {code}
-          </Typography>
-
           <Grid
             container
-            direction="row"
+            direction="column"
             justifyContent="center"
             alignItems="center"
-            gap={2}
-          >
-            <EmailShareButton
-              url={shareUrl}
-              subject="Rejoignez ma quête"
-              body={shareMessage}
-            >
-              <EmailIcon size={32} round />
-            </EmailShareButton>
-            <WhatsappShareButton url={shareUrl} title={shareMessage}>
-              <WhatsappIcon size={32} round />
-            </WhatsappShareButton>
-            <FacebookMessengerShareButton
-              url={shareUrl}
-              appId="YOUR_FACEBOOK_APP_ID"
-            >
-              <FacebookMessengerIcon size={32} round />
-            </FacebookMessengerShareButton>
-          </Grid>
-
-          <Box
+            component={Paper}
+            elevation={3}
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: "3rem",
+              width: {
+                xs: "80%",
+                sm: "70%",
+                md: "60%",
+                lg: "50%",
+                xl: "40%",
+              },
+              padding: 2,
+              backgroundColor: "transparent",
+              boxShadow: "none",
             }}
+            gap={3}
           >
-            <Lottie options={defaultOptions} height={400} width={600} />
-          </Box>
+            <Typography variant="h2">
+              Pour inviter tes amis, partage le code ci-dessous :
+            </Typography>
+            <Typography variant="h3" sx={{ fontWeight: "bold" }}>
+              {code}
+            </Typography>
 
-          <Button
-            variant="contained"
-            onClick={navigateToDashboard}
-            sx={{ bgcolor: "#7BD389", color: "#000000" }}
-          >
-            Aller sur la quête
-          </Button>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              gap={2}
+            >
+              <EmailShareButton
+                url={shareUrl}
+                subject="Rejoignez ma quête"
+                body={shareMessage}
+              >
+                <EmailIcon size={32} round />
+              </EmailShareButton>
+              <WhatsappShareButton url={shareUrl} title={shareMessage}>
+                <WhatsappIcon size={32} round />
+              </WhatsappShareButton>
+              <FacebookMessengerShareButton
+                url={shareUrl}
+                appId="YOUR_FACEBOOK_APP_ID"
+              >
+                <FacebookMessengerIcon size={32} round />
+              </FacebookMessengerShareButton>
+            </Grid>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                paddingTop: "3rem",
+                width: "100%",
+                height: {
+                  xs: 200,
+                  sm: 300,
+                  md: 400,
+                  lg: 500,
+                  xl: 600,
+                },
+              }}
+            >
+              <Lottie options={defaultOptions} height="100%" width="100%" />
+            </Box>
+
+            <Button
+              variant="contained"
+              onClick={navigateToDashboard}
+              sx={{ bgcolor: "primary.main", color: "#000000" }}
+            >
+              Aller sur la quête
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-    </Layout>
+      </Layout>
+    </ThemeProvider>
   );
 }

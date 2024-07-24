@@ -11,6 +11,7 @@ import {
   MenuItem,
   InputLabel,
   SelectChangeEvent,
+  ThemeProvider,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,6 +21,10 @@ import { useQuestContext } from "@/contexts/QuestContext";
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { mutationCreateQuest } from "@/graphql/mutationCreateQuest";
+import {
+  QuestTunnelTheme,
+  QuestTunnelGridTextField,
+} from "@/themes/questTunnelTheme";
 
 export type MissionType = {
   id: number;
@@ -47,7 +52,7 @@ export default function Missions() {
     }
   );
 
-  // pourvoir ajuster sa sélection en supprimant ajoutant les missions
+  // Pour pouvoir ajuster sa sélection en supprimant ajoutant les missions
   const deleteMission = (id: number) => {
     setMissions((prevMissions) =>
       prevMissions.filter((mission) => mission.id !== id)
@@ -77,7 +82,7 @@ export default function Missions() {
     router.back();
   };
 
-  // validation de la quête
+  // Validation de la quête
   const [createQuest] = useMutation(mutationCreateQuest);
 
   const validateQuest = async () => {
@@ -107,114 +112,101 @@ export default function Missions() {
   };
 
   return (
-    <Layout title="Missions">
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        gap={5}
-        marginTop={3}
-      >
-        <Typography variant="h1" sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-          Créer votre quête
-        </Typography>
-
+    <ThemeProvider theme={QuestTunnelTheme}>
+      <Layout title="Missions">
         <Grid
           container
           direction="column"
           justifyContent="center"
           alignItems="center"
-          component={Paper}
-          elevation={3}
-          sx={{
-            width: {
-              xs: "80%", // for extra-small screens
-              sm: "70%", // for small screens
-              md: "60%", // for medium screens
-              lg: "50%", // for large screens
-              xl: "40%", // for extra-large screens
-            },
-            padding: 4,
-            borderRadius: 5,
-          }}
-          gap={3}
+          gap={5}
+          marginTop={3}
         >
-          <Typography variant="h2" sx={{ fontSize: "1.5rem" }}>
-            Étape 4
-          </Typography>
-          <Typography variant="h3" sx={{ fontSize: "1rem" }}>
-            Choisis tes missions
+          <Typography
+            variant="h1"
+            sx={{ fontSize: "2rem", fontWeight: "bold" }}
+          >
+            Crée ta quête 🚀
           </Typography>
 
-          <Grid container direction="column" gap={2} sx={{ width: "100%" }}>
-            {missions.map((mission) => (
-              <Card
-                key={mission.id}
-                sx={{ position: "relative", backgroundColor: "#E0B676" }}
-              >
-                <IconButton
-                  sx={{ position: "absolute", top: 0, right: 0 }}
-                  onClick={() => deleteMission(mission.id)}
+          <QuestTunnelGridTextField>
+            <Typography variant="h2">Étape 4 🎯</Typography>
+            <Typography variant="h3">Choisis tes missions</Typography>
+
+            <Grid container direction="column" gap={2} sx={{ width: "100%" }}>
+              {missions.map((mission) => (
+                <Card
+                  key={mission.id}
+                  sx={{ position: "relative", backgroundColor: "#628395" }}
                 >
-                  <CloseIcon />
-                </IconButton>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {mission.title}
-                  </Typography>
-                  <Typography variant="body2">{mission.description}</Typography>
-                  <Typography variant="body2">
-                    Points: {mission.XPValue}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
-          </Grid>
-          <InputLabel id="select-label">
-            Sélectionner une autre mission ?
-          </InputLabel>
-          <Select
-            fullWidth
-            value={selectedMissionTitle}
-            variant="outlined"
-            onChange={selectMission}
-            sx={{
-              "&.Mui-focused fieldset": {
-                borderColor: "#7BD389 !important",
-              },
-            }}
-          >
-            {dataMissions?.getMissions.map((mission) => (
-              <MenuItem key={mission.id} value={mission.title}>
-                {mission.title}
-              </MenuItem>
-            ))}
-          </Select>
-          <Grid
-            container
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-          >
-            <Button
-              variant="contained"
-              onClick={previousPage}
-              sx={{ bgcolor: "#7BD389", color: "#000000" }}
+                  <IconButton
+                    sx={{ position: "absolute", top: 0, right: 0 }}
+                    onClick={() => deleteMission(mission.id)}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                  <CardContent>
+                    <Typography variant="h4" component="div">
+                      {mission.title}
+                    </Typography>
+                    <Typography variant="body2">
+                      {mission.description}
+                    </Typography>
+                    <Typography variant="body2">
+                      Points: {mission.XPValue}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </Grid>
+
+            <InputLabel id="select-label">
+              Sélectionner une autre mission ?
+            </InputLabel>
+            <Select
+              fullWidth
+              value={selectedMissionTitle}
+              variant="outlined"
+              onChange={selectMission}
+              sx={{
+                "&.Mui-focused fieldset": {
+                  borderColor: QuestTunnelTheme.palette.primary.main,
+                },
+                marginBottom: 2, // Add some margin to space it from the other elements
+              }}
             >
-              Retour
-            </Button>
-            <Button
-              variant="contained"
-              onClick={validateQuest}
-              sx={{ bgcolor: "#7BD389", color: "#000000" }}
-              disabled={missions.length <= 0}
+              {dataMissions?.getMissions.map((mission) => (
+                <MenuItem key={mission.id} value={mission.title}>
+                  {mission.title}
+                </MenuItem>
+              ))}
+            </Select>
+
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              width="100%"
             >
-              Valider
-            </Button>
-          </Grid>
+              <Button
+                variant="contained"
+                onClick={previousPage}
+                color="secondary"
+              >
+                Retour
+              </Button>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={validateQuest}
+                disabled={missions.length <= 0}
+              >
+                Valider
+              </Button>
+            </Grid>
+          </QuestTunnelGridTextField>
         </Grid>
-      </Grid>
-    </Layout>
+      </Layout>
+    </ThemeProvider>
   );
 }

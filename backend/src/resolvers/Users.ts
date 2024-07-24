@@ -92,7 +92,7 @@ export class UserResolver {
     Object.assign(newUser, {
       firstname: data.firstname,
       lastname: data.lastname,
-      nickname: data.nickname,
+      nickname: data.nickname || data.firstname,
       email: data.email,
       hashedPassword,
       isValidatedAccount: false,

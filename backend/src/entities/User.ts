@@ -35,12 +35,9 @@ export class User extends BaseEntity {
   @Field()
   lastname!: string;
 
-  @Column()
-  @Length(3, 50, {
-    message: "Username length",
-  })
-  @Field()
-  nickname!: string;
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  nickname?: string;
 
   @Column({
     length: 150,
@@ -102,9 +99,8 @@ export class UserCreateInput {
   @Field()
   lastname!: string;
 
-  @Length(3, 50)
-  @Field()
-  nickname!: string;
+  @Field({ nullable: true })
+  nickname?: string;
 
   @Field()
   @IsEmail()
@@ -131,7 +127,6 @@ export class UserUpdateInput {
   lastname?: string;
 
   @Field({ nullable: true })
-  @Length(3, 50)
   nickname?: string;
 
   @Field({ nullable: true })
