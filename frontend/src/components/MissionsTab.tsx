@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Fade, Typography, Pagination } from "@mui/material";
+import { Box, Fade, Typography, Pagination, Snackbar } from "@mui/material";
 import { useQuery, useMutation } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { QuestType } from "./QuestsTab";
@@ -62,6 +62,8 @@ const styles = {
     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
     margin: "1rem 0 0 0",
     animation: isAnimating ? "blinkAnimation 1s ease-in-out" : "none",
+    cursor: "pointer",
+    pointerEvents: isCompleted ? "auto" : "none",
     "@keyframes blinkAnimation": {
       "0%": { backgroundColor: "#a5d6a7" },
       "50%": { backgroundColor: "#66bb6a" },
@@ -90,46 +92,59 @@ const MissionsTab = (props: MissionTabProps) => {
   const [animationMission, setAnimationMission] = useState<number | null>(null);
   const [sortedMissions, setSortedMissions] = useState<any[]>([]);
   const [pointsToShow, setPointsToShow] = useState<number | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState({
+    open: false,
+    vertical: "top",
+    horizontal: "right",
+  });
+  const [toastMessage, setToastMessage] = useState("");
 
-  // Récupère les données de l'utilisateur actuel (meData), incluant ses informations personnelles.
+  const { vertical, horizontal, open } = snackbarOpen;
+
+  const [loadingMissions, setLoadingMissions] = useState(true);
+
+  // Query pour obtenir les informations sur l'utilisateur
   const { loading: meLoading, data: meData } = useQuery<{ item: userType }>(
     queryMySelf
   );
   const me = meData && meData.item;
 
-  // Récupère les quêtes associées à l'utilisateur (questData).
-  const { data: questData } = useQuery<{ item: QuestType[] }>(
-    queryGetQuestByUser,
+  // Query pour obtenir les quêtes de l'utilisateur
+  const { data: questData, loading: questLoading } = useQuery<{
+    item: QuestType[];
+  }>(queryGetQuestByUser, {
+    variables: { userId: me?.id },
+    fetchPolicy: "network-only",
+  });
+
+  const quests = questData && questData.item;
+
+  // Query pour obtenir les missions de l'utilisateur
+  const { data: userMissionData, loading: userMissionLoading } = useQuery(
+    queryGetUserMission,
     {
       variables: { userId: me?.id },
       fetchPolicy: "network-only",
     }
   );
 
-  const quests = questData && questData.item;
-
-  // Récupère les missions de l'utilisateur (userMissionData).
-  const { data: userMissionData } = useQuery(queryGetUserMission, {
-    variables: { userId: me?.id },
-    fetchPolicy: "network-only",
-  });
-
   const userMissions = userMissionData?.item || [];
 
-  // Prépare une mutation pour valider une mission (validateMission).
+  // Mutation pour valider une mission
   const [validateMission] = useMutation(mutationValidateMission);
 
-  // Met à jour la liste des missions complètes en fonction des missions de l'utilisateur (completedMissions).
   useEffect(() => {
-    const completed = userMissions
-      .filter((userMission: userMissionType) => userMission.isCompleted)
-      .map((userMission: userMissionType) => userMission.mission.id);
-    setCompletedMissions(completed);
-  }, [userMissionData]);
+    if (!userMissionLoading && !loadingMissions) {
+      // Met à jour la liste des missions complétées
+      const completed = userMissions
+        .filter((userMission: userMissionType) => userMission.isCompleted)
+        .map((userMission: userMissionType) => userMission.mission.id);
+      setCompletedMissions(completed);
+    }
+  }, [userMissionData, userMissionLoading, loadingMissions]);
 
-  // Crée une liste triée de toutes les missions en fonction de leur statut de complétion et les quêtes auxquelles elles appartiennent (sortedMissions).
   useEffect(() => {
-    if (!quests) return;
+    if (!quests || questLoading) return;
 
     const uniqueMissionsMap = new Map();
 
@@ -151,6 +166,7 @@ const MissionsTab = (props: MissionTabProps) => {
 
     const allMissions = Array.from(uniqueMissionsMap.values());
 
+    // Trie les missions en fonction de leur état complété
     const sorted = allMissions.sort((a, b) => {
       const isCompletedA = completedMissions.includes(a.id);
       const isCompletedB = completedMissions.includes(b.id);
@@ -159,9 +175,10 @@ const MissionsTab = (props: MissionTabProps) => {
     });
 
     setSortedMissions(sorted);
-  }, [quests, completedMissions]);
+    setLoadingMissions(false);
+  }, [quests, questLoading, completedMissions]);
 
-  // Définit les missions à afficher sur la page actuelle en fonction de la pagination.
+  // Pagination
   const missionsPerPage = 4;
   const displayedMissions = sortedMissions.slice(
     (page - 1) * missionsPerPage,
@@ -170,7 +187,7 @@ const MissionsTab = (props: MissionTabProps) => {
 
   const totalPages = Math.ceil(sortedMissions.length / missionsPerPage);
 
-  // Gère le changement de page pour la pagination des missions.
+  // Gestion du changement de page
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -178,12 +195,10 @@ const MissionsTab = (props: MissionTabProps) => {
     setPage(value);
   };
 
-  // Réinitialise la page à 1 lorsque le nombre total de missions triées change.
   useEffect(() => {
     setPage(1);
   }, [sortedMissions.length]);
 
-  // Retourne la valeur d'expérience d'une mission donnée par son ID.
   const getXPValueByMissionId = (missionId: number) => {
     const mission = userMissions.find(
       (userMission: { mission: { id: number } }) =>
@@ -192,52 +207,46 @@ const MissionsTab = (props: MissionTabProps) => {
     return mission ? mission.mission.XPValue : null;
   };
 
-  // Gère la validation d'une mission lorsqu'une case est cochée.
-  const handleCheckboxChange = async (
-    missionId: number,
-    questIds: number[],
-    checked: boolean
-  ) => {
-    if (checked) {
-      try {
-        await Promise.all(
-          questIds.map((questId) =>
-            validateMission({
-              variables: {
-                missionId,
-                userId: me?.id,
-                questId,
-              },
-            })
-          )
-        );
+  // Gestion de la validation des missions
+  const handleMissionClick = async (missionId: number, questIds: number[]) => {
+    // Si la mission est déjà complétée, affiche le message d'information
+    if (isMissionCompleted(missionId)) {
+      setToastMessage("Tu pourras revalider cette mission demain 😊");
+      setSnackbarOpen({ ...snackbarOpen, open: true });
+      return;
+    }
 
-        const xpValue = getXPValueByMissionId(missionId);
+    try {
+      await Promise.all(
+        questIds.map((questId) =>
+          validateMission({
+            variables: {
+              missionId,
+              userId: me?.id,
+              questId,
+            },
+          })
+        )
+      );
 
-        if (xpValue !== null) {
-          setCompletedMissions((prev) => [...prev, missionId]);
-          setAnimationMission(missionId);
-          setPointsToShow(xpValue);
-          setTimeout(() => setAnimationMission(null), 1000);
-          setTimeout(() => setPointsToShow(null), 2000);
-        }
-      } catch (error) {
-        console.error("Erreur lors de la validation de la mission:", error);
+      const xpValue = getXPValueByMissionId(missionId);
+
+      if (xpValue !== null) {
+        setCompletedMissions((prev) => [...prev, missionId]);
+        setAnimationMission(missionId);
+        setPointsToShow(xpValue);
+        setTimeout(() => setAnimationMission(null), 1000);
+        setTimeout(() => setPointsToShow(null), 2000);
       }
-    } else {
-      setCompletedMissions((prev) => {
-        const updated = prev.filter((id) => id !== missionId);
-        return updated;
-      });
+    } catch (error) {
+      console.error("Erreur lors de la validation de la mission:", error);
     }
   };
 
-  // Vérifie si une mission est marquée comme complétée.
   const isMissionCompleted = (missionId: number) => {
     return completedMissions.includes(missionId);
   };
 
-  // Définit les options de configuration pour une animation Lottie (wizard).
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -251,100 +260,100 @@ const MissionsTab = (props: MissionTabProps) => {
     <Fade in={props.value === 0} timeout={450}>
       <Box sx={styles.container}>
         <Box sx={styles.content}>
-          <Box sx={styles.missionList}>
-            {displayedMissions.length > 0 ? (
-              displayedMissions.map((mission, index) => {
-                const completed = isMissionCompleted(mission.id);
-                const isAnimating = animationMission === mission.id;
+          {loadingMissions ? (
+            <Typography sx={styles.noMissionText}>Chargement...</Typography>
+          ) : (
+            <Box sx={styles.missionList}>
+              {displayedMissions.length > 0 ? (
+                displayedMissions.map((mission, index) => {
+                  const completed = isMissionCompleted(mission.id);
+                  const isAnimating = animationMission === mission.id;
 
-                return (
-                  <Box
-                    key={`mission-${mission.id}-${index}`}
-                    sx={styles.missionBox(completed, isAnimating)}
-                  >
+                  return (
                     <Box
-                      sx={{
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
+                      key={`mission-${mission.id}-${index}`}
+                      sx={styles.missionBox(completed, isAnimating)}
+                      onClick={() =>
+                        handleMissionClick(mission.id, mission.questIds)
+                      }
                     >
-                      <Typography sx={styles.missionTitle}>
-                        {mission.title}
-                      </Typography>
-                      <div className={stylesCustomCheckbox.checkboxWrapper12}>
-                        <div className={stylesCustomCheckbox.cbx}>
-                          <input
-                            type="checkbox"
-                            id={`cbx-${mission.id}`}
-                            checked={completed}
-                            onChange={(e) =>
-                              handleCheckboxChange(
-                                mission.id,
-                                mission.questIds,
-                                e.target.checked
-                              )
-                            }
-                            disabled={completed}
-                          />
-                          <label htmlFor={`cbx-${mission.id}`} />
-                          <svg
-                            width="15"
-                            height="14"
-                            viewBox="0 0 15 14"
-                            fill="none"
-                          >
-                            <path d="M2 8.36364L6.23077 12L13 2"></path>
+                      <Box
+                        sx={{
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Typography sx={styles.missionTitle}>
+                          {mission.title}
+                        </Typography>
+                        <div className={stylesCustomCheckbox.checkboxWrapper12}>
+                          <div className={stylesCustomCheckbox.cbx}>
+                            <input
+                              type="checkbox"
+                              id={`cbx-${mission.id}`}
+                              checked={completed}
+                              readOnly
+                            />
+                            <label htmlFor={`cbx-${mission.id}`} />
+                            <svg
+                              width="15"
+                              height="14"
+                              viewBox="0 0 15 14"
+                              fill="none"
+                            >
+                              <path d="M2 8.36364L6.23077 12L13 2"></path>
+                            </svg>
+                          </div>
+                          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                            <defs>
+                              <filter id={`goo-${mission.id}`}>
+                                <feGaussianBlur
+                                  in="SourceGraphic"
+                                  stdDeviation="4"
+                                  result="blur"
+                                ></feGaussianBlur>
+                                <feColorMatrix
+                                  in="blur"
+                                  mode="matrix"
+                                  values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -7"
+                                  result={`goo-${mission.id}`}
+                                ></feColorMatrix>
+                                <feBlend
+                                  in="SourceGraphic"
+                                  in2={`goo-${mission.id}`}
+                                ></feBlend>
+                              </filter>
+                            </defs>
                           </svg>
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-                          <defs>
-                            <filter id={`goo-${mission.id}`}>
-                              <feGaussianBlur
-                                in="SourceGraphic"
-                                stdDeviation="4"
-                                result="blur"
-                              ></feGaussianBlur>
-                              <feColorMatrix
-                                in="blur"
-                                mode="matrix"
-                                values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -7"
-                                result={`goo-${mission.id}`}
-                              ></feColorMatrix>
-                              <feBlend
-                                in="SourceGraphic"
-                                in2={`goo-${mission.id}`}
-                              ></feBlend>
-                            </filter>
-                          </defs>
-                        </svg>
-                      </div>
+                      </Box>
                     </Box>
+                  );
+                })
+              ) : (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography sx={styles.noMissionText}>
+                    Oh non 😢 ! Tu n&apos;as pas encore de missions.
+                  </Typography>
+                  <Typography sx={styles.noMissionText}>
+                    Crées ou rejoins une quête 🧳 pour débloquer de nouvelles
+                    missions 🗝️!
+                  </Typography>
+                  <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
+                    <Lottie options={defaultOptions} height={400} width={400} />
                   </Box>
-                );
-              })
-            ) : (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={styles.noMissionText}>
-                  Oh non 😢 ! Tu n&apos;as pas encore de missions.
-                </Typography>
-                <Typography sx={styles.noMissionText}>
-                  Crées ou rejoins une quête 🧳 pour débloquer de nouvelles
-                  missions 🗝️!
-                </Typography>
-                <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
-                  <Lottie options={defaultOptions} height={400} width={400} />
                 </Box>
-              </Box>
-            )}
-          </Box>
+              )}
+            </Box>
+          )}
           {totalPages > 1 && (
             <Pagination
               count={totalPages}
@@ -377,6 +386,14 @@ const MissionsTab = (props: MissionTabProps) => {
             + {pointsToShow} pts !
           </motion.div>
         )}
+        <Snackbar
+          open={open}
+          autoHideDuration={5000}
+          onClose={() => setSnackbarOpen({ ...snackbarOpen, open: false })}
+          message={toastMessage}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          key={vertical + horizontal}
+        />
       </Box>
     </Fade>
   );
