@@ -101,16 +101,16 @@ const MissionsTab = (props: MissionTabProps) => {
 
   const { vertical, horizontal, open } = snackbarOpen;
 
-  const [loadingMissions, setLoadingMissions] = useState(true);
-
-  // Query pour obtenir les informations sur l'utilisateur
   const { loading: meLoading, data: meData } = useQuery<{ item: userType }>(
     queryMySelf
   );
   const me = meData && meData.item;
 
-  // Query pour obtenir les quêtes de l'utilisateur
-  const { data: questData, loading: questLoading } = useQuery<{
+  const {
+    data: questData,
+    loading: questLoading,
+    refetch: refetchQuests,
+  } = useQuery<{
     item: QuestType[];
   }>(queryGetQuestByUser, {
     variables: { userId: me?.id },
@@ -119,29 +119,27 @@ const MissionsTab = (props: MissionTabProps) => {
 
   const quests = questData && questData.item;
 
-  // Query pour obtenir les missions de l'utilisateur
-  const { data: userMissionData, loading: userMissionLoading } = useQuery(
-    queryGetUserMission,
-    {
-      variables: { userId: me?.id },
-      fetchPolicy: "network-only",
-    }
-  );
+  const {
+    data: userMissionData,
+    loading: userMissionLoading,
+    refetch: refetchUserMissions,
+  } = useQuery(queryGetUserMission, {
+    variables: { userId: me?.id },
+    fetchPolicy: "network-only",
+  });
 
   const userMissions = userMissionData?.item || [];
 
-  // Mutation pour valider une mission
   const [validateMission] = useMutation(mutationValidateMission);
 
   useEffect(() => {
-    if (!userMissionLoading && !loadingMissions) {
-      // Met à jour la liste des missions complétées
+    if (!userMissionLoading && !questLoading) {
       const completed = userMissions
         .filter((userMission: userMissionType) => userMission.isCompleted)
         .map((userMission: userMissionType) => userMission.mission.id);
       setCompletedMissions(completed);
     }
-  }, [userMissionData, userMissionLoading, loadingMissions]);
+  }, [userMissionData, userMissionLoading, questLoading]);
 
   useEffect(() => {
     if (!quests || questLoading) return;
@@ -166,7 +164,6 @@ const MissionsTab = (props: MissionTabProps) => {
 
     const allMissions = Array.from(uniqueMissionsMap.values());
 
-    // Trie les missions en fonction de leur état complété
     const sorted = allMissions.sort((a, b) => {
       const isCompletedA = completedMissions.includes(a.id);
       const isCompletedB = completedMissions.includes(b.id);
@@ -175,10 +172,8 @@ const MissionsTab = (props: MissionTabProps) => {
     });
 
     setSortedMissions(sorted);
-    setLoadingMissions(false);
   }, [quests, questLoading, completedMissions]);
 
-  // Pagination
   const missionsPerPage = 4;
   const displayedMissions = sortedMissions.slice(
     (page - 1) * missionsPerPage,
@@ -187,7 +182,6 @@ const MissionsTab = (props: MissionTabProps) => {
 
   const totalPages = Math.ceil(sortedMissions.length / missionsPerPage);
 
-  // Gestion du changement de page
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -200,16 +194,15 @@ const MissionsTab = (props: MissionTabProps) => {
   }, [sortedMissions.length]);
 
   const getXPValueByMissionId = (missionId: number) => {
-    const mission = userMissions.find(
-      (userMission: { mission: { id: number } }) =>
-        userMission.mission.id === missionId
+    const mission = sortedMissions.find(
+      (mission: { id: number }) => mission.id === missionId
     );
-    return mission ? mission.mission.XPValue : null;
+    return mission ? mission.XPValue : null;
   };
 
-  // Gestion de la validation des missions
+  console.log(sortedMissions);
+
   const handleMissionClick = async (missionId: number, questIds: number[]) => {
-    // Si la mission est déjà complétée, affiche le message d'information
     if (isMissionCompleted(missionId)) {
       setToastMessage("Tu pourras revalider cette mission demain 😊");
       setSnackbarOpen({ ...snackbarOpen, open: true });
@@ -229,10 +222,14 @@ const MissionsTab = (props: MissionTabProps) => {
         )
       );
 
+      await refetchUserMissions();
+      await refetchQuests();
+
       const xpValue = getXPValueByMissionId(missionId);
 
       if (xpValue !== null) {
-        setCompletedMissions((prev) => [...prev, missionId]);
+        // Update local state to include the newly completed mission
+        // setCompletedMissions((prev) => [...prev, missionId]);
         setAnimationMission(missionId);
         setPointsToShow(xpValue);
         setTimeout(() => setAnimationMission(null), 1000);
@@ -247,7 +244,6 @@ const MissionsTab = (props: MissionTabProps) => {
     return completedMissions.includes(missionId);
   };
 
-  // Paramétrage du lotti
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -261,98 +257,96 @@ const MissionsTab = (props: MissionTabProps) => {
     <Fade in={props.value === 0} timeout={450}>
       <Box sx={styles.container}>
         <Box sx={styles.content}>
-          {loadingMissions ? (
+          {userMissionLoading || questLoading ? (
             <Typography sx={styles.noMissionText}>Chargement...</Typography>
-          ) : (
+          ) : displayedMissions.length > 0 ? (
             <Box sx={styles.missionList}>
-              {displayedMissions.length > 0 ? (
-                displayedMissions.map((mission, index) => {
-                  const completed = isMissionCompleted(mission.id);
-                  const isAnimating = animationMission === mission.id;
+              {displayedMissions.map((mission, index) => {
+                const completed = isMissionCompleted(mission.id);
+                const isAnimating = animationMission === mission.id;
 
-                  return (
+                return (
+                  <Box
+                    key={`mission-${mission.id}-${index}`}
+                    sx={styles.missionBox(completed, isAnimating)}
+                    onClick={() =>
+                      handleMissionClick(mission.id, mission.questIds)
+                    }
+                  >
                     <Box
-                      key={`mission-${mission.id}-${index}`}
-                      sx={styles.missionBox(completed, isAnimating)}
-                      onClick={() =>
-                        handleMissionClick(mission.id, mission.questIds)
-                      }
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
                     >
-                      <Box
-                        sx={{
-                          width: "100%",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Typography sx={styles.missionTitle}>
-                          {mission.title}
-                        </Typography>
-                        <div className={stylesCustomCheckbox.checkboxWrapper12}>
-                          <div className={stylesCustomCheckbox.cbx}>
-                            <input
-                              type="checkbox"
-                              id={`cbx-${mission.id}`}
-                              checked={completed}
-                              readOnly
-                            />
-                            <label htmlFor={`cbx-${mission.id}`} />
-                            <svg
-                              width="15"
-                              height="14"
-                              viewBox="0 0 15 14"
-                              fill="none"
-                            >
-                              <path d="M2 8.36364L6.23077 12L13 2"></path>
-                            </svg>
-                          </div>
-                          <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
-                            <defs>
-                              <filter id={`goo-${mission.id}`}>
-                                <feGaussianBlur
-                                  in="SourceGraphic"
-                                  stdDeviation="4"
-                                  result="blur"
-                                ></feGaussianBlur>
-                                <feColorMatrix
-                                  in="blur"
-                                  mode="matrix"
-                                  values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -7"
-                                  result={`goo-${mission.id}`}
-                                ></feColorMatrix>
-                                <feBlend
-                                  in="SourceGraphic"
-                                  in2={`goo-${mission.id}`}
-                                ></feBlend>
-                              </filter>
-                            </defs>
+                      <Typography sx={styles.missionTitle}>
+                        {mission.title}
+                      </Typography>
+                      <div className={stylesCustomCheckbox.checkboxWrapper12}>
+                        <div className={stylesCustomCheckbox.cbx}>
+                          <input
+                            type="checkbox"
+                            id={`cbx-${mission.id}`}
+                            checked={completed}
+                            readOnly
+                          />
+                          <label htmlFor={`cbx-${mission.id}`} />
+                          <svg
+                            width="15"
+                            height="14"
+                            viewBox="0 0 15 14"
+                            fill="none"
+                          >
+                            <path d="M2 8.36364L6.23077 12L13 2"></path>
                           </svg>
                         </div>
-                      </Box>
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+                          <defs>
+                            <filter id={`goo-${mission.id}`}>
+                              <feGaussianBlur
+                                in="SourceGraphic"
+                                stdDeviation="4"
+                                result="blur"
+                              ></feGaussianBlur>
+                              <feColorMatrix
+                                in="blur"
+                                mode="matrix"
+                                values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -7"
+                                result={`goo-${mission.id}`}
+                              ></feColorMatrix>
+                              <feBlend
+                                in="SourceGraphic"
+                                in2={`goo-${mission.id}`}
+                              ></feBlend>
+                            </filter>
+                          </defs>
+                        </svg>
+                      </div>
                     </Box>
-                  );
-                })
-              ) : (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography sx={styles.noMissionText}>
-                    Oh non 😢 ! Tu n&apos;as pas encore de missions.
-                  </Typography>
-                  <Typography sx={styles.noMissionText}>
-                    Crées ou rejoins une quête 🧳 pour débloquer de nouvelles
-                    missions 🗝️!
-                  </Typography>
-                  <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
-                    <Lottie options={defaultOptions} height={400} width={400} />
                   </Box>
-                </Box>
-              )}
+                );
+              })}
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Typography sx={styles.noMissionText}>
+                Oh non 😢 ! Tu n&apos;as pas encore de missions.
+              </Typography>
+              <Typography sx={styles.noMissionText}>
+                Crées ou rejoins une quête 🧳 pour débloquer de nouvelles
+                missions 🗝️!
+              </Typography>
+              <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
+                <Lottie options={defaultOptions} height={400} width={400} />
+              </Box>
             </Box>
           )}
           {totalPages > 1 && (

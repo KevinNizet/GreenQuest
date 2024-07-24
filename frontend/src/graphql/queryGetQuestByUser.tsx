@@ -25,6 +25,7 @@ export const queryGetQuestByUser = gql`
       missions {
         id
         title
+        XPValue
       }
     }
   }

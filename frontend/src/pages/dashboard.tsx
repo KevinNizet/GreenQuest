@@ -10,6 +10,7 @@ import JoinQuestModal from "../components/modals/JoinQuestModal";
 import Lottie from "react-lottie";
 import cible from "@/images/lottie/cible.json";
 import boussole from "@/images/lottie/boussole.json";
+import Link from "next/link";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -59,9 +60,11 @@ const Dashboard = () => {
         >
           Rejoindre une quête
         </Button>
-        <Button variant="contained" href="/questtunnel" sx={{ height: "70%" }}>
-          Créer une quête
-        </Button>
+        <Link href="/questtunnel" passHref>
+          <Button variant="contained" sx={{ height: "70%" }}>
+            Créer une quête
+          </Button>
+        </Link>
       </Box>
       <JoinQuestModal open={modalOpen} onClose={handleCloseModal} />
       <Box
