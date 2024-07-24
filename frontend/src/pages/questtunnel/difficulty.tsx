@@ -3,15 +3,19 @@ import {
   Grid,
   Typography,
   Button,
-  Paper,
   Select,
   MenuItem,
   InputLabel,
+  ThemeProvider,
 } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 import { Difficulty, useQuestContext } from "@/contexts/QuestContext";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import {
+  QuestTunnelTheme,
+  QuestTunnelGridTextField,
+} from "@/themes/questTunnelTheme";
 
 export default function DifficultyLevel() {
   const router = useRouter();
@@ -36,83 +40,58 @@ export default function DifficultyLevel() {
   };
 
   return (
-    <Layout title="Niveau de difficulté">
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        gap={5}
-        marginTop={3}
-      >
-        <Typography variant="h1" sx={{ fontSize: "2rem", fontWeight: "bold" }}>
-          Crée ta quête
-        </Typography>
-
+    <ThemeProvider theme={QuestTunnelTheme}>
+      <Layout title="Niveau de difficulté">
         <Grid
           container
           direction="column"
           justifyContent="center"
           alignItems="center"
-          component={Paper}
-          elevation={3}
-          sx={{
-            width: {
-              xs: "80%", // for extra-small screens
-              sm: "70%", // for small screens
-              md: "60%", // for medium screens
-              lg: "50%", // for large screens
-              xl: "40%", // for extra-large screens
-            },
-            padding: 4,
-            borderRadius: 5,
-          }}
-          gap={3}
+          gap={5}
+          marginTop={3}
         >
-          <Typography variant="h2" sx={{ fontSize: "1.5rem" }}>
-            Étape 3
-          </Typography>
-          <InputLabel id="select-label">
-            Choisis le niveau de difficulté
-          </InputLabel>
-          <Select
-            value={difficulty}
-            onChange={difficultyChoice}
-            fullWidth
-            variant="outlined"
-            sx={{
-              "&.Mui-focused fieldset": {
-                borderColor: "#7BD389 !important",
-              },
-            }}
-          >
-            <MenuItem value={"EASY"}>Débutant</MenuItem>
-            <MenuItem value={"MEDIUM"}>Confirmé</MenuItem>
-            <MenuItem value={"HARD"}>Expert</MenuItem>
-          </Select>
-          <Grid
-            container
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-          >
-            <Button
-              variant="contained"
-              onClick={previousPage}
-              sx={{ bgcolor: "#7BD389", color: "#000000" }}
+          <Typography variant="h1">Crée ta quête 🚀</Typography>
+
+          <QuestTunnelGridTextField>
+            <Typography variant="h2">Étape 3 🔥</Typography>
+            <InputLabel id="select-label">
+              Choisis le niveau de difficulté
+            </InputLabel>
+            <Select
+              value={difficulty}
+              onChange={difficultyChoice}
+              fullWidth
+              variant="outlined"
+              sx={{
+                "&.Mui-focused fieldset": {
+                  borderColor: "#7BD389 !important",
+                },
+              }}
             >
-              Retour
-            </Button>
-            <Button
-              variant="contained"
-              onClick={nextPage}
-              sx={{ bgcolor: "#7BD389", color: "#000000" }}
+              <MenuItem value={"EASY"}>Débutant 🌱</MenuItem>
+              <MenuItem value={"MEDIUM"}>Confirmé 🏆</MenuItem>
+              <MenuItem value={"HARD"}>Expert 💎</MenuItem>
+            </Select>
+            <Grid
+              container
+              justifyContent="space-between"
+              alignItems="center"
+              width="100%"
             >
-              Suivant
-            </Button>
-          </Grid>
+              <Button
+                variant="contained"
+                onClick={previousPage}
+                color="secondary"
+              >
+                Retour
+              </Button>
+              <Button variant="contained" onClick={nextPage} color="secondary">
+                Suivant
+              </Button>
+            </Grid>
+          </QuestTunnelGridTextField>
         </Grid>
-      </Grid>
-    </Layout>
+      </Layout>
+    </ThemeProvider>
   );
 }

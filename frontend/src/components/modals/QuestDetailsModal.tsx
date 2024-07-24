@@ -50,6 +50,7 @@ type QuestDetailsModalType = {
   modalOpen: boolean;
   quest: QuestType | null;
   me: userType | undefined;
+  refetch: () => void;
 };
 
 export default function BasicModal({
@@ -57,6 +58,7 @@ export default function BasicModal({
   modalOpen,
   quest,
   me,
+  refetch,
 }: QuestDetailsModalType) {
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [state, setState] = React.useState<State>({
@@ -96,6 +98,7 @@ export default function BasicModal({
     variables: { deleteQuestId: quest?.id },
     refetchQueries: [queryGetQuestByUser],
     onCompleted: () => {
+      refetch(); // Appelle refetch après la suppression
       handleClick({ vertical: "top", horizontal: "right" });
     },
   });
