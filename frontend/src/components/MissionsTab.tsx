@@ -102,6 +102,7 @@ const MissionsTab = (props: MissionTabProps) => {
     queryGetQuestByUser,
     {
       variables: { userId: me?.id },
+      fetchPolicy: "network-only",
     }
   );
 
@@ -197,8 +198,6 @@ const MissionsTab = (props: MissionTabProps) => {
     questIds: number[],
     checked: boolean
   ) => {
-    console.log(`Completed Missions: ${missionId}`);
-
     if (checked) {
       try {
         await Promise.all(
@@ -228,7 +227,6 @@ const MissionsTab = (props: MissionTabProps) => {
     } else {
       setCompletedMissions((prev) => {
         const updated = prev.filter((id) => id !== missionId);
-        console.log(`Completed Missions after removal: ${updated}`);
         return updated;
       });
     }

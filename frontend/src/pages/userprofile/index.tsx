@@ -256,6 +256,47 @@ export default function Profile(): React.ReactNode {
                     helperText={lastNameError ? "Renseigner un nom valide" : ""}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h6" paragraph sx={{ pl: 1, pt: 1 }}>
+                    Avatar
+                  </Typography>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item>
+                      {preview ? (
+                        <Avatar
+                          alt="Avatar Preview"
+                          src={preview}
+                          sx={{ width: 56, height: 56 }}
+                        />
+                      ) : me?.image?.uri ? (
+                        <Avatar
+                          alt="Current Avatar"
+                          src={`${backUrl}${me.image.uri}`}
+                          sx={{ width: 56, height: 56 }}
+                        />
+                      ) : (
+                        <Avatar sx={{ width: 56, height: 56 }}>
+                          {me?.nickname.charAt(0).toUpperCase()}
+                        </Avatar>
+                      )}
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        component="label"
+                        disabled={!editable}
+                      >
+                        Changer d&apos;avatar
+                        <input
+                          type="file"
+                          hidden
+                          accept="image/*"
+                          onChange={handleFileChange}
+                        />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Grid
                   item
                   xs={12}
