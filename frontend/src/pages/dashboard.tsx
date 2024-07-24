@@ -28,13 +28,13 @@ const Dashboard = () => {
   };
 
   const defaultOptionsCible = {
-    loop: true,
+    loop: false,
     autoplay: true,
     animationData: cible,
   };
 
   const defaultOptionsBoussole = {
-    loop: true,
+    loop: false,
     autoplay: true,
     animationData: boussole,
   };
@@ -49,17 +49,28 @@ const Dashboard = () => {
           alignItems: "center",
           padding: "2rem",
           justifyContent: "space-between",
-          margin: "1rem 0 1rem 0",
+          margin: "1rem 0 0 0",
         }}
       >
         <Button
           variant="contained"
           onClick={handleOpenModal}
-          sx={{ height: "70%" }}
+          sx={{
+            width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
+            height: { sm: "5vh", md: "6vh" },
+          }}
         >
           Rejoindre une quête
         </Button>
-        <Button variant="contained" href="/questtunnel" sx={{ height: "70%" }}>
+        <Button
+          variant="contained"
+          href="/questtunnel"
+          sx={{
+            textAlign: "center",
+            width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
+            height: { sm: "5vh", md: "6vh" },
+          }}
+        >
           Créer une quête
         </Button>
       </Box>
@@ -71,7 +82,7 @@ const Dashboard = () => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
-          marginBottom: "50px",
+          marginBottom: "30px",
         }}
       >
         <Tabs
@@ -92,27 +103,37 @@ const Dashboard = () => {
           justifyContent: "center",
           alignItems: "center",
           marginBottom: "-2.5rem",
+          marginTop: "3vh",
         }}
       >
         {value === 0 && (
-          <Lottie options={defaultOptionsCible} height={90} width={90} />
+          <Lottie options={defaultOptionsCible} height="25vh" width="25vw" />
         )}
         {value === 1 && (
-          <Lottie options={defaultOptionsBoussole} height={50} width={50} />
+          <Lottie options={defaultOptionsBoussole} height="12vh" width="12vw" />
         )}
       </Box>
-
+      <br />
       <Box
         sx={{
-          width: "100%",
-          height: "60%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          width: "100vw",
         }}
       >
-        {value === 0 && <MissionsTab value={value} />}
-        {value === 1 && <QuestsTab value={value} />}
+        <Box
+          sx={{
+            width: "95vw",
+            height: "80vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {value === 0 && <MissionsTab value={value} />}
+          {value === 1 && <QuestsTab value={value} />}
+        </Box>
       </Box>
     </Layout>
   );

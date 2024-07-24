@@ -77,7 +77,7 @@ const styles = {
     color: "white",
   },
   noMissionText: {
-    fontSize: "1.3rem",
+    fontSize: { sx: "1rem", sm: "1.3rem", md: "1.5rem" },
     paddingY: "1rem",
     paddingX: "1rem",
     textAlign: "center",
@@ -242,9 +242,9 @@ const MissionsTab = (props: MissionTabProps) => {
     loop: true,
     autoplay: true,
     animationData: wizard,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
+    // rendererSettings: {
+    //   preserveAspectRatio: "xMidYMid slice",
+    // },
   };
 
   return (
@@ -339,8 +339,8 @@ const MissionsTab = (props: MissionTabProps) => {
                   Crées ou rejoins une quête 🧳 pour débloquer de nouvelles
                   missions 🗝️!
                 </Typography>
-                <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
-                  <Lottie options={defaultOptions} height={400} width={400} />
+                <Box sx={{ paddingTop: "1.5rem", paddingLeft: "1rem" }}>
+                  <Lottie options={defaultOptions} height="35vh" width="35vh" />
                 </Box>
               </Box>
             )}
