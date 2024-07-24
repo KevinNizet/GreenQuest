@@ -247,7 +247,7 @@ const QuestsTab = ({ value }: QuestTabProps) => {
               modalOpen={modalOpen}
               quest={selectedQuest}
               me={me}
-              refetch={refetch} // Passe refetch ici
+              refetch={refetch}
             />
           )}
         </Box>
