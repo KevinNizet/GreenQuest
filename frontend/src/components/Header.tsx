@@ -135,15 +135,24 @@ const Header = () => {
                     aria-haspopup="true"
                     color="inherit"
                     onClick={handleMenu}
+                    style={{
+                      padding: 0,
+                      border: "1px solid #ccc",
+                      borderRadius: "50%",
+                      backgroundColor: "#f5f5f5",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                      transition: "background-color 0.3s ease",
+                    }}
                   >
                     {me.image ? (
                       <img
                         src={`${backUrl}${me.image.uri}`}
-                        alt="Profile"
+                        alt="Avatar"
                         style={{
                           width: "4rem",
                           height: "4rem",
                           borderRadius: "50%",
+                          objectFit: "cover",
                         }}
                       />
                     ) : (
@@ -180,7 +189,7 @@ const Header = () => {
                         href="/userprofile"
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
-                        Profile
+                        Profil
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
@@ -188,7 +197,7 @@ const Header = () => {
                         href="/questtunnel"
                         style={{ textDecoration: "none", color: "inherit" }}
                       >
-                        Ajouter une quête
+                        Créer une quête
                       </Link>
                     </MenuItem>
                     <MenuItem onClick={handleClose}>

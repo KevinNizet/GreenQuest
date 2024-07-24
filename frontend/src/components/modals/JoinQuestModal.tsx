@@ -8,6 +8,8 @@ import {
   Button,
   Snackbar,
   Box,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import ReactCodeInput from "react-code-input";
 import { useMutation } from "@apollo/client";
@@ -44,9 +46,6 @@ const JoinQuestModal: React.FC<JoinQuestModalProps> = ({ open, onClose }) => {
       setToastMessage("La quête a été rejointe avec succès 👍🏻 !");
       setToastOpen(true);
       onClose();
-      //   setTimeout(() => {
-      //     window.location.reload();
-      //   }, 1000);
     } catch (err) {
       if (err instanceof ApolloError) {
         const errorMessage = err.graphQLErrors[0]?.message || err.message;
@@ -67,38 +66,50 @@ const JoinQuestModal: React.FC<JoinQuestModalProps> = ({ open, onClose }) => {
   };
 
   const inputStyle = {
-    width: "2.5rem",
-    height: "2.5rem",
-    margin: "0.5rem",
-    fontSize: "2rem",
-    fontStyle: "Roboto",
+    width: "1.5rem",
+    height: "2rem",
+    margin: "0.2rem",
+    fontSize: "1.2rem",
     borderRadius: "4px",
     border: "1px solid #ccc",
     textAlign: "center" as "center",
   };
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("xs"));
+
   return (
     <>
-      <style>
-        {`
-          input[type=number]::-webkit-outer-spin-button,
-          input[type=number]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-          input[type=number] {
-            -moz-appearance: textfield;
-          }
-        `}
-      </style>
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Rejoins une quête</DialogTitle>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="xs"
+        fullWidth
+        sx={{
+          "& .MuiDialog-paper": {
+            padding: isSmallScreen ? "1rem" : "1.5rem",
+            width: isSmallScreen ? "90%" : "auto",
+          },
+        }}
+      >
+        <DialogTitle>Rejoins une quête ⚔️</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Pour rejoindre une quête, entre le code de 6 chiffres fourni par le
-            créateur de la quête.
+            créateur de la quête 🔑
           </DialogContentText>
-          <Box display="flex" justifyContent="center" mt={2}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            mt={2}
+            sx={{
+              flexDirection: "row",
+              alignItems: "center",
+              width: "100%",
+              flexWrap: "nowrap",
+              overflowX: "auto",
+            }}
+          >
             <ReactCodeInput
               name="questCode"
               type="number"
@@ -107,14 +118,23 @@ const JoinQuestModal: React.FC<JoinQuestModalProps> = ({ open, onClose }) => {
               value={questCode}
               inputStyle={inputStyle}
               inputMode="numeric"
+              autoFocus
             />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose} color="primary">
+          <Button
+            onClick={onClose}
+            color="primary"
+            sx={{ fontSize: isSmallScreen ? "0.8rem" : "1rem" }}
+          >
             Annuler
           </Button>
-          <Button onClick={handleJoinQuest} color="primary">
+          <Button
+            onClick={handleJoinQuest}
+            color="primary"
+            sx={{ fontSize: isSmallScreen ? "0.8rem" : "1rem" }}
+          >
             Rejoindre
           </Button>
         </DialogActions>
@@ -125,6 +145,12 @@ const JoinQuestModal: React.FC<JoinQuestModalProps> = ({ open, onClose }) => {
         onClose={handleCloseToast}
         message={toastMessage}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        sx={{
+          "& .MuiSnackbarContent-root": {
+            backgroundColor: "#333",
+            color: "#fff",
+          },
+        }}
       />
     </>
   );
