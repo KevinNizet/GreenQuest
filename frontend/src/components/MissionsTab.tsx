@@ -200,8 +200,6 @@ const MissionsTab = (props: MissionTabProps) => {
     return mission ? mission.XPValue : null;
   };
 
-  console.log(sortedMissions);
-
   const handleMissionClick = async (missionId: number, questIds: number[]) => {
     if (isMissionCompleted(missionId)) {
       setToastMessage("Tu pourras revalider cette mission demain 😊");
