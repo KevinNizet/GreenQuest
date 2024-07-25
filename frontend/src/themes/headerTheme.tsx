@@ -37,7 +37,8 @@ const headerTheme = createTheme({
         root: ({ theme }) => ({
           flexGrow: 1,
           margin: 1,
-          fontSize: "1.5rem",
+          paddingLeft: "0.5rem",
+          fontSize: "1.3rem",
         }),
       },
     },
