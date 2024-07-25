@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { mutationAccountValidation } from "@/graphql/accountValidation/mutationAccountValidation";
 import Layout from "@/components/Layout";
 import Image from "next/image";
-import { Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 
 const ValidateAccount = () => {
   const router = useRouter();
@@ -28,46 +28,56 @@ const ValidateAccount = () => {
 
   return (
     <Layout title="Validate Account">
-      <div>
-        <Grid container spacing={3} padding={4}>
-          <Grid item xs={12} container justifyContent="center">
-            <Typography variant="h3" paragraph>
-              Compte validé !
-            </Typography>
-          </Grid>
-
-          <Grid item container justifyContent="center">
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{
-                width: "90%",
-                textAlign: "center",
-                marginBottom: "50px",
-              }}
-            >
-              {" "}
-              Félicitations, ton compte a été validé avec succés. Connecte toi
-              pour démarrer l&apos;aventure !{" "}
-            </Typography>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={handleClick}
-              type="submit"
-              sx={{ marginTop: "10px", marginBottom: "60px" }}
-            >
-              Connecte toi
-            </Button>
-            <Image
-              src="/images/account-validation-picture.jpg"
-              alt="Image de la page de validation de compte"
-              width={720}
-              height={300}
-            />
-          </Grid>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item>
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: { xs: "30vh", sm: "30vh", md: "40vh", lg: "40vh" },
+              backgroundImage: `url("/images/account-validation-picture.jpg")`,
+              backgroundSize: "cover",
+              backgroundPosition: "bottom",
+              backgroundRepeat: "no-repeat",
+              overflow: "hidden",
+            }}
+          />
         </Grid>
-      </div>
+        <Grid item xs={12} container justifyContent="center">
+          <Typography variant="h3" paragraph>
+            Compte validé !
+          </Typography>
+        </Grid>
+
+        <Grid item container justifyContent="center">
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{
+              width: "90%",
+              textAlign: "center",
+              marginBottom: "50px",
+            }}
+          >
+            {" "}
+            Félicitations, ton compte a été validé avec succés. Connecte toi
+            pour démarrer l&apos;aventure !{" "}
+          </Typography>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={handleClick}
+            type="submit"
+            sx={{
+              marginTop: "10px",
+              marginBottom: "60px",
+              width: { xs: "34%" },
+            }}
+          >
+            Connecte toi
+          </Button>
+        </Grid>
+      </Grid>
     </Layout>
   );
 };

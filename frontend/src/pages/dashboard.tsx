@@ -10,7 +10,6 @@ import JoinQuestModal from "../components/modals/JoinQuestModal";
 import Lottie from "react-lottie";
 import cible from "@/images/lottie/cible.json";
 import boussole from "@/images/lottie/boussole.json";
-import Link from "next/link";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -29,13 +28,13 @@ const Dashboard = () => {
   };
 
   const defaultOptionsCible = {
-    loop: true,
+    loop: false,
     autoplay: true,
     animationData: cible,
   };
 
   const defaultOptionsBoussole = {
-    loop: true,
+    loop: false,
     autoplay: true,
     animationData: boussole,
   };
@@ -56,15 +55,25 @@ const Dashboard = () => {
         <Button
           variant="contained"
           onClick={handleOpenModal}
-          sx={{ height: "70%" }}
+          sx={{
+            width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
+            height: { sm: "5vh", md: "8vh" },
+            textAlign: "center",
+          }}
         >
           Rejoindre une quête
         </Button>
-        <Link href="/questtunnel" passHref>
-          <Button variant="contained" sx={{ height: "70%" }}>
-            Créer une quête
-          </Button>
-        </Link>
+        <Button
+          variant="contained"
+          href="/questtunnel"
+          sx={{
+            width: { xs: "48%", sm: "20%", lg: "16%", xl: "12%" },
+            height: { sm: "5vh", md: "8vh" },
+            textAlign: "center",
+          }}
+        >
+          Créer ta propre quête
+        </Button>
       </Box>
       <JoinQuestModal open={modalOpen} onClose={handleCloseModal} />
       <Box
@@ -94,14 +103,14 @@ const Dashboard = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: "-2.5rem",
+          marginBottom: "1.8rem",
         }}
       >
         {value === 0 && (
-          <Lottie options={defaultOptionsCible} height={90} width={90} />
+          <Lottie options={defaultOptionsCible} height="200%" width="200%" />
         )}
         {value === 1 && (
-          <Lottie options={defaultOptionsBoussole} height={50} width={50} />
+          <Lottie options={defaultOptionsBoussole} height="100%" width="100%" />
         )}
       </Box>
 
