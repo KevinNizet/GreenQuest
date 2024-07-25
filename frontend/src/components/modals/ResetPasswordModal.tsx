@@ -135,7 +135,7 @@ export function ResetPasswordModal({
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ width: "50%" }}
+                sx={{ width: "25%" }}
               >
                 Envoyer
               </Button>

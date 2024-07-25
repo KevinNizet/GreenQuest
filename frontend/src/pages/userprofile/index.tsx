@@ -13,6 +13,8 @@ import {
   Snackbar,
   Paper,
   SnackbarContent,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { ProfileTheme, ProfileContainer } from "../../themes/profilTheme";
@@ -49,7 +51,19 @@ export default function Profile(): React.ReactNode {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  if (loading) return <p>Chargement...</p>;
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (error) return <p>Erreur: {error.message}</p>;
 
   const me = data?.item;

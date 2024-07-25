@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { userType } from "@/components/Header";
 import { queryMySelf } from "@/graphql/queryMySelf";
+import { Box, CircularProgress } from "@mui/material";
 
 const link = createHttpLink({
   uri:
@@ -63,7 +64,18 @@ const Auth = (props: { children: React.ReactNode }) => {
   }, [loading, data, router.pathname, router]);
 
   if (loading || isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (isAuthenticated === false) {

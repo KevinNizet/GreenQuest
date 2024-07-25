@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { mutationAccountValidation } from "@/graphql/accountValidation/mutationAccountValidation";
 import Layout from "@/components/Layout";
 import Image from "next/image";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 
 const ValidateAccount = () => {
   const router = useRouter();
@@ -23,7 +23,19 @@ const ValidateAccount = () => {
     router.replace("/signin");
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (error) return <p>Error: {error.message}</p>;
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Fade, Typography, Pagination, Snackbar } from "@mui/material";
+import { Box, Fade, Typography, Pagination, Snackbar, CircularProgress } from "@mui/material";
 import { useQuery, useMutation } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { QuestType } from "./QuestsTab";
@@ -254,7 +254,16 @@ const MissionsTab = (props: MissionTabProps) => {
       <Box sx={styles.container}>
         <Box sx={styles.content}>
           {userMissionLoading || questLoading ? (
-            <Typography sx={styles.noMissionText}>Chargement...</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <CircularProgress />
+            </Box>
           ) : displayedMissions.length > 0 ? (
             <Box sx={styles.missionList}>
               {displayedMissions.map((mission, index) => {

@@ -99,8 +99,9 @@ const HomeFirstContainer = styled("div")(({ theme }) => ({
   alignItems: "center",
   width: "100%",
   height: "100vh",
-  backgroundImage: `url('images/greenquest_background-accueil.jpg')`,
+  backgroundImage: `url('images/5.jpg')`,
   backgroundPosition: "center",
+  backgroundSize: "cover",
   position: "relative",
 }));
 
