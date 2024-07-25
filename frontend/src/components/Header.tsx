@@ -42,14 +42,6 @@ const Header = () => {
 
   const me = data && data?.item;
 
-  useEffect(() => {
-    if (data) {
-      console.log("connecté");
-    } else {
-      console.log("non connecté");
-    }
-  }, [data]);
-
   const handleCloseModal = () => {
     setModalOpen(false);
   };
@@ -104,11 +96,7 @@ const Header = () => {
                 >
                   Greenquest
                 </Typography>
-                <Stack
-                  direction="row"
-                  // spacing={2}
-                  sx={{}}
-                >
+                <Stack direction="row" sx={{}}>
                   {router.pathname === "/signin" ? (
                     <Link href="/signup" passHref>
                       <Button color={"success"} variant="contained">
@@ -142,6 +130,7 @@ const Header = () => {
                       backgroundColor: "#f5f5f5",
                       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                       transition: "background-color 0.3s ease",
+                      marginLeft: "0.5rem",
                     }}
                   >
                     {me.image ? (
@@ -149,8 +138,8 @@ const Header = () => {
                         src={`${backUrl}${me.image.uri}`}
                         alt="Avatar"
                         style={{
-                          width: "4rem",
-                          height: "4rem",
+                          width: "3.5rem",
+                          height: "3.5rem",
                           borderRadius: "50%",
                           objectFit: "cover",
                         }}

@@ -12,6 +12,7 @@ import {
   Avatar,
   Snackbar,
   Paper,
+  SnackbarContent,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { ProfileTheme, ProfileContainer } from "../../themes/profilTheme";
@@ -337,10 +338,17 @@ export default function Profile(): React.ReactNode {
           open={open}
           autoHideDuration={5000}
           onClose={() => setToastOpen({ ...toastOpen, open: false })}
-          message={toastMessage}
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           key={vertical + horizontal}
-        />
+        >
+          <SnackbarContent
+            message={toastMessage}
+            style={{
+              backgroundColor: "#333",
+              color: "#fff",
+            }}
+          />
+        </Snackbar>
       </Layout>
     </ThemeProvider>
   );
