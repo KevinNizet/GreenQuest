@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   ThemeProvider,
+  Box,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useMutation } from "@apollo/client";
@@ -100,16 +101,24 @@ const Signin = () => {
       <SigninForm onSubmit={handleSignIn}>
         <Grid container direction="column" spacing={1}>
           <Grid item container justifyContent="center" width="100%">
-            <SigninFormImg
-              src="/images/karsten-wurth-w_a40DuyPAc-unsplash.jpg"
-              alt="Description de l'image"
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                height: { xs: "30vh", sm: "30vh", md: "40vh", lg: "40vh" },
+                backgroundImage: "url(/images/singin-page-picture.jpg)",
+                backgroundSize: "cover",
+                backgroundPosition: "bottom",
+                backgroundRepeat: "no-repeat",
+                overflow: "hidden",
+              }}
             />
           </Grid>
 
           <Grid item container justifyContent="center">
             <Typography variant="body1" gutterBottom>
-              Connecte toi ou inscrit toi pour participer à une quête et valider
-              tes missions quotidiennes !
+              Connecte toi pour participer à une quête et valider tes missions
+              quotidiennes !
             </Typography>
           </Grid>
 
