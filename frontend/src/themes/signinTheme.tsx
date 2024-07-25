@@ -33,7 +33,7 @@ const SigninFormTheme = createTheme({
             width: "40%",
           },
           [theme.breakpoints.up("xl")]: {
-            fontSize: "1.5vh",
+            fontSize: "2vh",
             width: "30%",
           },
         }),
@@ -129,11 +129,13 @@ const SigninFormImg = styled("img")(({ theme }) => ({
   [theme.breakpoints.up("md")]: {
     width: "60%",
     height: "38vh",
+    marginTop: "2rem",
     borderBottomRightRadius: "8px",
     borderBottomLeftRadius: "8px",
     borderRadius: "8px",
   },
   [theme.breakpoints.up("lg")]: {
+    marginTop: "2rem",
     width: "40%",
   },
   [theme.breakpoints.up("xl")]: {
