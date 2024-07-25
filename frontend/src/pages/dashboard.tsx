@@ -57,7 +57,7 @@ const Dashboard = () => {
           onClick={handleOpenModal}
           sx={{
             width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
-            height: { sm: "5vh", md: "6vh" },
+            height: { sm: "5vh", md: "8vh" },
             textAlign: "center",
           }}
         >
@@ -67,12 +67,12 @@ const Dashboard = () => {
           variant="contained"
           href="/questtunnel"
           sx={{
-            width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
-            height: { sm: "5vh", md: "6vh" },
+            width: { xs: "48%", sm: "20%", lg: "16%", xl: "12%" },
+            height: { sm: "5vh", md: "8vh" },
             textAlign: "center",
           }}
         >
-          Créer une quête
+          Créer ta propre quête
         </Button>
       </Box>
       <JoinQuestModal open={modalOpen} onClose={handleCloseModal} />
