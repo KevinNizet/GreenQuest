@@ -121,26 +121,20 @@ const SigninForm = styled("form")(({ theme }) => ({
 const SigninFormImg = styled("img")(({ theme }) => ({
   width: "100%",
   height: "24vh",
-  marginTop: "1px",
   boxShadow: "17px 42px 31px -41px rgba(0, 0, 0, 0.19)",
+  objectFit: "cover",
   [theme.breakpoints.up("sm")]: {
     height: "25vh",
   },
   [theme.breakpoints.up("md")]: {
-    width: "60%",
     height: "38vh",
-    marginTop: "2rem",
     borderBottomRightRadius: "8px",
     borderBottomLeftRadius: "8px",
-    borderRadius: "8px",
   },
   [theme.breakpoints.up("lg")]: {
-    marginTop: "2rem",
-    width: "40%",
+    // width: "40%",
   },
   [theme.breakpoints.up("xl")]: {
-    marginTop: "2rem",
-    width: "30%",
     height: "30vh",
     borderRadius: "8px",
   },

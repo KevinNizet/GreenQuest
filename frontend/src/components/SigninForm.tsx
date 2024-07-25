@@ -101,7 +101,7 @@ const Signin = () => {
         <Grid container direction="column" spacing={1}>
           <Grid item container justifyContent="center" width="100%">
             <SigninFormImg
-              src="/images/singin-page-picture.jpg"
+              src="/images/karsten-wurth-w_a40DuyPAc-unsplash.jpg"
               alt="Description de l'image"
             />
           </Grid>
