@@ -8,7 +8,14 @@ import http from "http";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { dataSource } from "./datasource";
+import { MissionResolver } from "./resolvers/Missions";
+import { QuestResolver } from "./resolvers/Quests";
 import { UserResolver } from "./resolvers/Users";
+import { customAuthChecker } from "./auth";
+import { UserMissionResolver } from "./resolvers/UserMissions";
+import "./scheduler";
+import { initializeRoutes } from "./routes";
+import { ImageResolver } from "./resolvers/Images";
 
 const port = process.env.BACK_PORT || 5050;
 
@@ -18,7 +25,14 @@ async function start() {
   const httpServer = http.createServer(app);
 
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [
+      UserResolver,
+      QuestResolver,
+      MissionResolver,
+      UserMissionResolver,
+      ImageResolver,
+    ],
+    authChecker: customAuthChecker,
   });
 
   const server = new ApolloServer({
@@ -30,8 +44,10 @@ async function start() {
 
   await server.start();
 
+  initializeRoutes(app);
+
   app.use(
-    "/",
+    "/api",
     cors<cors.CorsRequest>({
       origin: process.env.FRONT_URL,
       credentials: true,
@@ -46,10 +62,8 @@ async function start() {
   );
 
   await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
-  console.log(`🚀🚀🚀 Backend ready at http://localhost:${port}/ 🚀🚀🚀`);
-  console.log(
-    `🚀🚀🚀 Frontend is running at : ${process.env.FRONT_URL} 🚀🚀🚀`
-  );
+  console.log(`🚀🚀 Backend ready at http://localhost:${port}/ 🚀🚀`);
+  console.log(`🚀🚀 Frontend is running at : ${process.env.FRONT_URL} 🚀🚀`);
 }
 
 start();

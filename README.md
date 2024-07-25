@@ -24,17 +24,18 @@ cp .env.sample .env
 docker compose -f docker-compose.dev.yml up --build
 ```
 
-## 1er lancement : Créer le bon user dans le container postgres
+## Lancement des tests du backend
 
-- Exécutez la commande suivante pour accéder au shell du container postgres :
+- Si vous êtes sur linux ou mac :
 
 ```shell
-docker exec -it greenquest-database-1 psql -U postgres
+cd backend
+npm test
 ```
 
-- Dans le shell postgres, exécutez les commandes suivantes en remplaçant `username` et `password` par les valeurs définies dans les fichiers `.env` et `backend/.env` :
+- Si vous êtes sur windows ou wsl, faire : cd backends et lancer toute la commande :
 
-```sql
-CREATE USER username WITH PASSWORD 'password';
-ALTER USER username WITH SUPERUSER;
+```wsl
+cd backend
+docker stop pgtesting ; docker run --rm --name pgtesting -p 5571:5432 -e POSTGRES_PASSWORD=pgpassword -d postgres && npx jest
 ```

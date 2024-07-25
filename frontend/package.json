@@ -6,20 +6,36 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "echo \"Running test\""
   },
   "dependencies": {
-    "@apollo/client": "^3.8.6",
+    "@apollo/client": "^3.9.5",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.15.8",
+    "@mui/material": "^5.15.7",
+    "@mui/x-date-pickers": "^6.19.7",
     "@types/node": "20.6.2",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
     "axios": "^1.5.1",
+    "dayjs": "^1.11.10",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
+    "framer-motion": "^11.3.9",
     "graphql": "^16.8.1",
     "next": "13.4.19",
     "react": "18.2.0",
+    "react-code-input": "^3.10.1",
+    "react-confetti": "^6.1.0",
     "react-dom": "18.2.0",
+    "react-lottie": "^1.2.4",
+    "react-share": "^5.1.0",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/react-lottie": "^1.2.10"
   }
 }
