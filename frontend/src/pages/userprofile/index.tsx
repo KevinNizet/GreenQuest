@@ -293,6 +293,7 @@ export default function Profile(): React.ReactNode {
                         <Button
                           variant="contained"
                           component="label"
+                          size="small"
                           disabled={!editable}
                         >
                           Changer d&apos;avatar
