@@ -146,28 +146,4 @@ const SignupForm = styled("form")(({ theme }) => ({
   width: "100%",
 }));
 
-const SignupFormImg = styled("img")(({ theme }) => ({
-  width: "100%",
-  height: "24vh",
-  marginTop: "px",
-  boxShadow: "17px 42px 31px -41px rgba(0, 0, 0, 0.19)",
-  objectFit: "cover",
-  [theme.breakpoints.up("sm")]: {
-    height: "25vh",
-  },
-  [theme.breakpoints.up("md")]: {
-    height: "38vh",
-    borderBottomRightRadius: "8px",
-    borderBottomLeftRadius: "8px",
-  },
-  [theme.breakpoints.up("lg")]: {
-    // width: "40%",
-  },
-  [theme.breakpoints.up("xl")]: {
-    marginTop: "2rem",
-    height: "30vh",
-    borderRadius: "8px",
-  },
-}));
-
-export { SignupTheme, SignupDiv, SignupFormImg, SignupForm };
+export { SignupTheme, SignupDiv, SignupForm };

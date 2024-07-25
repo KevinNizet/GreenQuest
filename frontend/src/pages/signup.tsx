@@ -2,8 +2,8 @@ import React, { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import {
+  Box,
   Button,
-  CardMedia,
   Grid,
   IconButton,
   TextField,
@@ -13,17 +13,10 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { signup } from "@/graphql/mutationSignup";
 import { useMutation } from "@apollo/client";
-import Image from "next/image";
 import Snackbar from "@mui/material/Snackbar";
-import {
-  SignupDiv,
-  SignupForm,
-  SignupFormImg,
-  SignupTheme,
-} from "@/themes/signupTheme";
+import { SignupDiv, SignupForm, SignupTheme } from "@/themes/signupTheme";
 
 const Signup = () => {
-  // Form states
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -92,9 +85,17 @@ const Signup = () => {
         <SignupForm onSubmit={onSubmit}>
           <Grid container direction="column" spacing={2} alignItems="center">
             <Grid item container justifyContent="center">
-              <SignupFormImg
-                src="https://images.pexels.com/photos/259280/pexels-photo-259280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                alt="Picture of the author"
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "100%",
+                  height: { xs: "30vh", sm: "30vh", md: "40vh", lg: "40vh" },
+                  backgroundImage: "url(/images/signup_image.jpeg)",
+                  backgroundSize: "cover",
+                  backgroundPosition: "bottom",
+                  backgroundRepeat: "no-repeat",
+                  overflow: "hidden",
+                }}
               />
             </Grid>
             <Grid item container justifyContent="center">
