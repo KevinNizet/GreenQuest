@@ -1,4 +1,3 @@
-import { Height } from "@mui/icons-material";
 import { createTheme, styled } from "@mui/material/styles";
 
 const SigninFormTheme = createTheme({
@@ -17,7 +16,7 @@ const SigninFormTheme = createTheme({
           color: "#393E41",
           fontWeight: "bold",
           fontSize: "1.8vh",
-          width: "60%",
+          width: "85%",
           textAlign: "center",
           marginTop: "5vh",
           [theme.breakpoints.up("sm")]: {
@@ -44,7 +43,6 @@ const SigninFormTheme = createTheme({
           width: "80%",
           fontSize: "2vh",
           margin: "0.5rem",
-          marginTop: "2vh",
           [theme.breakpoints.up("md")]: {
             fontSize: "1rem",
           },
@@ -98,7 +96,7 @@ const SigninDiv = styled("div")(({ theme }) => ({
   padding: "20px",
   borderRadius: "5px",
   width: "70%",
-  marginTop: "6vh",
+  marginTop: "3vh",
 
   [theme.breakpoints.up("sm")]: {
     width: "50%",

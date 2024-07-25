@@ -67,6 +67,7 @@ export function ResetPasswordModal({
             sx={{
               fontSize: { xs: "12.5px", sm: "16px", md: "18px" },
               textAlign: "left",
+              mt: 0,
             }}
           >
             Réinitialisation du mot de passe

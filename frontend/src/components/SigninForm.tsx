@@ -111,9 +111,9 @@ const Signin = () => {
           </Grid>
 
           <Grid item container justifyContent="center">
-            <Typography variant="body1" gutterBottom>
+            <Typography variant="body1">
               Connecte toi pour participer à une quête et valider tes missions
-              quotidiennes !
+              quotidiennes 🏇 !
             </Typography>
           </Grid>
 
