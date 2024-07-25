@@ -16,12 +16,7 @@ import { useRouter } from "next/router";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { ResetPasswordModal } from "./modals/ResetPasswordModal";
 import { ApolloError } from "@apollo/client";
-import {
-  SigninDiv,
-  SigninForm,
-  SigninFormImg,
-  SigninFormTheme,
-} from "@/themes/signinTheme";
+import { SigninDiv, SigninForm, SigninFormTheme } from "@/themes/signinTheme";
 
 const Signin = () => {
   const [showPassword, setShowPassword] = useState(false);
