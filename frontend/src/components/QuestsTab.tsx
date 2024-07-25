@@ -38,7 +38,7 @@ export type QuestType = {
 
 const styles = {
   container: {
-    width: "90%",
+    width: { xs: "85%", sm: "90%", md: "75%", lg: "55%" },
     height: "90%",
     backgroundColor: "#ECEBF5",
     borderRadius: "10px",

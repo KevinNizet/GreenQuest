@@ -10,6 +10,7 @@ import JoinQuestModal from "../components/modals/JoinQuestModal";
 import Lottie from "react-lottie";
 import cible from "@/images/lottie/cible.json";
 import boussole from "@/images/lottie/boussole.json";
+import Link from "next/link";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -47,8 +48,9 @@ const Dashboard = () => {
           height: "10%",
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           padding: "2rem",
-          justifyContent: "space-between",
+          gap: "40%",
           margin: "1rem 0 1rem 0",
         }}
       >
@@ -56,24 +58,60 @@ const Dashboard = () => {
           variant="contained"
           onClick={handleOpenModal}
           sx={{
-            width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
+            width: { xs: "30%", sm: "20%", lg: "16%", xl: "12%" },
             height: { sm: "5vh", md: "8vh" },
             textAlign: "center",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            whiteSpace: "normal",
+            wordBreak: "break-word",
+            padding: "0.5rem",
+            fontSize: {
+              xs: "0.6rem",
+              sm: "0.65rem",
+              md: "0.8rem",
+              lg: "1rem",
+            },
           }}
         >
-          Rejoindre une quête
+          Rejoindre <br />
+          une quête
         </Button>
-        <Button
-          variant="contained"
-          href="/questtunnel"
+        <Box
           sx={{
-            width: { xs: "48%", sm: "20%", lg: "16%", xl: "12%" },
+            width: { xs: "30%", sm: "20%", lg: "16%", xl: "12%" },
             height: { sm: "5vh", md: "8vh" },
-            textAlign: "center",
           }}
         >
-          Créer ta propre quête
-        </Button>
+          <Link href="/questtunnel" passHref style={{ textDecoration: "none" }}>
+            <Button
+              variant="contained"
+              sx={{
+                width: "100%",
+                height: "100%",
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                padding: "0.5rem",
+                fontSize: {
+                  xs: "0.6rem",
+                  sm: "0.65rem",
+                  md: "0.8rem",
+                  lg: "1rem",
+                },
+              }}
+            >
+              Créer une <br />
+              quête
+            </Button>
+          </Link>
+        </Box>
       </Box>
       <JoinQuestModal open={modalOpen} onClose={handleCloseModal} />
       <Box

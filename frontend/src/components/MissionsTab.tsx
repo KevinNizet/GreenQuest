@@ -27,7 +27,7 @@ export type userMissionType = {
 
 const styles = {
   container: {
-    width: "90%",
+    width: { xs: "85%", sm: "90%", md: "75%", lg: "55%" },
     height: "90%",
     backgroundColor: "#ECEBF5",
     borderRadius: "10px",
@@ -46,7 +46,7 @@ const styles = {
     alignItems: "center",
   },
   missionList: {
-    width: "100%",
+    width: "90%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -60,7 +60,7 @@ const styles = {
     padding: "1.5rem",
     borderRadius: "10px",
     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-    margin: "1rem 0 0 0",
+    // margin: "1rem 0 0 0",
     animation: isAnimating ? "blinkAnimation 1s ease-in-out" : "none",
     cursor: "pointer",
     pointerEvents: isCompleted ? "auto" : "auto",
@@ -246,9 +246,6 @@ const MissionsTab = (props: MissionTabProps) => {
     loop: true,
     autoplay: true,
     animationData: wizard,
-    // rendererSettings: {
-    //   preserveAspectRatio: "xMidYMid slice",
-    // },
   };
 
   return (
