@@ -104,11 +104,7 @@ const Header = () => {
                 >
                   Greenquest
                 </Typography>
-                <Stack
-                  direction="row"
-                  // spacing={2}
-                  sx={{}}
-                >
+                <Stack direction="row" spacing={2} sx={{}}>
                   {router.pathname === "/signin" ? (
                     <Link href="/signup" passHref>
                       <Button color={"success"} variant="contained">

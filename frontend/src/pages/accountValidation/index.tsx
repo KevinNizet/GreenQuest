@@ -28,46 +28,50 @@ const ValidateAccount = () => {
 
   return (
     <Layout title="Validate Account">
-      <div>
-        <Grid container spacing={3} padding={4}>
-          <Grid item xs={12} container justifyContent="center">
-            <Typography variant="h3" paragraph>
-              Compte validé !
-            </Typography>
-          </Grid>
-
-          <Grid item container justifyContent="center">
-            <Typography
-              variant="body1"
-              gutterBottom
-              sx={{
-                width: "90%",
-                textAlign: "center",
-                marginBottom: "50px",
-              }}
-            >
-              {" "}
-              Félicitations, ton compte a été validé avec succés. Connecte toi
-              pour démarrer l&apos;aventure !{" "}
-            </Typography>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={handleClick}
-              type="submit"
-              sx={{ marginTop: "10px", marginBottom: "60px" }}
-            >
-              Connecte toi
-            </Button>
-            <Image
-              src="/images/account-validation-picture.jpg"
-              alt="Image de la page de validation de compte"
-              width={720}
-              height={300}
-            />
-          </Grid>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item>
+          <Image
+            src="/images/account-validation-picture.jpg"
+            alt="Image de la page de validation de compte"
+            width={200}
+            height={200}
+          />
         </Grid>
-      </div>
+        <Grid item xs={12} container justifyContent="center">
+          <Typography variant="h3" paragraph>
+            Compte validé !
+          </Typography>
+        </Grid>
+
+        <Grid item container justifyContent="center">
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{
+              width: "90%",
+              textAlign: "center",
+              marginBottom: "50px",
+            }}
+          >
+            {" "}
+            Félicitations, ton compte a été validé avec succés. Connecte toi
+            pour démarrer l&apos;aventure !{" "}
+          </Typography>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={handleClick}
+            type="submit"
+            sx={{
+              marginTop: "10px",
+              marginBottom: "60px",
+              width: { xs: "34%" },
+            }}
+          >
+            Connecte toi
+          </Button>
+        </Grid>
+      </Grid>
     </Layout>
   );
 };

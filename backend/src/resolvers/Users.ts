@@ -135,7 +135,7 @@ export class UserResolver {
     user.isValidatedAccount = true;
     await user.save();
 
-    await userToken.remove();
+    // await userToken.remove();
 
     return true;
   }
