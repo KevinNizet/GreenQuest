@@ -15,6 +15,7 @@ import Link from "next/link";
 const Dashboard = () => {
   const [value, setValue] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [missionsKey, setMissionsKey] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -26,6 +27,10 @@ const Dashboard = () => {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+  };
+
+  const handleQuestJoined = () => {
+    setMissionsKey((prevKey) => prevKey + 1);
   };
 
   const defaultOptionsCible = {
@@ -113,7 +118,11 @@ const Dashboard = () => {
           </Link>
         </Box>
       </Box>
-      <JoinQuestModal open={modalOpen} onClose={handleCloseModal} />
+      <JoinQuestModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        onQuestJoined={handleQuestJoined}
+      />
       <Box
         sx={{
           width: "100%",
@@ -161,7 +170,13 @@ const Dashboard = () => {
           alignItems: "center",
         }}
       >
-        {value === 0 && <MissionsTab value={value} />}
+        {value === 0 && (
+          <MissionsTab
+            key={missionsKey}
+            value={value}
+            onQuestJoined={handleQuestJoined}
+          />
+        )}
         {value === 1 && <QuestsTab value={value} />}
       </Box>
     </Layout>
