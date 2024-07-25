@@ -36,7 +36,7 @@ const secondeModalstyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: { xs: "20%", sm: "60%", md: "40%", lg: "40%", xl: "25%" },
+  width: { xs: "70%", sm: "60%", md: "40%", lg: "40%", xl: "25%" },
 
   bgcolor: "background.paper",
   border: "2px solid #000",
@@ -195,10 +195,11 @@ export default function BasicModal({
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",
-              mt: 2,
             }}
           >
-            <WarningIcon sx={{ color: "orange", fontSize: 36 }} />{" "}
+            <WarningIcon
+              sx={{ color: "orange", fontSize: 36, margin: "1rem" }}
+            />{" "}
             <Typography id="modal-modal-description" variant="h6">
               Es-tu sûr.e de vouloir supprimer cette quête ?
             </Typography>

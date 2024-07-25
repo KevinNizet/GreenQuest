@@ -225,7 +225,7 @@ const QuestsTab = ({ value }: QuestTabProps) => {
                   🗝️ fourni par un brave compagnon de voyage 🧑‍🤝‍🧑 !
                 </Typography>
                 <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
-                  <Lottie options={defaultOptions} height={400} width={400} />
+                  <Lottie options={defaultOptions} height="100%" width="100%" />
                 </Box>
               </Box>
             )}

@@ -79,7 +79,7 @@ const styles = {
     color: "white",
   },
   noMissionText: {
-    fontSize: { sx: "1rem", sm: "1.3rem", md: "1.5rem" },
+    fontSize: "1.3rem",
     paddingY: "1rem",
     paddingX: "1rem",
     textAlign: "center",
@@ -333,6 +333,7 @@ const MissionsTab = (props: MissionTabProps) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                width: "80%",
               }}
             >
               <Typography sx={styles.noMissionText}>
@@ -343,7 +344,7 @@ const MissionsTab = (props: MissionTabProps) => {
                 missions 🗝️!
               </Typography>
               <Box sx={{ paddingTop: "3rem", paddingLeft: "1rem" }}>
-                <Lottie options={defaultOptions} height={400} width={400} />
+                <Lottie options={defaultOptions} height="100%" width="100%" />
               </Box>
             </Box>
           )}

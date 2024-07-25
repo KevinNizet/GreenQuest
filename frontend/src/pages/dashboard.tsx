@@ -10,7 +10,6 @@ import JoinQuestModal from "../components/modals/JoinQuestModal";
 import Lottie from "react-lottie";
 import cible from "@/images/lottie/cible.json";
 import boussole from "@/images/lottie/boussole.json";
-import Link from "next/link";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -50,7 +49,7 @@ const Dashboard = () => {
           alignItems: "center",
           padding: "2rem",
           justifyContent: "space-between",
-          margin: "1rem 0 0 0",
+          margin: "1rem 0 1rem 0",
         }}
       >
         <Button
@@ -59,6 +58,7 @@ const Dashboard = () => {
           sx={{
             width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
             height: { sm: "5vh", md: "6vh" },
+            textAlign: "center",
           }}
         >
           Rejoindre une quête
@@ -67,9 +67,9 @@ const Dashboard = () => {
           variant="contained"
           href="/questtunnel"
           sx={{
-            textAlign: "center",
             width: { xs: "45%", sm: "20%", lg: "16%", xl: "12%" },
             height: { sm: "5vh", md: "6vh" },
+            textAlign: "center",
           }}
         >
           Créer une quête
@@ -83,7 +83,7 @@ const Dashboard = () => {
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
-          marginBottom: "30px",
+          marginBottom: "50px",
         }}
       >
         <Tabs
@@ -103,38 +103,28 @@ const Dashboard = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: "-2.5rem",
-          marginTop: "3vh",
+          marginBottom: "1.8rem",
         }}
       >
         {value === 0 && (
-          <Lottie options={defaultOptionsCible} height="25vh" width="25vw" />
+          <Lottie options={defaultOptionsCible} height="200%" width="200%" />
         )}
         {value === 1 && (
-          <Lottie options={defaultOptionsBoussole} height="12vh" width="12vw" />
+          <Lottie options={defaultOptionsBoussole} height="100%" width="100%" />
         )}
       </Box>
-      <br />
+
       <Box
         sx={{
+          width: "100%",
+          height: "60%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "100vw",
         }}
       >
-        <Box
-          sx={{
-            width: "95vw",
-            height: "80vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {value === 0 && <MissionsTab value={value} />}
-          {value === 1 && <QuestsTab value={value} />}
-        </Box>
+        {value === 0 && <MissionsTab value={value} />}
+        {value === 1 && <QuestsTab value={value} />}
       </Box>
     </Layout>
   );

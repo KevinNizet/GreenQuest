@@ -151,10 +151,10 @@ const Header = () => {
                       <AccountCircle
                         sx={{
                           fontSize: {
-                            xs: "3.5rem", // taille de la police pour les écrans extra-petits
-                            sm: "4rem", // taille de la police pour les petits écrans
-                            md: "3.5rem", // taille de la police pour les écrans moyens
-                            lg: "4rem", // taille de la police pour les grands écran
+                            xs: "3.5rem",
+                            sm: "4rem",
+                            md: "3.5rem",
+                            lg: "4rem",
                           },
                         }}
                       />
