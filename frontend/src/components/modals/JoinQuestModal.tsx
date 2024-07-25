@@ -19,9 +19,14 @@ import { ApolloError } from "@apollo/client";
 interface JoinQuestModalProps {
   open: boolean;
   onClose: () => void;
+  onQuestJoined: () => void;
 }
 
-const JoinQuestModal: React.FC<JoinQuestModalProps> = ({ open, onClose }) => {
+const JoinQuestModal: React.FC<JoinQuestModalProps> = ({
+  open,
+  onClose,
+  onQuestJoined,
+}) => {
   const [questCode, setQuestCode] = useState<string>("");
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -46,6 +51,7 @@ const JoinQuestModal: React.FC<JoinQuestModalProps> = ({ open, onClose }) => {
       setToastMessage("La quête a été rejointe avec succès 👍🏻 !");
       setToastOpen(true);
       onClose();
+      onQuestJoined();
     } catch (err) {
       if (err instanceof ApolloError) {
         const errorMessage = err.graphQLErrors[0]?.message || err.message;

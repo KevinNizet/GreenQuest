@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 
 type MissionTabProps = {
   value: number;
+  onQuestJoined: () => void;
 };
 
 export type userMissionType = {
