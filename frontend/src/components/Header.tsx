@@ -97,11 +97,7 @@ const Header = () => {
                   <span style={{ color: "green" }}>Green</span>
                   <span style={{ color: "black" }}>Quest</span>
                 </Typography>
-                <Stack
-                  direction="row"
-                  // spacing={2}
-                  sx={{}}
-                >
+                <Stack direction="row">
                   {router.pathname === "/signin" ? (
                     <Link href="/signup" passHref>
                       <Button color={"success"} variant="contained">
@@ -156,7 +152,7 @@ const Header = () => {
                             xs: "3.5rem", // taille de la police pour les écrans extra-petits
                             sm: "4rem", // taille de la police pour les petits écrans
                             md: "3.5rem", // taille de la police pour les écrans moyens
-                            lg: "4rem", // taille de la police pour les grands écran
+                            lg: "4rem", // taille de la police pour les grands écrans
                           },
                         }}
                       />

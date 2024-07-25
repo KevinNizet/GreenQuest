@@ -45,7 +45,7 @@ async function resetMissions() {
 // }
 
 // Planification du cron - éxécution tous les jours à minuit
-cron.schedule("*/2 * * * *", async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     await resetMissions();
   } catch (err) {

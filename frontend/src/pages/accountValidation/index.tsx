@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { mutationAccountValidation } from "@/graphql/accountValidation/mutationAccountValidation";
 import Layout from "@/components/Layout";
 import Image from "next/image";
-import { Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 
 const ValidateAccount = () => {
   const router = useRouter();
@@ -30,11 +30,17 @@ const ValidateAccount = () => {
     <Layout title="Validate Account">
       <Grid container spacing={3} justifyContent="center">
         <Grid item>
-          <Image
-            src="/images/account-validation-picture.jpg"
-            alt="Image de la page de validation de compte"
-            width={200}
-            height={200}
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: { xs: "30vh", sm: "30vh", md: "40vh", lg: "40vh" },
+              backgroundImage: `url("/images/account-validation-picture.jpg")`,
+              backgroundSize: "cover",
+              backgroundPosition: "bottom",
+              backgroundRepeat: "no-repeat",
+              overflow: "hidden",
+            }}
           />
         </Grid>
         <Grid item xs={12} container justifyContent="center">
