@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Fade, Typography, Pagination, Snackbar } from "@mui/material";
+import {
+  Box,
+  Fade,
+  Typography,
+  Pagination,
+  Snackbar,
+  CircularProgress,
+} from "@mui/material";
 import { useQuery, useMutation } from "@apollo/client";
 import { queryMySelf } from "@/graphql/queryMySelf";
 import { QuestType } from "./QuestsTab";
@@ -14,6 +21,7 @@ import { motion } from "framer-motion";
 
 type MissionTabProps = {
   value: number;
+  onQuestJoined: () => void;
 };
 
 export type userMissionType = {
@@ -60,10 +68,13 @@ const styles = {
     padding: "1.5rem",
     borderRadius: "10px",
     boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-    // margin: "1rem 0 0 0",
-    animation: isAnimating ? "blinkAnimation 1s ease-in-out" : "none",
     cursor: "pointer",
     pointerEvents: isCompleted ? "auto" : "auto",
+    animation: isAnimating ? "blinkAnimation 1s ease-in-out" : "none",
+    transition: "transform 0.3s ease-in-out",
+    "&:hover": {
+      transform: "scale(1.05)",
+    },
     "@keyframes blinkAnimation": {
       "0%": { backgroundColor: "#a5d6a7" },
       "50%": { backgroundColor: "#66bb6a" },
@@ -253,7 +264,16 @@ const MissionsTab = (props: MissionTabProps) => {
       <Box sx={styles.container}>
         <Box sx={styles.content}>
           {userMissionLoading || questLoading ? (
-            <Typography sx={styles.noMissionText}>Chargement...</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <CircularProgress />
+            </Box>
           ) : displayedMissions.length > 0 ? (
             <Box sx={styles.missionList}>
               {displayedMissions.map((mission, index) => {

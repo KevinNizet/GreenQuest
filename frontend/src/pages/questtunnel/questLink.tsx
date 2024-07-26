@@ -6,6 +6,7 @@ import {
   Paper,
   Box,
   ThemeProvider,
+  CircularProgress,
 } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { queryGetQuestById } from "@/graphql/queryGetQuestById";
@@ -62,7 +63,18 @@ export default function QuestLink() {
   }
 
   if (!data) {
-    return <div>Chargement...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const code = data.item.code;

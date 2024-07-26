@@ -10,6 +10,7 @@ import { useQuery } from "@apollo/client";
 import { queryGetTotalPointsForQuest } from "@/graphql/queryGetTotalPointsForQuest";
 import { queryGetQuestById } from "@/graphql/queryGetQuestById";
 import { UserType } from "@/pages/userprofile";
+import { Box, CircularProgress } from "@mui/material";
 
 type LeaderBoardType = {
   points: number;
@@ -68,7 +69,18 @@ const LeaderBoard = ({ questId }: LeaderBoardProps) => {
     return acc;
   }, {});
 
-  if (questLoading) return <p>Loading...</p>;
+  if (questLoading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (questError || error)
     return <p>Error: {questError?.message || error?.message}</p>;
 

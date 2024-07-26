@@ -17,6 +17,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { ThemeProvider } from "@mui/material/styles";
 import { headerTheme, HeaderLogo } from "@/themes/headerTheme";
 import router from "next/router";
+import { CircularProgress } from "@mui/material";
 
 export type userType = {
   id: number;
@@ -58,14 +59,16 @@ const Header = () => {
 
   if (loading)
     return (
-      <div
-        style={{
-          textAlign: "center",
-          height: "75px",
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
         }}
       >
-        Loading...
-      </div>
+        <CircularProgress />
+      </Box>
     );
 
   return (

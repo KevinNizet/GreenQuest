@@ -20,6 +20,7 @@ const headerTheme = createTheme({
         }),
       },
     },
+
     MuiToolbar: {
       styleOverrides: {
         root: ({ theme }) => ({
@@ -27,7 +28,10 @@ const headerTheme = createTheme({
           alignItems: "center",
           justifyItems: "center",
           margin: "0",
-          padding: "0",
+          padding: 0,
+          [theme.breakpoints.up("xs")]: {
+            padding: "0.4rem",
+          },
         }),
       },
     },
@@ -37,15 +41,13 @@ const headerTheme = createTheme({
         root: ({ theme }) => ({
           flexGrow: 1,
           margin: 1,
-          paddingLeft: "0.5rem",
-          fontSize: "1.3rem",
+          fontSize: "1.5rem",
         }),
       },
     },
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
-          margin: "0 5% 0 0",
           [theme.breakpoints.up("xs")]: {
             fontSize: "0.55rem",
             padding: "0.5rem",
@@ -53,7 +55,6 @@ const headerTheme = createTheme({
           [theme.breakpoints.up("sm")]: {
             fontSize: "0.75rem",
             padding: "0.75rem",
-            margin: "0 1% 0 0",
           },
           [theme.breakpoints.up("md")]: {
             fontSize: "0.7rem",
