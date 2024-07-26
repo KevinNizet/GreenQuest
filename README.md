@@ -14,7 +14,7 @@ GreenQuest est une plateforme web permettant à des groupes de personnes (amis, 
 
 ## Démonstration
 
-![Démonstration de GreenQuest](frontend/public/images/parcours-creation-quete.gif)
+![Démonstration de GreenQuest](frontend/public/images/quest_creation.mov)
 
 ## Technologies Utilisées
 
