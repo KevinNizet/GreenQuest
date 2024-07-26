@@ -76,7 +76,6 @@ const LeaderBoard = ({ questId }: LeaderBoardProps) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
         }}
       >
         <CircularProgress />
