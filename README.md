@@ -12,6 +12,10 @@ GreenQuest est une plateforme web permettant à des groupes de personnes (amis, 
 - **Notifications par Email** : Envoi d'emails pour la réinitialisation des mots de passe et autres notifications importantes.
 - **Upload de Fichiers** : Fonctionnalité d'upload de fichiers pour les utilisateurs.
 
+## Démonstration
+
+![Démonstration de GreenQuest](frontend/public/images/parcours-creation-quete.gif)
+
 ## Technologies Utilisées
 
 ### Frontend
