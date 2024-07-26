@@ -99,7 +99,7 @@ const HomeFirstContainer = styled("div")(({ theme }) => ({
   alignItems: "center",
   width: "100%",
   height: "100vh",
-  backgroundImage: `url('images/5.jpg')`,
+  backgroundImage: `url('images/home_theme.jpg')`,
   backgroundPosition: "center",
   backgroundSize: "cover",
   position: "relative",
